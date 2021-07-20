@@ -9,6 +9,7 @@
  * @tparam T the type of the input unsigned integer value
  * @param[in] v the input unsigned integer value
  * @param[in] n the number of the LSB bits to display, default to `sizeof(T)*CHAR_BIT`
+ * @param[in] withPrefix whether to add prefix "0b", default to `true`
  */
 template <typename T>
 void printb(T v, uint8_t n=sizeof(T)*CHAR_BIT, bool withPrefix=true) {
