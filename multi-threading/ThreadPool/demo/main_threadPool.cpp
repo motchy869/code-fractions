@@ -1,7 +1,7 @@
 #include <array>
 #include <cstdlib>
 #include <iostream>
-#include "ThreadPool.hpp"
+#include "../include/ThreadPool.hpp"
 
 
 static std::mutex gMtx_stdCout; // mutex for std::cout

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <mutex>
 #include <thread>
-#include "MultiThreadQueue.hpp"
+#include "../include/MultiThreadQueue.hpp"
 
 struct Param {
     int a;

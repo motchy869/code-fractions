@@ -4,8 +4,8 @@
 #include <iostream>
 #include <memory>
 #include <thread>
-#include "MultiThreadQueue.hpp"
-#include "ThreadPool.hpp"
+#include "../include/MultiThreadQueue.hpp"
+#include "../include/ThreadPool.hpp"
 
 static std::mutex gMtx_stdCout; // mutex for std::cout
 void printToStdCout(const char *msg) {
