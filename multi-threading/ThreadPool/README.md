@@ -4,9 +4,18 @@ A thread pool library and example code for C++.
 
 ## 1. Build & Run example
 
+### 1.1. On Unix-like OS
+
 ```sh
 ./doDebugBuild.sh
-./build/demo/main_threadPool.out
+./build/demo/main_threadPool
+```
+
+### 1.2. On Windows
+
+```bat
+./doDebugBuild.bat
+./build/demo/main_threadPool.exe
 ```
 
 ## 2. Core files
@@ -23,7 +32,7 @@ A thread pool library and example code for C++.
 ```C++
 #include <array>
 #include <cstdio>
-#include "ThreadPool.hpp"
+#include "../include/ThreadPool.hpp"
 
 /**
  * @brief Parameter for a task.
