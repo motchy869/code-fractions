@@ -4,7 +4,6 @@ static void thread_runExecutable(std::reference_wrapper<MultiThreadQueue<std::sh
     MultiThreadQueue<std::shared_ptr<Executable>> &queue = ref_queue.get();
     std::shared_ptr<Executable> exe;
     while (queue.pop(exe)) {
-        std::this_thread::yield(); // Let other worker threads take tasks from the queue.
         exe->run();
     }
 }
