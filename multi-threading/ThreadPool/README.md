@@ -54,8 +54,8 @@ class Task : public Executable {
 
         void run() override {
             /* Let other worker threads in thread pool take tasks from the queue. */
-            constexpr int gapTime_ms = 100;
-            std::this_thread::sleep_for(std::chrono::microseconds(gapTime_ms));
+            constexpr int gapTime_us = 100; // Good value depends on situations
+            std::this_thread::sleep_for(std::chrono::microseconds(gapTime_us));
 
             /* Do some heavy work */
         }
