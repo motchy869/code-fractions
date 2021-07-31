@@ -56,7 +56,7 @@ int main() {
     for (size_t i=0; i<10; ++i) {
         const Param param = {.a = static_cast<int>(i), .b = 10.0f+static_cast<int>(i)};
         mtq.push(param);
-        snprintf(msgBuf.data(), msgBuf.size()-1, "[main] Pushed param, i=%llu\n", i);
+        snprintf(msgBuf.data(), msgBuf.size()-1, "[main] Pushed param, i=%zu\n", i);
         printToStdCout(msgBuf.data());
     }
 

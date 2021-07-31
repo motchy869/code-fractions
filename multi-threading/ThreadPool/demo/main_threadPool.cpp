@@ -105,7 +105,7 @@ void thread_produceTasks(unsigned int numTasks, std::reference_wrapper<ThreadPoo
         const float beta = static_cast<float>(10+i);
         std::shared_ptr<Executable> task = std::make_shared<Task>(i, mtq_result, waitTime_ms, alpha, beta);
         threadPool.pushExecutable(task);
-        snprintf(msgBuf.data(), msgBuf.size()-1, "[%s] Pushed task, i=%llu\n", __func__, i);
+        snprintf(msgBuf.data(), msgBuf.size()-1, "[%s] Pushed task, i=%zu\n", __func__, i);
         printToStdCout(msgBuf.data());
     }
 

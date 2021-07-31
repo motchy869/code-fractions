@@ -102,7 +102,7 @@ int main() {
         const float beta = static_cast<float>(10+i);
         std::shared_ptr<Executable> task = std::make_shared<Task>(i, mtq_result, waitTime_ms, alpha, beta);
         mtq_exec.push(task);
-        snprintf(msgBuf.data(), msgBuf.size()-1, "[main] Pushed task, i=%llu\n", i);
+        snprintf(msgBuf.data(), msgBuf.size()-1, "[main] Pushed task, i=%zu\n", i);
         printToStdCout(msgBuf.data());
     }
 
