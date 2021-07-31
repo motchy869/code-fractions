@@ -60,8 +60,8 @@ class Task: public Executable {
             const bool pushResult = m_mtq_output.push(result);
             if (!pushResult) {
                 snprintf(msgBuf.data(), msgBuf.size()-1, "  [taskId=%d] Failed to push result.\n", m_taskId);
+                printToStdCout(msgBuf.data());
             }
-            printToStdCout(msgBuf.data());
         }
 };
 
