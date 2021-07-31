@@ -125,7 +125,7 @@ int main() {
     ThreadPool threadPool(numThreads, queueDepth);
 
     /* Create a task producer thread. */
-    std::thread th_produceTasks = std::thread(thread_produceTasks, numTasks, std::ref(threadPool), std::ref(mtq_result));
+    std::thread th_produceTasks(thread_produceTasks, numTasks, std::ref(threadPool), std::ref(mtq_result));
 
     /* Wait for the task producer to shut down. */
     th_produceTasks.join();
