@@ -45,8 +45,6 @@ class Task: public Executable {
 
         const char *getDescriptionString() override {return m_descriptionString.data();}
 
-            std::this_thread::sleep_for(std::chrono::microseconds(100)); // Let other worker threads in thread pool take tasks from the queue.
-
         void run(ThreadInfo threadInfo) override {
             std::array<char, 1024> msgBuf;
             snprintf(msgBuf.data(), msgBuf.size()-1, "  [threadId=%d, taskId=%d] Started. alpha=%g, beta=%g\n", threadInfo.threadId, m_taskId, m_alpha, m_beta);

@@ -2,7 +2,7 @@
  * @file ThreadPool.hpp
  * @author motchy (motchy869@gmail.com)
  * @brief thread pool
- * @version 0.0.1
+ * @version 0.1.0
  * @date 2021-07-29
  * @copyright Copyright (c) 2021 motchy
  * https://motchy869.com/wordpress/

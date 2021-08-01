@@ -62,10 +62,6 @@ class Task : public Executable {
         const char *getDescriptionString() override {return m_descriptionString.data();}
 
         void run() override {
-            /* Let other worker threads in thread pool take tasks from the queue. */
-            constexpr int gapTime_us = 100; // Good value depends on situations
-            std::this_thread::sleep_for(std::chrono::microseconds(gapTime_us));
-
             /* Do some heavy work */
         }
 };
