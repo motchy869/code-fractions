@@ -18,6 +18,13 @@
 #include "MultiThreadQueue.hpp"
 
 /**
+ * @brief struct for hold information of a worker thread.
+ */
+struct ThreadInfo {
+    const unsigned int threadId; // Worker-unique non-negative integer starts with 0. If the thread pool has N worker threads, 0 <= threadId <= N-1.
+};
+
+/**
  * @brief interface class for handling task as object
  * @details A `ThreadPool` can accept any class inheriting `Executable` class, so it is possible to push various type tasks into a single thread pool.
  */
@@ -33,7 +40,7 @@ class Executable {
         /**
          * @brief Run task in current thread
          */
-        virtual void run() = 0;
+        virtual void run(ThreadInfo threadInfo) = 0;
 
         /**
          * @brief Destroy the Executable object

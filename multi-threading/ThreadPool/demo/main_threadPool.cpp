@@ -45,23 +45,23 @@ class Task: public Executable {
 
         const char *getDescriptionString() override {return m_descriptionString.data();}
 
-        void run() override {
             std::this_thread::sleep_for(std::chrono::microseconds(100)); // Let other worker threads in thread pool take tasks from the queue.
 
+        void run(ThreadInfo threadInfo) override {
             std::array<char, 1024> msgBuf;
-            snprintf(msgBuf.data(), msgBuf.size()-1, "  [taskId=%d] Started. alpha=%g, beta=%g\n", m_taskId, m_alpha, m_beta);
+            snprintf(msgBuf.data(), msgBuf.size()-1, "  [threadId=%d, taskId=%d] Started. alpha=%g, beta=%g\n", threadInfo.threadId, m_taskId, m_alpha, m_beta);
             printToStdCout(msgBuf.data());
 
             std::this_thread::sleep_for(std::chrono::milliseconds(m_waitTime_ms));
             const float gamma = m_alpha*m_beta;
-            snprintf(msgBuf.data(), msgBuf.size()-1, "  [taskId=%d] Calculation done. gamma=%g\n", m_taskId, gamma);
+            snprintf(msgBuf.data(), msgBuf.size()-1, "  [threadId=%d, taskId=%d] Calculation done. gamma=%g\n", threadInfo.threadId, m_taskId, gamma);
             printToStdCout(msgBuf.data());
 
             const Result result = {.taskId = m_taskId, .alpha = m_alpha, .beta = m_beta, .gamma = gamma};
-            snprintf(msgBuf.data(), msgBuf.size()-1, "  [taskId=%d] Pushing result. Task is done.\n", m_taskId);
+            snprintf(msgBuf.data(), msgBuf.size()-1, "  [threadId=%d, taskId=%d] Pushing result. Task is done.\n", threadInfo.threadId, m_taskId);
             const bool pushResult = m_mtq_output.push(result);
             if (!pushResult) {
-                snprintf(msgBuf.data(), msgBuf.size()-1, "  [taskId=%d] Failed to push result.\n", m_taskId);
+                snprintf(msgBuf.data(), msgBuf.size()-1, "  [threadId=%d, taskId=%d] Failed to push result.\n", threadInfo.threadId, m_taskId);
                 printToStdCout(msgBuf.data());
             }
         }
