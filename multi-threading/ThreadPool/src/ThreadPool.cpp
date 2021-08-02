@@ -16,7 +16,7 @@ static void thread_runExecutable(std::reference_wrapper<std::mutex> ref_threadsC
 ThreadPool::ThreadPool(unsigned int numThreads, unsigned int queueDepth) : m_numThreads(numThreads), m_threads(numThreads), m_queue(queueDepth) {
     std::lock_guard<std::mutex> lock(m_threadsMtx);
     for (unsigned int i=0; i<m_numThreads; ++i) {
-        m_threads.push_back(std::thread(thread_runExecutable, std::ref(m_threadsMtx), (ThreadInfo){.threadId=i}, std::ref(m_queue)));
+        m_threads.emplace_back(thread_runExecutable, std::ref(m_threadsMtx), (ThreadInfo){.threadId=i}, std::ref(m_queue));
     }
 }
 
