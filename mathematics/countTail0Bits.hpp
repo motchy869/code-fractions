@@ -16,7 +16,7 @@ template <typename T>
 T countTail0Bits(T x) {
     static_assert(std::is_integral<T>::value, "T must be an integral type.");
     constexpr T numBits = static_cast<T>(sizeof(T)*CHAR_BIT);
-    T count;
+    T count = 0;
     for (int i=0; i<numBits; ++i) {
         if (x&0b01 != 0) {
             break;
