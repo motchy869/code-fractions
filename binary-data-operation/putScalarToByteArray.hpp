@@ -1,3 +1,5 @@
+#include <cstddef>
+
 /**
  * @brief Write a scalar value to the given address.
  * @details Let `t` be the target address and `v` be the source value.
