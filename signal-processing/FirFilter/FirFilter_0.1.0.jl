@@ -3,7 +3,7 @@ FIR filter
 
 - example usage: see test.ipynb
 - tested on: Julia 1.7.2
-- version: 0.0.1
+- version: 0.1.0
 - author: motchy
 - license: MIT
 """
