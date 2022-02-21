@@ -1,6 +1,12 @@
 """
 A cyclic stack which holds the latest `N` elements where `N` is a positive integer.
 When a new element `x` is pushed, the oldest element is overwritten with `x`.
+
+- example usage: see test.ipynb
+- tested on: Julia 1.7.2
+- version: 0.2.0
+- author: motchy
+- license: MIT
 """
 module RingStack
     mutable struct State{T<:Any}
@@ -33,7 +39,8 @@ module RingStack
 
     """
     Pop an element from the stack.
-    The internal index is decremented.
+    The internal index is decremented, but the popped element is remain valid in buffer.
+    Thus, `moveHead(n)` after n-times `pop()` recovers the buffer state identical to the state before calling `pop()`s.
     """
     function pop(s::State{T}) where T
         s.index -= 1
@@ -41,5 +48,30 @@ module RingStack
             s.index = s.capacity
         end
         s.buffer[s.index]
+    end
+
+    """
+    Move the internal index by `n`.
+    """
+    function moveHead(s::State{T}, n::Int) where T
+        if n == 1
+            s.index += 1
+            if s.index == s.capacity+1
+                s.index = 1
+            end
+        elseif n == -1
+            s.index -= 1
+            if s.index == 0
+                s.index = s.capacity
+            end
+        else
+            i = s.index - 1 # Convert index range to [0, capacity-1]
+            c = s.capacity
+            i = (i+n)%c
+            if i < 0
+                i += c
+            end
+            s.index = 1 + i # Convert index range to [1, capacity]
+        end
     end
 end
