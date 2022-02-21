@@ -1,3 +1,4 @@
 # code-fractions
 
-code fractions for various works
+Code fractions for my various works.
+This repository is used as *Code Warehouse*, and there is only "main" branch because "develop" and "release" branches is not important.
