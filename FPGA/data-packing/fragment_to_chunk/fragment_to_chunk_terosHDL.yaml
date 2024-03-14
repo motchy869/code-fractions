@@ -1,0 +1,31 @@
+files: 
+  - name: "fragment_to_chunk.sv"
+    file_type: systemVerilogSource
+    is_include_file: false
+    include_path: ""
+    logical_name: ""
+    is_manual: true
+hooks: 
+  pre_build: 
+    []
+  post_build: 
+    []
+  pre_run: 
+    []
+  post_run: 
+    []
+watchers: 
+  []
+name: fragment_to_chunk
+tool_options: 
+  ghdl: 
+    name: ghdl
+    installation_path: ""
+    config: 
+      installation_path: ""
+      waveform: vcd
+      analyze_options: 
+        []
+      run_options: 
+        []
+toplevel: ""
