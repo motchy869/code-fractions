@@ -41,13 +41,13 @@ localparam int FRAG_BUF_CAP = 2*S_MAX_IN; //! capacity of the fragment buffer
 // ---------- working signals and storage ----------
 // input clipping
 wire [$clog2(S_MAX_IN)-1:0] g_clipped_frag_size; //! fragment size input clipped up to `S_MAX_IN`
-assign g_clipped_frag_size = i_frag_size > S_MAX_IN ? S_MAX_IN : i_frag_size;
+assign g_clipped_frag_size = $bits(g_clipped_frag_size)'(int'(i_frag_size) > S_MAX_IN ? S_MAX_IN : int'(i_frag_size));
 
 var T r_frag_buf[FRAG_BUF_CAP]; //! buffer to store fragments, 2-page buffer
 var logic [$clog2(FRAG_BUF_CAP)-1:0] r_buf_cnt; //! count of the fragments in the buffer
 var logic r_read_page_ptr; //! Read pointer of the fragment buffer. Note that there is only 2 pages in the fragment buffer.
 wire [$clog2(FRAG_BUF_CAP)-1:0] g_write_elem_start_ptr; //! write starting pointer of the fragment buffer
-assign g_write_elem_start_ptr = (r_read_page_ptr == 1'b0) ? r_buf_cnt : (r_buf_cnt < S_OUT) ? S_OUT + r_buf_cnt : r_buf_cnt - S_OUT;
+assign g_write_elem_start_ptr = (r_read_page_ptr == 1'b0) ? r_buf_cnt : $clog2(FRAG_BUF_CAP)'((int'(r_buf_cnt) < S_OUT) ? S_OUT + int'(r_buf_cnt) : int'(r_buf_cnt) - S_OUT);
 wire g_push_en; //! enable signal to push the fragment into the buffer
 assign g_push_en = o_ds_ready && i_frag_valid;
 wire g_pop_en; //! enable signal to pop the fragment from the buffer
@@ -55,9 +55,9 @@ assign g_pop_en = i_ds_ready && o_chunk_valid;
 // --------------------
 
 // Drive output signals.
-assign o_ds_ready = !i_sync_rst && (i_ds_ready ? r_buf_cnt - S_OUT : r_buf_cnt) + g_clipped_frag_size < FRAGMENT_BUF_CAPACITY;
-assign o_chunk_valid = !i_sync_rst && r_buf_cnt >= S_OUT;
-assign o_chunk = r_frag_buf[type(S_OUT)'(r_read_page_ptr)*S_OUT+:S_OUT];
+assign o_ds_ready = !i_sync_rst && (i_ds_ready ? int'(r_buf_cnt) - S_OUT : int'(r_buf_cnt)) + int'(g_clipped_frag_size) < FRAG_BUF_CAP;
+assign o_chunk_valid = !i_sync_rst && int'(r_buf_cnt) >= S_OUT;
+assign o_chunk = r_frag_buf[int'(r_read_page_ptr)*S_OUT+:S_OUT];
 
 //! Update the fragment buffer count.
 always_ff @(posedge i_clk) begin: update_buf_cnt

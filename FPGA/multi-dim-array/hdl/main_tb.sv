@@ -5,7 +5,7 @@
 // timeunit 1ns;
 // timeprecision 10ps;
 
-localparam CLKNUM = 10;
+localparam int CLKNUM = 10;
 
 module main_tb;
 
