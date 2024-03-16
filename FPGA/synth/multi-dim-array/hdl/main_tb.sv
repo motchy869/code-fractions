@@ -8,7 +8,7 @@
 // timeunit 1ns;
 // timeprecision 10ps;
 
-localparam int CLKNUM = 10;
+localparam int CLK_NUM = 10;
 
 module main_tb;
 
@@ -47,7 +47,7 @@ main main_inst(
 );
 
 initial begin
-    #(STEP*CLKNUM);
+    #(STEP*CLK_NUM);
     $stop;
 end
 
