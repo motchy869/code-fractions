@@ -15,7 +15,7 @@ module saw_tooth_wav_p4_tl1 #(
     //! @virtualbus us_side_if @dir in upstream side interface
     input wire logic ip_start, //! Start request pulse for waveform generation. The request is accepted only when `o_busy` is low. The pulse length must be 1 clock-cycle.
     input wire logic [BW_VAL-1:0] i_init_val, //! initial term value
-    input wire logic [BW_SEQ_CONT-1:0] i_num_steps, //! The number of steps. **Value less than 1 causes undefined behaviour.**
+    input wire logic [BW_SEQ_CONT-1:0] i_num_steps, //! The number of steps. **Value less than 1 causes undefined behavior.**
     output wire logic o_busy, //! busy flag which indicates that waveform generation is in progress
     //! @end
 

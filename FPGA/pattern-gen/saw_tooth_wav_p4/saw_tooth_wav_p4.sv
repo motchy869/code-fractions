@@ -6,7 +6,7 @@ localparam int PARA = 4; // processing parallelism
 
 //! Generate sawtooth waveform in 4 parallelism (4 elements/clock-cycle).
 //! This module outputs 'chunk' at each clock-cycle with valid signal.
-//! Each chunk normally contains 4 elements, but the last ouput chunk may contain less than 4 elements.
+//! Each chunk normally contains 4 elements, but the last output chunk may contain less than 4 elements.
 module saw_tooth_wav_p4 #(
     parameter int BW_VAL = 16, //! bit-width of output numeric value
     parameter int BW_SEQ_CONT = 16 //! bit-width of sequence control data: tread length and the number of steps
