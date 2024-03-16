@@ -1,3 +1,6 @@
+// Verible directive
+// verilog_lint: waive-start parameter-name-style
+
 `default_nettype none
 
 //! Receives data fragments from upstream and stores them in a buffer to construct data chunks.

@@ -1,3 +1,6 @@
+// Verible directive
+// verilog_lint: waive-start parameter-name-style
+
 `default_nettype none
 
 `timescale  1ns / 10ps
