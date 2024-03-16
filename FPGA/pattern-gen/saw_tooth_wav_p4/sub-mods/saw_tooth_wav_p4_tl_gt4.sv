@@ -4,8 +4,7 @@ localparam int PARA = 4; // processing parallelism
 
 //! Sub module of saw_tooth_wav_p4.
 //! This module is specialized for tread length greater than 4.
-module saw_tooth_wav_p4_tl_gt4
- #(
+module saw_tooth_wav_p4_tl_gt4 #(
     parameter int BW_VAL = 16, //! bit-width of output numeric value
     parameter int BW_SEQ_CONT = 16 //! bit-width of sequence control data: tread length and the number of steps
 )(
