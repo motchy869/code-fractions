@@ -8,7 +8,7 @@ localparam int P = 4; // processing parallelism
 //! Generate ramp waveform in parallelism 4 (4 elements/clock-cycle).
 //! This module outputs 'chunk' at each clock-cycle with valid signal.
 //! Each chunk contains 4 elements, except for the last output chunk (may contain less than 4 elements).
-module saw_tooth_wav_p4_v0_1_0 #(
+module ramp_p4_v0_1_0 #(
     parameter int BW_VAL = 16, //! bit-width of output numeric value
     parameter int BW_SEQ_CONT = 16 //! bit-width of sequence control data: tread length and the number of steps
 )(
@@ -17,12 +17,12 @@ module saw_tooth_wav_p4_v0_1_0 #(
     input wire logic i_sync_rst, //! input reset synchronous to the input clock
 
     //! @virtualbus us_side_if @dir in upstream side interface
-    input wire logic ip_start_req, //! Start request pulse for waveform generation. The request is accepted only when `o_busy` is low. The pulse length must be 1 clock-cycle.
+    input wire logic ip_start_req, //! Start request pulse for waveform generation. The request is accepted only when `o_idle` is high. The pulse length must be 1 clock-cycle.
     input wire logic [BW_VAL-1:0] i_init_val, //! Initial term value. Latched at starting waveform generation
     input wire logic [BW_VAL-1:0] i_inc_val, //! Increment value. The (n+1)-th tread value is larger than the n-th tread value by this value. This value is latched at starting waveform generation
     input wire logic [BW_SEQ_CONT-1:0] i_tread_len, //! Tread length. When this value is less than 1, `ip_start_req` is ignored. This value is latched at starting waveform generation
     input wire logic [BW_SEQ_CONT-1:0] i_num_treads, //! The number of treads. When this value is less than 1, `ip_start_req` is ignored. This value is latched at starting waveform generation
-    output wire logic o_busy, //! Busy flag which indicates that waveform generation is in progress. OR-ed with reset signal.
+    output wire logic o_idle, //! Idle flag which indicates that new start request can be issued. Masked by reset signal.
     //! @end
 
     //! @virtualbus ds_side_if @dir out downstream side interface
@@ -55,9 +55,9 @@ typedef struct packed {
 
 wire logic g_wav_param_good; //! indicates that waveform generation parameters are good
 assign g_wav_param_good = (i_tread_len >= BW_SEQ_CONT'(1)) && (i_num_treads >= BW_SEQ_CONT'(1));
-var logic r_busy; //! busy flag which indicates that waveform generation is in progress
+var logic r_idle; //! idle flag which indicates that new start request can be issued
 wire logic g_acceptable_start_req; //! acceptable start request
-assign g_acceptable_start_req = !r_busy && ip_start_req && g_wav_param_good;
+assign g_acceptable_start_req = r_idle && ip_start_req && g_wav_param_good;
 var wav_param_t r_wav_param; //! waveform generation parameters latched at starting waveform generation
 wire logic [BW_SEQ_CONT-1:0] g_waveform_len = r_wav_param.num_treads*r_wav_param.tread_len; //! the length of the waveform
 wire logic g_can_goto_next_chunk; //! Indicates that the current chunk is accepted by the downstream side.
@@ -75,21 +75,21 @@ assign g_last_chunk_flg = `PLUS_ONE(r_sent_chunk_cnt)*P >= g_waveform_len;
 // --------------------
 
 // ---------- Drive output signals. ----------
-assign o_busy = i_sync_rst | r_busy;
+assign o_idle = !i_sync_rst && r_idle;
 
-assign o_chunk_valid = !i_sync_rst && r_busy;
+assign o_chunk_valid = !i_sync_rst && !o_idle;
 assign o_chunk_elem_cnt = g_last_chunk_flg ? (`PLUS_ONE(r_sent_chunk_cnt)*P - g_waveform_len) : P;
 assign o_chunk = g_chunk;
 // --------------------
 
-//! Update `r_busy`.
-always_ff @(posedge i_clk) begin: update_busy
+//! Update `o_idle`.
+always_ff @(posedge i_clk) begin: update_idle_signal
     if (i_sync_rst) begin
-        r_busy <= 1'b0;
-    end else if (r_busy) begin
-        r_busy <= !(g_can_goto_next_chunk && g_last_chunk_flg);
+        o_idle <= 1'b0;
+    end else if (o_idle) begin
+        o_idle <= !g_acceptable_start_req;
     end else begin
-        r_busy <= g_acceptable_start_req;
+        o_idle <= g_can_goto_next_chunk && g_last_chunk_flg;
     end
 end
 
