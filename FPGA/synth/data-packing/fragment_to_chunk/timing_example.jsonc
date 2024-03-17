@@ -1,0 +1,36 @@
+{
+    // S_MAX_IN = 4
+    // S_OUT = 8
+    // T = logic
+    "head": {
+        "text": [
+            "tspan",
+            ["tspan", {"class":"h4"}, "timing diagram example    "],
+            ["tspan", "(S_MAX_IN = 4, S_OUT = 8)"]
+        ]
+    },
+    "signal": [
+        {"name": "i_clk",                      "wave": "P..........."},
+        {"name": "i_sync_rst",                 "wave": "010........."},
+        [
+            "us_side_if",
+            {"name": "i_frag_valid",           "wave": "x.1....0...."},
+            {"name": "i_frag_size",            "wave": "x.=.==......", "data": "3 4 3"},
+            {"name": "o_next_frag_ready",      "wave": "x01........."}
+        ],
+        [
+            "ds_side_if",
+            {"name": "i_ds_ready",             "wave": "x.1........."},
+            {"name": "o_chunk_valid",          "wave": "x0...1010..."}
+        ],
+        [
+            "internal signals",
+            {"name": "g_frag_size_good",       "wave": "xx1........."},
+            {"name": "r_buf_cnt",              "wave": "xx=======...", "data": "0 3 6 10 5 8 0"},
+            {"name": "r_read_page_ptr",        "wave": "xx0...1.0..."},
+            {"name": "g_write_elem_start_ptr", "wave": "xx======....", "data": "0 3 6 10 13 0"},
+            {"name": "g_pop_en",               "wave": "xx0..1010..."},
+            {"name": "g_push_en",              "wave": "xx1........."}
+        ]
+    ]
+}
