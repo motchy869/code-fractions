@@ -20,7 +20,7 @@ module fragment_to_chunk #(
     input wire logic i_frag_valid, //! input valid signal which indicates that the input fragment is valid
     input wire logic [$clog2(S_MAX_IN)-1:0] i_frag_size, //! the number of the input fragment **clipped up to `S_MAX_IN`**
     input wire T i_frag[S_MAX_IN], //! input fragment
-    output wire logic o_ds_ready, //! output ready signal which indicates that the upstream-side can send the next fragment
+    output wire logic o_next_frag_ready, //! Output ready signal which indicates that the upstream-side can send the next fragment. Masked by reset.
     //! @end
 
     //! @virtualbus ds_side_if @dir out downstream side interface
@@ -59,7 +59,7 @@ assign g_pop_en = i_ds_ready && o_chunk_valid;
 // --------------------
 
 // Drive output signals.
-assign o_ds_ready = !i_sync_rst && (i_ds_ready ? int'(r_buf_cnt) - S_OUT : int'(r_buf_cnt)) + int'(g_clipped_frag_size) < FRAG_BUF_CAP;
+assign o_next_frag_ready = !i_sync_rst && g_frag_size_good && (g_pop_en ? int'(r_buf_cnt) - S_OUT : int'(r_buf_cnt)) + int'(i_frag_size) <= FRAG_BUF_CAP;
 assign o_chunk_valid = !i_sync_rst && int'(r_buf_cnt) >= S_OUT;
 assign o_chunk = r_frag_buf[int'(r_read_page_ptr)*S_OUT+:S_OUT];
 
