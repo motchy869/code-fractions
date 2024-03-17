@@ -24,9 +24,9 @@ module fragment_to_chunk #(
     //! @end
 
     //! @virtualbus ds_side_if @dir out downstream side interface
-    //! input ready signal which indicates that the downstream is ready to accept the output chunk
+    //! input ready signal which indicates that the downstream side is ready to accept a new chunk
     input wire logic i_ds_ready,
-    output wire logic o_chunk_valid, //! output valid signal which indicates that the output chunk is valid
+    output wire logic o_chunk_valid, //! Output valid signal which indicates that the output chunk is valid. Masked by reset.
     output wire T o_chunk[S_OUT] //! output chunk
     //! @end
 );
