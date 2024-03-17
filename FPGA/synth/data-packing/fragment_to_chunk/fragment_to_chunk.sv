@@ -18,7 +18,7 @@ module fragment_to_chunk #(
 
     //! @virtualbus us_side_if @dir in upstream side interface
     input wire logic i_frag_valid, //! input valid signal which indicates that the input fragment is valid
-    input wire logic [$clog2(S_MAX_IN)-1:0] i_frag_size, //! the number of the input fragment **clipped up to `S_MAX_IN`**
+    input wire logic [$clog2(S_MAX_IN)-1:0] i_frag_size, //! The size of the input fragment. When this exceeds `S_MAX_IN`, `o_next_frag_ready` will be deasserted.
     input wire T i_frag[S_MAX_IN], //! input fragment
     output wire logic o_next_frag_ready, //! Output ready signal which indicates that the upstream-side can send the next fragment. Masked by reset.
     //! @end
@@ -43,19 +43,18 @@ localparam int FRAG_BUF_CAP = 2*S_MAX_IN; //! capacity of the fragment buffer
 localparam int CLOG2_FRAG_BUF_CAP = $clog2(FRAG_BUF_CAP); //! $clog2 of the fragment buffer capacity
 
 // ---------- working signals and storage ----------
-// input clipping
-wire [$clog2(S_MAX_IN)-1:0] g_clipped_frag_size; //! fragment size input clipped up to `S_MAX_IN`
-assign g_clipped_frag_size = $bits(g_clipped_frag_size)'(int'(i_frag_size) > S_MAX_IN ? S_MAX_IN : int'(i_frag_size));
+wire logic g_frag_size_good; //! Indicates that the input fragment size is good.
+assign g_frag_size_good = int'(i_frag_size) <= S_MAX_IN;
 
 var T r_frag_buf[FRAG_BUF_CAP]; //! buffer to store fragments, 2-page buffer
 var logic [CLOG2_FRAG_BUF_CAP-1:0] r_buf_cnt; //! count of the fragments in the buffer
 var logic r_read_page_ptr; //! Read pointer of the fragment buffer. Note that there is only 2 pages in the fragment buffer.
-wire g_push_en; //! enable signal to push the fragment into the buffer
-assign g_push_en = o_ds_ready && i_frag_valid;
 wire [CLOG2_FRAG_BUF_CAP-1:0] g_write_elem_start_ptr; //! write starting pointer of the fragment buffer
 assign g_write_elem_start_ptr = (r_read_page_ptr == 1'b0) ? r_buf_cnt : CLOG2_FRAG_BUF_CAP'((int'(r_buf_cnt) < S_OUT) ? S_OUT + int'(r_buf_cnt) : int'(r_buf_cnt) - S_OUT);
 wire g_pop_en; //! enable signal to pop the fragment from the buffer
 assign g_pop_en = i_ds_ready && o_chunk_valid;
+wire g_push_en; //! enable signal to push the fragment into the buffer
+assign g_push_en = i_frag_valid && o_next_frag_ready;
 // --------------------
 
 // Drive output signals.
@@ -68,7 +67,7 @@ always_ff @(posedge i_clk) begin: update_buf_cnt
     if (i_sync_rst) begin
         r_buf_cnt <= '0;
     end else begin
-        r_buf_cnt <= r_buf_cnt + (g_push_en ? g_clipped_frag_size : '0) - (g_pop_en ? S_OUT : '0);
+        r_buf_cnt <= r_buf_cnt + (g_push_en ? i_frag_size : '0) - (g_pop_en ? S_OUT : '0);
     end
 end
 
