@@ -19,6 +19,7 @@ module fragment_to_chunk #(
     //! @virtualbus us_side_if @dir in upstream side interface
     input wire logic i_frag_valid, //! input valid signal which indicates that the input fragment is valid
     input wire logic [$clog2(S_MAX_IN)-1:0] i_frag_size, //! The size of the input fragment. When this exceeds `S_MAX_IN`, `o_next_frag_ready` will be deasserted.
+    input wire logic i_pad_tail, // ! Directive to append zero or more empty (all bits are set to 0) elements to the fragment to ensure that the internal buffer has integer multiple of `S_OUT` elements. This can be used to flush the internal buffer.
     input wire T i_frag[S_MAX_IN], //! input fragment
     output wire logic o_next_frag_ready, //! Output ready signal which indicates that the upstream-side can send the next fragment. Masked by reset.
     //! @end
@@ -42,6 +43,36 @@ endgenerate
 localparam int FRAG_BUF_CAP = 2*S_MAX_IN; //! capacity of the fragment buffer
 localparam int CLOG2_FRAG_BUF_CAP = $clog2(FRAG_BUF_CAP); //! $clog2 of the fragment buffer capacity
 
+// ---------- functions ----------
+//! Calculate the write element pointer of the fragment buffer.
+function automatic int calcWriteElemPointer(
+    input int frag_head_ptr, //! the input fragment's head pointer in the fragment buffer
+    input int elem_idx //! element index in the input fragment
+);
+    const int ptr = frag_head_ptr + elem_idx;
+    if (ptr < FRAG_BUF_CAP) begin
+        return ptr;
+    end else begin
+        return ptr - FRAG_BUF_CAP;
+    end
+endfunction
+
+//! Calculate the padding fragment size.
+function automatic int calcPadFragSize(
+    input int frag_head_ptr, //! the input fragment's head pointer in the fragment buffer
+    input int frag_size // ! the size of the input fragment
+);
+    const int tail_end_ptr = calcWriteElemPointer(frag_head_ptr, frag_size);
+    if (tail_room_ptr inside {0, S_OUT}) begin
+        return 0;
+    end else if (tail_end_ptr < S_OUT) begin
+        return S_OUT - tail_end_ptr;
+    end else begin
+        return FRAG_BUF_CAP - tail_end_ptr;
+    end
+endfunction
+// --------------------
+
 // ---------- working signals and storage ----------
 wire logic g_frag_size_good; //! Indicates that the input fragment size is good.
 assign g_frag_size_good = int'(i_frag_size) <= S_MAX_IN;
@@ -51,10 +82,12 @@ var logic [CLOG2_FRAG_BUF_CAP-1:0] r_buf_cnt; //! count of the fragments in the 
 var logic r_read_page_ptr; //! Read pointer of the fragment buffer. Note that there is only 2 pages in the fragment buffer.
 wire [CLOG2_FRAG_BUF_CAP-1:0] g_write_elem_start_ptr; //! write starting pointer of the fragment buffer
 assign g_write_elem_start_ptr = (r_read_page_ptr == 1'b0) ? r_buf_cnt : CLOG2_FRAG_BUF_CAP'((int'(r_buf_cnt) < S_OUT) ? S_OUT + int'(r_buf_cnt) : int'(r_buf_cnt) - S_OUT);
-wire g_pop_en; //! enable signal to pop the fragment from the buffer
+wire g_pop_en; //! enable signal to pop a chunk from the buffer
 assign g_pop_en = i_ds_ready && o_chunk_valid;
-wire g_push_en; //! enable signal to push the fragment into the buffer
+wire g_push_en; //! enable signal to push a fragment into the buffer
 assign g_push_en = i_frag_valid && o_next_frag_ready;
+wire logic [CLOG2_FRAG_BUF_CAP-1:0] g_pad_frag_size; //! The size of the 'padding fragment' (the number of the elements added to the input fragment according to `i_pad_tail`).
+assign g_pad_frag_size = i_pad_tail ? calcPadFragSize(g_write_elem_start_ptr, i_frag_size) : '0;
 // --------------------
 
 // Drive output signals.
@@ -67,7 +100,7 @@ always_ff @(posedge i_clk) begin: update_buf_cnt
     if (i_sync_rst) begin
         r_buf_cnt <= '0;
     end else begin
-        r_buf_cnt <= r_buf_cnt + (g_push_en ? i_frag_size : '0) - (g_pop_en ? S_OUT : '0);
+        r_buf_cnt <= r_buf_cnt + (g_push_en ? i_frag_size + g_pad_frag_size : '0) - (g_pop_en ? S_OUT : '0);
     end
 end
 
@@ -80,16 +113,6 @@ always_ff @(posedge i_clk) begin: update_read_page_ptr
     end
 end
 
-//! Calculate the write element pointer of the fragment buffer.
-function automatic int calcWriteElemPointer(input int offset, input int increment);
-    const int ptr = offset + increment;
-    if (ptr < FRAG_BUF_CAP) begin
-        return ptr;
-    end else begin
-        return ptr - FRAG_BUF_CAP;
-    end
-endfunction
-
 //! Update the fragment buffer.
 always_ff @(posedge i_clk) begin: update_fragment_buffer
     if (i_sync_rst) begin
@@ -97,8 +120,8 @@ always_ff @(posedge i_clk) begin: update_fragment_buffer
         r_buf_cnt <= '0;
     end else if (g_push_en) begin
         for (int i=0; i<S_MAX_IN; ++i) begin
-            if (i < i_frag_size) begin
-                r_frag_buf[calcWriteElemPointer(g_write_elem_start_ptr, i)] <= i_frag[i];
+            if (i < i_frag_size + g_pad_frag_size) begin
+                r_frag_buf[calcWriteElemPointer(g_write_elem_start_ptr, i)] <= (i < i_frag_size) ? i_frag[i] : '{default:'0};
             end
         end
     end

@@ -16,6 +16,7 @@
             "us_side_if",
             {"name": "i_frag_valid",           "wave": "x.1....0...."},
             {"name": "i_frag_size",            "wave": "x.=.==......", "data": "3 4 3"},
+            {"name": "i_pad_tail",             "wave": "x.0........."},
             {"name": "o_next_frag_ready",      "wave": "x01........."}
         ],
         [
