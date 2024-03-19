@@ -66,12 +66,12 @@ var logic [BW_SEQ_CONT-1:0] r_sent_chunk_cnt; //! the number of chunks sent to t
 var logic [BW_SEQ_CONT-1:0] r_sent_treads_cnt; //! the number of full-treads sent to the downstream side
 var logic [BW_SEQ_CONT-1:0] r_intra_tread_chunk_head_pos; //! current chunk head position in the tread which the current chunk head belongs to
 var logic [BW_VAL-1:0] r_chunk_head_val; //! the value of the current chunk head
-wire logic [BW_SEQ_CONT-1:0] g_next_sent_treads_cnt; //! the value of `r_sent_treads_cnt` for the next chunk.
-wire logic [BW_SEQ_CONT-1:0] g_next_intra_tread_chunk_head_pos; //! the value of `r_intra_tread_chunk_head_pos` for the next chunk.
-wire logic [BW_VAL-1:0] g_next_chunk_head_val; //! the value of `r_chunk_head_val` for the next chunk.
+var logic [BW_SEQ_CONT-1:0] g_next_sent_treads_cnt; //! the value of `r_sent_treads_cnt` for the next chunk.
+var logic [BW_SEQ_CONT-1:0] g_next_intra_tread_chunk_head_pos; //! the value of `r_intra_tread_chunk_head_pos` for the next chunk.
+var logic [BW_VAL-1:0] g_next_chunk_head_val; //! the value of `r_chunk_head_val` for the next chunk.
 wire logic g_last_chunk_flg; //! flag indicating that the current chunk is the last one
-var logic [P-1:0][BW_VAL-1:0] g_chunk; //! current chunk
 assign g_last_chunk_flg = `PLUS_ONE(r_sent_chunk_cnt)*P >= g_waveform_len;
+var logic [P-1:0][BW_VAL-1:0] g_chunk; //! current chunk
 // --------------------
 
 // ---------- Drive output signals. ----------
@@ -82,14 +82,14 @@ assign o_chunk_elem_cnt = g_last_chunk_flg ? (`PLUS_ONE(r_sent_chunk_cnt)*P - g_
 assign o_chunk = g_chunk;
 // --------------------
 
-//! Update `o_idle`.
+//! Update `r_idle`.
 always_ff @(posedge i_clk) begin: update_idle_signal
     if (i_sync_rst) begin
-        o_idle <= 1'b0;
-    end else if (o_idle) begin
-        o_idle <= !g_acceptable_start_req;
+        r_idle <= 1'b0;
+    end else if (r_idle) begin
+        r_idle <= !g_acceptable_start_req;
     end else begin
-        o_idle <= g_can_goto_next_chunk && g_last_chunk_flg;
+        r_idle <= g_can_goto_next_chunk && g_last_chunk_flg;
     end
 end
 
@@ -160,24 +160,6 @@ always_ff @(posedge i_clk) begin: update_chunk_head_val
         end else begin
             r_chunk_head_val <= g_next_chunk_head_val;
         end
-    end
-end
-
-//! Control `g_next_sent_treads_cnt`, `g_next_intra_tread_chunk_head_pos`, `g_next_chunk_head_val`.
-always_comb begin: cont_next_idx_and_val
-    // Avoid creating unintended latches.
-    g_next_sent_treads_cnt = r_sent_treads_cnt;
-    g_next_intra_tread_chunk_head_pos = r_intra_tread_chunk_head_pos;
-    g_next_chunk_head_val = r_chunk_head_val;
-
-    if (r_wav_param.tread_len == BW_SEQ_CONT'(1)) begin
-        g_next_sent_treads_cnt = `INCR(r_sent_treads_cnt, P);
-    end else if (r_wav_param.tread_len == BW_SEQ_CONT'(2)) begin
-        g_next_sent_treads_cnt = `INCR(r_sent_treads_cnt, P/2);
-    end else if (r_wav_param.tread_len == BW_SEQ_CONT'(3)) begin
-    end else if (r_wav_param.tread_len == BW_SEQ_CONT'(4)) begin
-        g_next_sent_treads_cnt = `INCR(r_sent_treads_cnt, 1);
-    end else begin // r_wav_param.tread_len > 4
     end
 end
 
