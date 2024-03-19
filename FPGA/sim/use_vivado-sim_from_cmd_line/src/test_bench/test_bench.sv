@@ -13,7 +13,7 @@ module test_bench;
 // ---------- parameters ----------
 localparam int CLK_PERIOD_NS = 8; //! clock period in ns
 localparam int SIM_DURATION_NS = 200; //! simulation duration in ns
-localparam int RELEASE_RST_AT_CLK = 2; //! Reset signal deasserts right after this clock rising-edge.
+localparam int RELEASE_RST_AFTER_CLK = 2; //! Reset signal deasserts right after this clock rising-edge.
 // --------------------
 
 // ---------- internal signal and storage ----------
@@ -35,7 +35,7 @@ task automatic drive_rst();
     int clk_cnt;
 
     r_sync_rst = 1;
-    repeat (RELEASE_RST_AT_CLK) begin
+    repeat (RELEASE_RST_AFTER_CLK) begin
         @(posedge r_clk);
     end
     r_sync_rst <= 0;
