@@ -1,11 +1,22 @@
 # Based on [Vivado Simulator(xsim)でのロジックシミュレーションおよびデバッグ](https://qiita.com/vega77/items/be284e1fc955381d0dae), but modified.
 #
-# example
-# $ make -f <path/to/this/Makefile> dump wave
+# Example
+#  $ make -f <path/to/this/Makefile> dump wave
 #
 # Note:
-# 1. All simulation output files & directories are created in 'sim' directory.
-# 2. The current directory of the shell which calls this Makefile doesn't affect the result at all.
+#  1. All simulation output files & directories are created in 'sim' directory.
+#  2. The current directory of the shell which calls this Makefile doesn't affect the result at all.
+#
+# Typical Usage:
+#  1. make -f <path/to/this/Makefile> elab // Repeat this until all compilation error is resolved.
+#  2. make -f <path/to/this/Makefile> dump // Run simulation and create .wdb file which records all signals.
+#  3. To view waveform
+#    3.1. If waveform viewer is not opened, `make -f <path/to/this/Makefile> wave` to open it.
+#    3.2. If waveform viewer is already opened, Flow -> Open Static Simulation, then open all.wdb.
+#  4. To debug
+#    4.1. modify source files
+#    4.2. File -> Close Simulation
+#    4.3. Go to step 1.
 
 MAKEFILE_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 
@@ -39,6 +50,11 @@ wave: $(SIM_DIR)/all.wdb
 	cd $(SIM_DIR) && \
 	$(XSIM) all.wdb -gui &
 
+# Run parsing, elaboration and simulation with GUI.
+gui: $(SIM_DIR)/xsim.dir/debug/xsimk
+	cd $(SIM_DIR) && \
+	$(XSIM) debug -gui &
+
 # Run parsing, elaboration and simulation.
 once:
 	cd $(SIM_DIR) && \
@@ -49,11 +65,6 @@ once:
 alone: $(SIM_DIR)/xsim.dir/alone/axsim
 	cd $(SIM_DIR) && \
 	./axsim.sh
-
-# Run parsing, elaboration and simulation with GUI.
-gui: $(SIM_DIR)/xsim.dir/debug/xsimk
-	cd $(SIM_DIR) && \
-	$(XSIM) debug -gui &
 
 help: $(SIM_DIR)/help.txt
 	cat $<
