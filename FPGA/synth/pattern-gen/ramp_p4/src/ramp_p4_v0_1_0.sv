@@ -1,9 +1,13 @@
+// Verible directive
+// verilog_lint: waive-start parameter-name-style
+
 `default_nettype none
 
 `define PLUS_ONE(x) (x + $bits(x)'(1))
 `define INCR(x, dx) (x + $bits(x)'(dx))
 
 localparam int P = 4; // processing parallelism
+localparam int BW_CHUNK_ELEM_COUNT = $clog2(P+1); // bit-width of the number of the valid elements in chunks
 
 //! Generate ramp waveform in parallelism 4 (4 elements/clock-cycle).
 //! This module outputs 'chunk' at each clock-cycle with valid signal.
@@ -29,7 +33,7 @@ module ramp_p4_v0_1_0 #(
     //! input ready signal which indicates that the downstream is ready to accept the output chunk
     input wire logic i_ds_ready,
     output wire logic o_chunk_valid, //! Output valid signal which indicates that the output chunk is valid. Masked by reset signal.
-    output wire logic [$clog2(P+1)-1:0] o_chunk_elem_cnt, //! The number of the valid elements in the chunk. Normally 4, but for the last chunk, may be less than 4.
+    output wire logic [BW_CHUNK_ELEM_COUNT-1:0] o_chunk_elem_cnt, //! The number of the valid elements in the chunk. Normally 4, but for the last chunk, may be less than 4.
     output wire logic [P-1:0][BW_VAL-1:0] o_chunk //! output chunk
     //! @end
 );
@@ -78,7 +82,7 @@ var logic [BW_SEQ_CONT-1:0] g_next_sent_treads_cnt; //! the value of `r_sent_tre
 var logic [BW_SEQ_CONT-1:0] g_next_intra_tread_chunk_head_pos; //! the value of `r_intra_tread_chunk_head_pos` for the next chunk.
 var logic [BW_VAL-1:0] g_next_chunk_head_val; //! the value of `r_chunk_head_val` for the next chunk.
 wire logic g_last_chunk_flg; //! flag indicating that the current chunk is the last one
-assign g_last_chunk_flg = `PLUS_ONE(r_sent_chunk_cnt)*P >= g_waveform_len;
+assign g_last_chunk_flg = r_curr_state == STAT_WAV_GEN && `PLUS_ONE(r_sent_chunk_cnt)*P >= g_waveform_len;
 var logic [P-1:0][BW_VAL-1:0] g_chunk; //! current chunk
 // --------------------
 
@@ -86,7 +90,7 @@ var logic [P-1:0][BW_VAL-1:0] g_chunk; //! current chunk
 assign o_idle = !i_sync_rst && r_curr_state == STAT_IDLE;
 
 assign o_chunk_valid = !i_sync_rst && r_curr_state == STAT_WAV_GEN;
-assign o_chunk_elem_cnt = g_last_chunk_flg ? (`PLUS_ONE(r_sent_chunk_cnt)*P - g_waveform_len) : P;
+assign o_chunk_elem_cnt = g_last_chunk_flg ? BW_CHUNK_ELEM_COUNT'(g_waveform_len - r_sent_chunk_cnt*P) : BW_CHUNK_ELEM_COUNT'(P);
 assign o_chunk = g_chunk;
 // --------------------
 
