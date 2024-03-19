@@ -257,15 +257,11 @@ always_comb begin: cont_chunk__next_idx__val
             g_next_chunk_head_val = r_chunk_head_val + r_wav_param.inc_val;
         end
 
-        if (r_intra_tread_chunk_head_pos + BW_SEQ_CONT'(P) <= r_wav_param.tread_len) begin
-            g_chunk = {P{r_chunk_head_val}};
-        end else begin
-            for (int i=0; i<P; ++i) begin
-                if (r_intra_tread_chunk_head_pos + BW_SEQ_CONT'(i) + BW_SEQ_CONT'(1) <= r_wav_param.tread_len) begin
-                    g_chunk[i] = r_chunk_head_val;
-                end else begin
-                    g_chunk[i] = r_chunk_head_val + r_wav_param.inc_val;
-                end
+        for (int i=0; i<P; ++i) begin
+            if (r_intra_tread_chunk_head_pos + BW_SEQ_CONT'(i) + BW_SEQ_CONT'(1) <= r_wav_param.tread_len) begin
+                g_chunk[i] = r_chunk_head_val;
+            end else begin
+                g_chunk[i] = r_chunk_head_val + r_wav_param.inc_val;
             end
         end
     end
