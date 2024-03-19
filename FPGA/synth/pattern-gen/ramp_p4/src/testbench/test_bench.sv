@@ -30,16 +30,48 @@ typedef struct {
 //! Simulation configuration. Most easy case.
 const sim_cfg_t sim_cfg_0 = '{
     init_val: RAMP_WAV_BW_VAL'(0),
-    inc_val: RAMP_WAV_BW_VAL'(1),
+    inc_val: RAMP_WAV_BW_VAL'(3),
     tread_len: RAMP_WAV_BW_SEQ_CONT'(1),
     num_treads: RAMP_WAV_BW_SEQ_CONT'(12)
 };
 
+//! Simulation configuration. Easy case.
+const sim_cfg_t sim_cfg_1 = '{
+    init_val: RAMP_WAV_BW_VAL'(0),
+    inc_val: RAMP_WAV_BW_VAL'(3),
+    tread_len: RAMP_WAV_BW_SEQ_CONT'(2),
+    num_treads: RAMP_WAV_BW_SEQ_CONT'(8)
+};
+
+//! Simulation configuration. Easy case.
+const sim_cfg_t sim_cfg_2 = '{
+    init_val: RAMP_WAV_BW_VAL'(0),
+    inc_val: RAMP_WAV_BW_VAL'(3),
+    tread_len: RAMP_WAV_BW_SEQ_CONT'(4),
+    num_treads: RAMP_WAV_BW_SEQ_CONT'(5)
+};
+
+//! Simulation configuration. Hard case.
+const sim_cfg_t sim_cfg_3 = '{
+    init_val: RAMP_WAV_BW_VAL'(0),
+    inc_val: RAMP_WAV_BW_VAL'(3),
+    tread_len: RAMP_WAV_BW_SEQ_CONT'(3),
+    num_treads: RAMP_WAV_BW_SEQ_CONT'(5)
+};
+
+//! Simulation configuration. Hard case.
+const sim_cfg_t sim_cfg_4 = '{
+    init_val: RAMP_WAV_BW_VAL'(0),
+    inc_val: RAMP_WAV_BW_VAL'(3),
+    tread_len: RAMP_WAV_BW_SEQ_CONT'(7),
+    num_treads: RAMP_WAV_BW_SEQ_CONT'(5)
+};
+
 var bit w_ramp_p4_ip_start_req = 1'b0;
-const bit [RAMP_WAV_BW_VAL-1:0] w_ramp_p4_init_val = sim_cfg_0.init_val;
-const bit [RAMP_WAV_BW_VAL-1:0] w_ramp_p4_inc_val = sim_cfg_0.inc_val;
-const bit [RAMP_WAV_BW_SEQ_CONT-1:0] w_ramp_p4_tread_len = sim_cfg_0.tread_len;
-const bit [RAMP_WAV_BW_SEQ_CONT-1:0] w_ramp_p4_num_treads = sim_cfg_0.num_treads;
+const bit [RAMP_WAV_BW_VAL-1:0] w_ramp_p4_init_val = sim_cfg_4.init_val;
+const bit [RAMP_WAV_BW_VAL-1:0] w_ramp_p4_inc_val = sim_cfg_4.inc_val;
+const bit [RAMP_WAV_BW_SEQ_CONT-1:0] w_ramp_p4_tread_len = sim_cfg_4.tread_len;
+const bit [RAMP_WAV_BW_SEQ_CONT-1:0] w_ramp_p4_num_treads = sim_cfg_4.num_treads;
 wire logic ramp_p4_idle;
 
 const bit w_ramp_p4_ds_ready = 1'b1;
