@@ -70,7 +70,7 @@ always_comb begin: next_op_state_decision
             end
         end
         default: begin
-            $error("invalid state");
+            $error("unexpected state");
         end
     endcase
 end
