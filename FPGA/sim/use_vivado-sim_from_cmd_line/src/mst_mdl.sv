@@ -47,7 +47,7 @@ assign if_bus.wr_data = r_wr_data;
 always_comb begin: next_op_state_decision
     g_next_state = r_curr_state;
 
-    case (r_curr_state)
+    unique case (r_curr_state)
         OP_STATE_RST: begin
             if (i_sync_rst) begin
                 g_next_state = OP_STATE_RST;
