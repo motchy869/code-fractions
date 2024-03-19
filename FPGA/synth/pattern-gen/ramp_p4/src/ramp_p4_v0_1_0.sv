@@ -46,6 +46,15 @@ generate
 endgenerate
 
 // ---------- internal signals and storage ----------
+typedef enum {
+    STAT_RST, //! reset state
+    STAT_IDLE, //! idle state
+    STAT_WAV_GEN //! generating waveform
+} state_t;
+
+var state_t r_curr_state; //! current operation state
+var state_t g_next_state; //! operation state right after the next clock rising-edge
+
 typedef struct packed {
     logic [BW_VAL-1:0] init_val; //! initial term value
     logic [BW_VAL-1:0] inc_val; //! increment value
@@ -55,9 +64,8 @@ typedef struct packed {
 
 wire logic g_wav_param_good; //! indicates that waveform generation parameters are good
 assign g_wav_param_good = (i_tread_len >= BW_SEQ_CONT'(1)) && (i_num_treads >= BW_SEQ_CONT'(1));
-var logic r_idle; //! idle flag which indicates that new start request can be issued
 wire logic g_acceptable_start_req; //! acceptable start request
-assign g_acceptable_start_req = r_idle && ip_start_req && g_wav_param_good;
+assign g_acceptable_start_req = r_curr_state == STAT_IDLE && ip_start_req && g_wav_param_good;
 var wav_param_t r_wav_param; //! waveform generation parameters latched at starting waveform generation
 wire logic [BW_SEQ_CONT-1:0] g_waveform_len = r_wav_param.num_treads*r_wav_param.tread_len; //! the length of the waveform
 wire logic g_can_goto_next_chunk; //! Indicates that the current chunk is accepted by the downstream side.
@@ -75,21 +83,39 @@ var logic [P-1:0][BW_VAL-1:0] g_chunk; //! current chunk
 // --------------------
 
 // ---------- Drive output signals. ----------
-assign o_idle = !i_sync_rst && r_idle;
+assign o_idle = !i_sync_rst && r_curr_state == STAT_IDLE;
 
-assign o_chunk_valid = !i_sync_rst && !o_idle;
+assign o_chunk_valid = !i_sync_rst && r_curr_state == STAT_WAV_GEN;
 assign o_chunk_elem_cnt = g_last_chunk_flg ? (`PLUS_ONE(r_sent_chunk_cnt)*P - g_waveform_len) : P;
 assign o_chunk = g_chunk;
 // --------------------
 
-//! Update `r_idle`.
-always_ff @(posedge i_clk) begin: update_idle_signal
+//! Decide next operation state.
+always_comb begin: decide_next_state
+    unique case (r_curr_state)
+        STAT_RST: begin
+            g_next_state = i_sync_rst ? STAT_RST : STAT_IDLE;
+        end
+        STAT_IDLE: begin
+            g_next_state = i_sync_rst ? STAT_RST :
+            g_acceptable_start_req ? STAT_WAV_GEN : STAT_IDLE;
+        end
+        STAT_WAV_GEN: begin
+            g_next_state = i_sync_rst ? STAT_RST :
+            g_can_goto_next_chunk && g_last_chunk_flg ? STAT_IDLE : STAT_WAV_GEN;
+        end
+        default: begin
+            $error("unexpected state");
+        end
+    endcase
+end
+
+//! Update `r_curr_state`.
+always_ff @(posedge i_clk) begin: update_state
     if (i_sync_rst) begin
-        r_idle <= 1'b0;
-    end else if (r_idle) begin
-        r_idle <= !g_acceptable_start_req;
+        r_curr_state <= STAT_RST;
     end else begin
-        r_idle <= g_can_goto_next_chunk && g_last_chunk_flg;
+        r_curr_state <= g_next_state;
     end
 end
 
