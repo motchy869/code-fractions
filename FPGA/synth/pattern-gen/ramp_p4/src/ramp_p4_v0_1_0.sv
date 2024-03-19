@@ -9,9 +9,9 @@
 localparam int P = 4; // processing parallelism
 localparam int BW_CHUNK_ELEM_COUNT = $clog2(P+1); // bit-width of the number of the valid elements in chunks
 
-//! Generate ramp waveform in parallelism 4 (4 elements/clock-cycle).
-//! This module outputs 'chunk' at each clock-cycle with valid signal.
-//! Each chunk contains 4 elements, except for the last output chunk (may contain less than 4 elements).
+//! This module generates a ramp waveform in parallelism 4 (4 elements/clock-cycle).
+//! This module outputs a 'chunk' at each clock-cycle (with back-pressure from the downstream side).
+//! Each chunk contains 4 elements except for the last one (may contain less than 4 elements).
 module ramp_p4_v0_1_0 #(
     parameter int BW_VAL = 16, //! bit-width of output numeric value
     parameter int BW_SEQ_CONT = 16 //! bit-width of sequence control data: tread length and the number of steps
@@ -33,7 +33,7 @@ module ramp_p4_v0_1_0 #(
     //! input ready signal which indicates that the downstream is ready to accept the output chunk
     input wire logic i_ds_ready,
     output wire logic o_chunk_valid, //! Output valid signal which indicates that the output chunk is valid. Masked by reset signal.
-    output wire logic [BW_CHUNK_ELEM_COUNT-1:0] o_chunk_elem_cnt, //! The number of the valid elements in the chunk. Normally 4, but for the last chunk, may be less than 4.
+    output wire logic [BW_CHUNK_ELEM_COUNT-1:0] o_chunk_elem_cnt, //! The number of the valid elements in the chunk. This value is 4 except for the last chunk (can be less than 4).
     output wire logic [P-1:0][BW_VAL-1:0] o_chunk //! output chunk
     //! @end
 );
@@ -71,7 +71,8 @@ assign g_wav_param_good = (i_tread_len >= BW_SEQ_CONT'(1)) && (i_num_treads >= B
 wire logic g_acceptable_start_req; //! acceptable start request
 assign g_acceptable_start_req = r_curr_state == STAT_IDLE && ip_start_req && g_wav_param_good;
 var wav_param_t r_wav_param; //! waveform generation parameters latched at starting waveform generation
-wire logic [BW_SEQ_CONT-1:0] g_waveform_len = r_wav_param.num_treads*r_wav_param.tread_len; //! the length of the waveform
+wire logic [BW_SEQ_CONT-1:0] g_waveform_len; //! the length of the waveform
+assign g_waveform_len = r_wav_param.num_treads*r_wav_param.tread_len;
 wire logic g_can_goto_next_chunk; //! Indicates that the current chunk is accepted by the downstream side.
 assign g_can_goto_next_chunk = o_chunk_valid && i_ds_ready;
 var logic [BW_SEQ_CONT-1:0] r_sent_chunk_cnt; //! the number of chunks sent to the downstream side
