@@ -22,10 +22,10 @@ module ramp_p4_v0_1_0 #(
 
     //! @virtualbus us_side_if @dir in upstream side interface
     input wire logic ip_start_req, //! Start request pulse for waveform generation. The request is accepted only when `o_idle` is high. The pulse length must be 1 clock-cycle.
-    input wire logic [BW_VAL-1:0] i_init_val, //! Initial term value. Latched at starting waveform generation
-    input wire logic [BW_VAL-1:0] i_inc_val, //! Increment value. The (n+1)-th tread value is larger than the n-th tread value by this value. This value is latched at starting waveform generation
-    input wire logic [BW_SEQ_CONT-1:0] i_tread_len, //! Tread length. When this value is less than 1, `ip_start_req` is ignored. This value is latched at starting waveform generation
-    input wire logic [BW_SEQ_CONT-1:0] i_num_treads, //! The number of treads. When this value is less than 1, `ip_start_req` is ignored. This value is latched at starting waveform generation
+    input wire logic signed [BW_VAL-1:0] i_init_val, //! Initial term value. Latched at starting waveform generation
+    input wire logic signed [BW_VAL-1:0] i_inc_val, //! Increment value. The (n+1)-th tread value is larger than the n-th tread value by this value. This value is latched at starting waveform generation.
+    input wire logic [BW_SEQ_CONT-1:0] i_tread_len, //! Tread length. When this value is less than 1, `ip_start_req` is ignored. This value is latched at starting waveform generation.
+    input wire logic [BW_SEQ_CONT-1:0] i_num_treads, //! The number of treads. When this value is less than 1, `ip_start_req` is ignored. This value is latched at starting waveform generation.
     output wire logic o_idle, //! Idle flag which indicates that new start request can be issued. Masked by reset signal.
     //! @end
 
@@ -60,8 +60,8 @@ var state_t r_curr_state; //! current operation state
 var state_t g_next_state; //! operation state right after the next clock rising-edge
 
 typedef struct packed {
-    logic [BW_VAL-1:0] init_val; //! initial term value
-    logic [BW_VAL-1:0] inc_val; //! increment value
+    logic signed [BW_VAL-1:0] init_val; //! initial term value
+    logic signed [BW_VAL-1:0] inc_val; //! increment value
     logic [BW_SEQ_CONT-1:0] tread_len; //! tread length
     logic [BW_SEQ_CONT-1:0] num_treads; //! the number of treads
 } wav_param_t;
@@ -78,10 +78,10 @@ assign g_can_goto_next_chunk = o_chunk_valid && i_ds_ready;
 var logic [BW_SEQ_CONT-1:0] r_sent_chunk_cnt; //! the number of chunks sent to the downstream side
 var logic [BW_SEQ_CONT-1:0] r_sent_treads_cnt; //! the number of full-treads sent to the downstream side
 var logic [BW_SEQ_CONT-1:0] r_intra_tread_chunk_head_pos; //! current chunk head position in the tread which the current chunk head belongs to
-var logic [BW_VAL-1:0] r_chunk_head_val; //! the value of the current chunk head
+var logic signed [BW_VAL-1:0] r_chunk_head_val; //! the value of the current chunk head
 var logic [BW_SEQ_CONT-1:0] g_next_sent_treads_cnt; //! the value of `r_sent_treads_cnt` for the next chunk.
 var logic [BW_SEQ_CONT-1:0] g_next_intra_tread_chunk_head_pos; //! the value of `r_intra_tread_chunk_head_pos` for the next chunk.
-var logic [BW_VAL-1:0] g_next_chunk_head_val; //! the value of `r_chunk_head_val` for the next chunk.
+var logic signed [BW_VAL-1:0] g_next_chunk_head_val; //! the value of `r_chunk_head_val` for the next chunk.
 wire logic g_last_chunk_flg; //! flag indicating that the current chunk is the last one
 assign g_last_chunk_flg = r_curr_state == STAT_WAV_GEN && `PLUS_ONE(r_sent_chunk_cnt)*P >= g_waveform_len;
 var logic [P-1:0][BW_VAL-1:0] g_chunk; //! current chunk
