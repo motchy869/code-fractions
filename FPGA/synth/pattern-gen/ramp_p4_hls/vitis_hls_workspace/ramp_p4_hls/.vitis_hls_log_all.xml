@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vivadoHLSLog:LogRoot xmlns:vivadoHLSLog="www.xilinx.com/vivadoHLSLog">
+  <errorLogs>
+    <logs>
+      <synLog/>
+      <simLog/>
+      <mgLog/>
+      <packageLog/>
+      <csimLog/>
+    </logs>
+  </errorLogs>
+  <warningLogs>
+    <logs>
+      <synLog>
+        <logs message="WARNING: [HLS 200-880] The II Violation in module 'ramp_p4_hls_v0_1_0_Pipeline_TREADS_LOOP' (loop 'TREADS_LOOP'): Unable to enforce a carried dependence constraint (II = 2, distance = 1, offset = 1) between 'icmp' operation 1 bit ('icmp_ln60_3', ../src/ramp_p4.cpp:60) and 'select' operation 16 bit ('treadIdx', ../src/ramp_p4.cpp:56).&#xA;Resolution: For help on HLS 200-880 see docs.xilinx.com/access/sources/dita/topic?Doc_Version=2023.2%20English&amp;url=ug1448-hls-guidance&amp;resourceid=200-880.html" projectName="ramp_p4_hls" solutionName="solution0" date="2024-03-20T21:41:09.483+0900" type="Warning"/>
+        <logs message="WARNING: [HLS 200-880] The II Violation in module 'ramp_p4_hls_v0_1_0_Pipeline_TREADS_LOOP' (loop 'TREADS_LOOP'): Unable to enforce a carried dependence constraint (II = 1, distance = 1, offset = 1) between 'icmp' operation 1 bit ('icmp_ln60_1', ../src/ramp_p4.cpp:60) and 'icmp' operation 1 bit ('icmp_ln46', ../src/ramp_p4.cpp:46).&#xA;Resolution: For help on HLS 200-880 see docs.xilinx.com/access/sources/dita/topic?Doc_Version=2023.2%20English&amp;url=ug1448-hls-guidance&amp;resourceid=200-880.html" projectName="ramp_p4_hls" solutionName="solution0" date="2024-03-20T21:41:09.425+0900" type="Warning"/>
+        <logs message="WARNING: [HLS 214-142] Implementing stream: may cause mismatch if read and write accesses are not in sequential order on port 'o_chunk' (../src/ramp_p4.cpp:29:0)&#xA;Resolution: For help on HLS 214-142 see docs.xilinx.com/access/sources/dita/topic?Doc_Version=2023.2%20English&amp;url=ug1448-hls-guidance&amp;resourceid=214-142.html" projectName="ramp_p4_hls" solutionName="solution0" date="2024-03-20T21:41:08.575+0900" type="Warning"/>
+      </synLog>
+      <simLog/>
+      <mgLog/>
+      <packageLog/>
+      <csimLog/>
+    </logs>
+  </warningLogs>
+</vivadoHLSLog:LogRoot>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<autopilotfilemapping:AutoPilotFileMapping xmlns:autopilotfilemapping="www.autoesl.com/autopilotfilemapping">
+  <source>
+    <originFiles name="ramp_p4.cpp" path="/mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/src/ramp_p4.cpp"/>
+  </source>
+  <testbench>
+    <originFiles name="test_bench.cpp" path="/mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/src/test_bench.cpp"/>
+  </testbench>
+</autopilotfilemapping:AutoPilotFileMapping>

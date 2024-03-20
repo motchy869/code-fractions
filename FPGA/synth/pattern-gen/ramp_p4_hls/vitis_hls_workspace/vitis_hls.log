@@ -1,0 +1,141 @@
+INFO: [HLS 200-10] Running '/tools/Xilinx/Vitis_HLS/2023.2/bin/unwrapped/lnx64.o/vitis_hls'
+INFO: [HLS 200-10] For user 'motchy' on host 'SLT5.' (Linux_x86_64 version 5.15.146.1-microsoft-standard-WSL2) on Wed Mar 20 21:40:56 JST 2024
+INFO: [HLS 200-10] On os Ubuntu 22.04.4 LTS
+INFO: [HLS 200-10] In directory '/mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/vitis_hls_workspace'
+INFO: [HLS 200-2053] The vitis_hls executable is being deprecated. Consider using vitis-run --mode hls --tcl
+Sourcing Tcl script '/mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/vitis_hls_workspace/ramp_p4_hls/solution0/csynth.tcl'
+INFO: [HLS 200-1510] Running: source /mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/vitis_hls_workspace/ramp_p4_hls/solution0/csynth.tcl
+INFO: [HLS 200-1510] Running: open_project ramp_p4_hls 
+INFO: [HLS 200-10] Opening project '/mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/vitis_hls_workspace/ramp_p4_hls'.
+INFO: [HLS 200-1510] Running: set_top ramp_p4_hls_v0_1_0 
+INFO: [HLS 200-1510] Running: add_files ../src/ramp_p4.cpp 
+INFO: [HLS 200-10] Adding design file '../src/ramp_p4.cpp' to the project
+INFO: [HLS 200-1510] Running: add_files -tb ../src/test_bench.cpp -cflags -Wno-unknown-pragmas 
+INFO: [HLS 200-10] Adding test bench file '../src/test_bench.cpp' to the project
+INFO: [HLS 200-1510] Running: open_solution solution0 -flow_target vivado 
+INFO: [HLS 200-10] Opening solution '/mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/vitis_hls_workspace/ramp_p4_hls/solution0'.
+INFO: [SYN 201-201] Setting up clock 'default' with a period of 4ns.
+INFO: [HLS 200-1611] Setting target device to 'xczu28dr-ffvg1517-2-e'
+INFO: [HLS 200-1505] Using flow_target 'vivado'
+Resolution: For help on HLS 200-1505 see docs.xilinx.com/access/sources/dita/topic?Doc_Version=2023.2%20English&url=ug1448-hls-guidance&resourceid=200-1505.html
+INFO: [HLS 200-1464] Running solution command: config_cosim -tool=xsim
+INFO: [HLS 200-1464] Running solution command: config_cosim -trace_level=port
+INFO: [HLS 200-1510] Running: set_part xczu28dr-ffvg1517-2-e 
+INFO: [HLS 200-1510] Running: create_clock -period 4 -name default 
+INFO: [HLS 200-1510] Running: config_cosim -tool xsim -trace_level port 
+INFO: [HLS 200-1510] Running: source ./ramp_p4_hls/solution0/directives.tcl
+INFO: [HLS 200-1510] Running: set_directive_top -name ramp_p4_hls_v0_1_0 ramp_p4_hls_v0_1_0 
+INFO: [HLS 200-1510] Running: csynth_design 
+INFO: [HLS 200-111] Finished File checks and directory preparation: CPU user time: 0.07 seconds. CPU system time: 0.01 seconds. Elapsed time: 0.19 seconds; current allocated memory: 244.094 MB.
+INFO: [HLS 200-10] Analyzing design file '../src/ramp_p4.cpp' ... 
+INFO: [HLS 200-111] Finished Source Code Analysis and Preprocessing: CPU user time: 2.11 seconds. CPU system time: 0.3 seconds. Elapsed time: 3.26 seconds; current allocated memory: 245.133 MB.
+INFO: [HLS 200-777] Using interface defaults for 'Vivado' flow target.
+INFO: [HLS 200-1995] There were 478 instructions in the design after the 'Compile/Link' phase of compilation. See the Design Size Report for more details: /mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/vitis_hls_workspace/ramp_p4_hls/solution0/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 209 instructions in the design after the 'Unroll/Inline (step 1)' phase of compilation. See the Design Size Report for more details: /mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/vitis_hls_workspace/ramp_p4_hls/solution0/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 164 instructions in the design after the 'Unroll/Inline (step 2)' phase of compilation. See the Design Size Report for more details: /mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/vitis_hls_workspace/ramp_p4_hls/solution0/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 163 instructions in the design after the 'Unroll/Inline (step 3)' phase of compilation. See the Design Size Report for more details: /mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/vitis_hls_workspace/ramp_p4_hls/solution0/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 137 instructions in the design after the 'Unroll/Inline (step 4)' phase of compilation. See the Design Size Report for more details: /mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/vitis_hls_workspace/ramp_p4_hls/solution0/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 136 instructions in the design after the 'Array/Struct (step 1)' phase of compilation. See the Design Size Report for more details: /mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/vitis_hls_workspace/ramp_p4_hls/solution0/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 136 instructions in the design after the 'Array/Struct (step 2)' phase of compilation. See the Design Size Report for more details: /mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/vitis_hls_workspace/ramp_p4_hls/solution0/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 148 instructions in the design after the 'Array/Struct (step 3)' phase of compilation. See the Design Size Report for more details: /mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/vitis_hls_workspace/ramp_p4_hls/solution0/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 144 instructions in the design after the 'Array/Struct (step 4)' phase of compilation. See the Design Size Report for more details: /mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/vitis_hls_workspace/ramp_p4_hls/solution0/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 145 instructions in the design after the 'Array/Struct (step 5)' phase of compilation. See the Design Size Report for more details: /mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/vitis_hls_workspace/ramp_p4_hls/solution0/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 137 instructions in the design after the 'Performance (step 1)' phase of compilation. See the Design Size Report for more details: /mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/vitis_hls_workspace/ramp_p4_hls/solution0/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 136 instructions in the design after the 'Performance (step 2)' phase of compilation. See the Design Size Report for more details: /mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/vitis_hls_workspace/ramp_p4_hls/solution0/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 154 instructions in the design after the 'Performance (step 3)' phase of compilation. See the Design Size Report for more details: /mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/vitis_hls_workspace/ramp_p4_hls/solution0/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 140 instructions in the design after the 'Performance (step 4)' phase of compilation. See the Design Size Report for more details: /mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/vitis_hls_workspace/ramp_p4_hls/solution0/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 142 instructions in the design after the 'HW Transforms (step 1)' phase of compilation. See the Design Size Report for more details: /mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/vitis_hls_workspace/ramp_p4_hls/solution0/syn/report/csynth_design_size.rpt
+INFO: [HLS 200-1995] There were 150 instructions in the design after the 'HW Transforms (step 2)' phase of compilation. See the Design Size Report for more details: /mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/pattern-gen/ramp_p4_hls/vitis_hls_workspace/ramp_p4_hls/solution0/syn/report/csynth_design_size.rpt
+INFO: [HLS 214-241] Aggregating fifo (array-to-stream) variable 'chunk' with compact=bit mode in 67-bits (../src/ramp_p4.cpp:29:0)
+INFO: [HLS 214-359] Unrolling loop 'CHUNK_LOOP' (../src/ramp_p4.cpp:47:21) in function 'ramp_p4_hls_v0_1_0': changing partial unrolling into complete unrolling since the unrolling factor (=4) is no less than the loop trip count (=4). (../src/ramp_p4.cpp:29:0)
+INFO: [HLS 214-186] Unrolling loop 'CHUNK_LOOP' (../src/ramp_p4.cpp:47:21) in function 'ramp_p4_hls_v0_1_0' completely with a factor of 4 (../src/ramp_p4.cpp:29:0)
+INFO: [HLS 214-241] Aggregating scalar variable 'wavParam' with compact=bit mode in 64-bits (../src/ramp_p4.cpp:29:0)
+INFO: [HLS 214-376] automatically set the pipeline for Loop< unknown> at ../src/ramp_p4.cpp:35:49 
+INFO: [HLS 214-376] automatically set the pipeline for Loop< TREADS_LOOP> at ../src/ramp_p4.cpp:46:18 
+INFO: [HLS 214-270] Inferring pragma 'array_partition type=complete dim=1' for array 'chunkBuf.chunk' due to pipeline pragma (../src/ramp_p4.cpp:35:11)
+INFO: [HLS 214-248] Applying array_partition to 'chunkBuf.chunk': Complete partitioning on dimension 1. (../src/ramp_p4.cpp:35:11)
+WARNING: [HLS 214-142] Implementing stream: may cause mismatch if read and write accesses are not in sequential order on port 'o_chunk' (../src/ramp_p4.cpp:29:0)
+Resolution: For help on HLS 214-142 see docs.xilinx.com/access/sources/dita/topic?Doc_Version=2023.2%20English&url=ug1448-hls-guidance&resourceid=214-142.html
+INFO: [HLS 200-111] Finished Compiling Optimization and Transform: CPU user time: 1.96 seconds. CPU system time: 0.33 seconds. Elapsed time: 8.21 seconds; current allocated memory: 247.547 MB.
+INFO: [HLS 200-111] Finished Checking Pragmas: CPU user time: 0.01 seconds. CPU system time: 0 seconds. Elapsed time: 0.01 seconds; current allocated memory: 247.547 MB.
+INFO: [HLS 200-10] Starting code transformations ...
+INFO: [HLS 200-111] Finished Standard Transforms: CPU user time: 0.02 seconds. CPU system time: 0 seconds. Elapsed time: 0.07 seconds; current allocated memory: 248.070 MB.
+INFO: [HLS 200-10] Checking synthesizability ...
+INFO: [HLS 200-111] Finished Checking Synthesizability: CPU user time: 0.02 seconds. CPU system time: 0 seconds. Elapsed time: 0.05 seconds; current allocated memory: 248.145 MB.
+INFO: [XFORM 203-401] Performing if-conversion on hyperblock from (../src/ramp_p4.cpp:35:11) to (../src/ramp_p4.cpp:35:49) in function 'ramp_p4_hls_v0_1_0'... converting 5 basic blocks.
+INFO: [XFORM 203-401] Performing if-conversion on hyperblock from (../src/ramp_p4.cpp:42:26) to (../src/ramp_p4.cpp:46:18) in function 'ramp_p4_hls_v0_1_0'... converting 10 basic blocks.
+INFO: [HLS 200-111] Finished Loop, function and other optimizations: CPU user time: 0.05 seconds. CPU system time: 0 seconds. Elapsed time: 0.12 seconds; current allocated memory: 270.223 MB.
+INFO: [HLS 200-111] Finished Architecture Synthesis: CPU user time: 0.04 seconds. CPU system time: 0 seconds. Elapsed time: 0.05 seconds; current allocated memory: 280.359 MB.
+INFO: [HLS 200-10] Starting hardware synthesis ...
+INFO: [HLS 200-10] Synthesizing 'ramp_p4_hls_v0_1_0' ...
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-42] -- Implementing module 'ramp_p4_hls_v0_1_0_Pipeline_1' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [SCHED 204-11] Starting scheduling ...
+INFO: [SCHED 204-61] Pipelining loop 'Loop 1'.
+INFO: [HLS 200-1470] Pipelining result : Target II = NA, Final II = 1, Depth = 1, loop 'Loop 1'
+INFO: [SCHED 204-11] Finished scheduling.
+INFO: [HLS 200-111] Finished Scheduling: CPU user time: 0.02 seconds. CPU system time: 0.02 seconds. Elapsed time: 0.21 seconds; current allocated memory: 281.734 MB.
+INFO: [BIND 205-100] Starting micro-architecture generation ...
+INFO: [BIND 205-101] Performing variable lifetime analysis.
+INFO: [BIND 205-101] Exploring resource sharing.
+INFO: [BIND 205-101] Binding ...
+INFO: [BIND 205-100] Finished micro-architecture generation.
+INFO: [HLS 200-111] Finished Binding: CPU user time: 0.02 seconds. CPU system time: 0 seconds. Elapsed time: 0.12 seconds; current allocated memory: 281.734 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-42] -- Implementing module 'ramp_p4_hls_v0_1_0_Pipeline_TREADS_LOOP' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [SCHED 204-11] Starting scheduling ...
+INFO: [SCHED 204-61] Pipelining loop 'TREADS_LOOP'.
+WARNING: [HLS 200-880] The II Violation in module 'ramp_p4_hls_v0_1_0_Pipeline_TREADS_LOOP' (loop 'TREADS_LOOP'): Unable to enforce a carried dependence constraint (II = 1, distance = 1, offset = 1) between 'icmp' operation 1 bit ('icmp_ln60_1', ../src/ramp_p4.cpp:60) and 'icmp' operation 1 bit ('icmp_ln46', ../src/ramp_p4.cpp:46).
+Resolution: For help on HLS 200-880 see docs.xilinx.com/access/sources/dita/topic?Doc_Version=2023.2%20English&url=ug1448-hls-guidance&resourceid=200-880.html
+WARNING: [HLS 200-880] The II Violation in module 'ramp_p4_hls_v0_1_0_Pipeline_TREADS_LOOP' (loop 'TREADS_LOOP'): Unable to enforce a carried dependence constraint (II = 2, distance = 1, offset = 1) between 'icmp' operation 1 bit ('icmp_ln60_3', ../src/ramp_p4.cpp:60) and 'select' operation 16 bit ('treadIdx', ../src/ramp_p4.cpp:56).
+Resolution: For help on HLS 200-880 see docs.xilinx.com/access/sources/dita/topic?Doc_Version=2023.2%20English&url=ug1448-hls-guidance&resourceid=200-880.html
+INFO: [HLS 200-1470] Pipelining result : Target II = NA, Final II = 3, Depth = 4, loop 'TREADS_LOOP'
+INFO: [SCHED 204-11] Finished scheduling.
+INFO: [HLS 200-111] Finished Scheduling: CPU user time: 0.11 seconds. CPU system time: 0 seconds. Elapsed time: 0.24 seconds; current allocated memory: 287.809 MB.
+INFO: [BIND 205-100] Starting micro-architecture generation ...
+INFO: [BIND 205-101] Performing variable lifetime analysis.
+INFO: [BIND 205-101] Exploring resource sharing.
+INFO: [BIND 205-101] Binding ...
+INFO: [BIND 205-100] Finished micro-architecture generation.
+INFO: [HLS 200-111] Finished Binding: CPU user time: 0.03 seconds. CPU system time: 0.01 seconds. Elapsed time: 0.15 seconds; current allocated memory: 287.809 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-42] -- Implementing module 'ramp_p4_hls_v0_1_0' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [SCHED 204-11] Starting scheduling ...
+INFO: [SCHED 204-11] Finished scheduling.
+INFO: [HLS 200-111] Finished Scheduling: CPU user time: 0.04 seconds. CPU system time: 0 seconds. Elapsed time: 0.16 seconds; current allocated memory: 287.809 MB.
+INFO: [BIND 205-100] Starting micro-architecture generation ...
+INFO: [BIND 205-101] Performing variable lifetime analysis.
+INFO: [BIND 205-101] Exploring resource sharing.
+INFO: [BIND 205-101] Binding ...
+INFO: [BIND 205-100] Finished micro-architecture generation.
+INFO: [HLS 200-111] Finished Binding: CPU user time: 0.02 seconds. CPU system time: 0 seconds. Elapsed time: 0.12 seconds; current allocated memory: 287.809 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-10] -- Generating RTL for module 'ramp_p4_hls_v0_1_0_Pipeline_1' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [RTGEN 206-100] Finished creating RTL model for 'ramp_p4_hls_v0_1_0_Pipeline_1'.
+INFO: [HLS 200-111] Finished Creating RTL model: CPU user time: 0.02 seconds. CPU system time: 0 seconds. Elapsed time: 0.13 seconds; current allocated memory: 287.809 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-10] -- Generating RTL for module 'ramp_p4_hls_v0_1_0_Pipeline_TREADS_LOOP' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-1030] Apply Unified Pipeline Control on module 'ramp_p4_hls_v0_1_0_Pipeline_TREADS_LOOP' pipeline 'TREADS_LOOP' pipeline type 'loop pipeline'
+INFO: [RTGEN 206-100] Finished creating RTL model for 'ramp_p4_hls_v0_1_0_Pipeline_TREADS_LOOP'.
+INFO: [HLS 200-111] Finished Creating RTL model: CPU user time: 0.04 seconds. CPU system time: 0.02 seconds. Elapsed time: 0.23 seconds; current allocated memory: 287.809 MB.
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [HLS 200-10] -- Generating RTL for module 'ramp_p4_hls_v0_1_0' 
+INFO: [HLS 200-10] ----------------------------------------------------------------
+INFO: [RTGEN 206-500] Setting interface mode on port 'ramp_p4_hls_v0_1_0/i_wav_param' to 'ap_none'.
+INFO: [RTGEN 206-500] Setting interface mode on port 'ramp_p4_hls_v0_1_0/o_chunk' to 'ap_fifo'.
+INFO: [RTGEN 206-500] Setting interface mode on function 'ramp_p4_hls_v0_1_0' to 'ap_ctrl_hs'.
+INFO: [RTGEN 206-100] Finished creating RTL model for 'ramp_p4_hls_v0_1_0'.
+INFO: [HLS 200-111] Finished Creating RTL model: CPU user time: 0.09 seconds. CPU system time: 0 seconds. Elapsed time: 0.39 seconds; current allocated memory: 288.305 MB.
+INFO: [HLS 200-111] Finished Generating all RTL models: CPU user time: 0.15 seconds. CPU system time: 0.05 seconds. Elapsed time: 0.91 seconds; current allocated memory: 291.695 MB.
+INFO: [HLS 200-111] Finished Updating report files: CPU user time: 0.27 seconds. CPU system time: 0.06 seconds. Elapsed time: 1.31 seconds; current allocated memory: 301.086 MB.
+INFO: [VHDL 208-304] Generating VHDL RTL for ramp_p4_hls_v0_1_0.
+INFO: [VLOG 209-307] Generating Verilog RTL for ramp_p4_hls_v0_1_0.
+INFO: [HLS 200-790] **** Loop Constraint Status: All loop constraints were NOT satisfied.
+INFO: [HLS 200-789] **** Estimated Fmax: 350.26 MHz
+INFO: [HLS 200-111] Finished Command csynth_design CPU user time: 5.11 seconds. CPU system time: 0.8 seconds. Elapsed time: 16.16 seconds; current allocated memory: 57.254 MB.
+INFO: [HLS 200-112] Total CPU user time: 6.3 seconds. Total CPU system time: 0.94 seconds. Total elapsed time: 17.67 seconds; peak allocated memory: 301.348 MB.
