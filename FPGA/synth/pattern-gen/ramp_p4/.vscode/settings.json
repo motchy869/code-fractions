@@ -2,5 +2,7 @@
     "cSpell.words": [
         "curr",
         "virtualbus"
-    ]
+    ],
+    "cursor-ruler.color": "lightgray",
+    "cursor-ruler.enabled": false
 }
