@@ -1,5 +1,6 @@
 // Verible directive
 // verilog_lint: waive-start parameter-name-style
+// verilog_lint: waive-start line-length
 
 `include "simple_if.svh"
 `include "macros_def.svh"
