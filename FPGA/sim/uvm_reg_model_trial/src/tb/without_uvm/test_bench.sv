@@ -199,7 +199,7 @@ end
 task automatic reg_check();
     axi4_lite_write(g_dut_if_mon_sigs, r_dut_if_drv_sigs, AXI4_LITE_ADDR_BIT_WIDTH'('h0), AXI4_LITE_DATA_BIT_WIDTH'('h12345678));
     @(posedge r_clk);
-    axi4_lite_write(g_dut_if_mon_sigs, r_dut_if_drv_sigs, AXI4_LITE_ADDR_BIT_WIDTH'('h1), AXI4_LITE_DATA_BIT_WIDTH'('h87654321));
+    axi4_lite_write(g_dut_if_mon_sigs, r_dut_if_drv_sigs, AXI4_LITE_ADDR_BIT_WIDTH'('h4), AXI4_LITE_DATA_BIT_WIDTH'('h87654321));
     @(posedge r_clk);
 endtask
 
