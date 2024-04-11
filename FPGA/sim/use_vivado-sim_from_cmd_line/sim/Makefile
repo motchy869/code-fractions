@@ -70,8 +70,6 @@ help: $(SIM_DIR)/help.txt
 	cat $<
 
 clean:
-#	cd $(SIM_DIR) && \
-#	rm -rf *.jou *.log *.pb *.sh *.tcl *.wdb xsim.dir .Xil
 	rm -rf $(SIM_DIR)
 #---------------------------------------------
 
