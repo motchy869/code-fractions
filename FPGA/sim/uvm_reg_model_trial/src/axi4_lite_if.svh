@@ -1,3 +1,6 @@
+`ifndef AXI4_LITE_IF_SVH_INCLUDED
+`define AXI4_LITE_IF_SVH_INCLUDED
+
 // Verible directive
 // verilog_lint: waive-start line-length
 
@@ -109,3 +112,5 @@ interface aix4_lite_if #(
         input rready
     );
 endinterface
+
+`endif
