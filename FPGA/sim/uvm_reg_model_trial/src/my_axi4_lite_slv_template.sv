@@ -31,6 +31,13 @@ module my_axi4_lite_slv_template (
     endgenerate
 
     // ---------- internal signal and storage ----------
+    typedef enum {
+        AXI4_RESP_OKAY = 2'b00,
+        AXI4_RESP_EXOKAY = 2'b01,
+        AXI4_RESP_SLVERR = 2'b10,
+        AXI4_RESP_DECERR = 2'b11
+    } axi4_resp_t;
+
     typedef struct {
         logic [AXI4_LITE_ADDR_BIT_WIDTH-1:0] awaddr;
         logic awready;
@@ -51,6 +58,8 @@ module my_axi4_lite_slv_template (
     var logic [AXI4_LITE_DATA_BIT_WIDTH-1:0] r_slv_reg3; //! register 3
 
     wire g_latch_awaddr; //! AWADDR latch timing signal.
+    var logic g_rd_addr_is_in_range; //! Indicates that the read address is in valid range.
+    var logic g_wr_addr_is_in_range; //! Indicates that the write address is in valid range.
     wire g_slv_reg_rd_en; //! register read enable
     wire g_slv_reg_wr_en; //! register write enable
     var logic [AXI4_LITE_DATA_BIT_WIDTH-1:0] r_reg_data_out; //! data in selected register
@@ -136,6 +145,22 @@ module my_axi4_lite_slv_template (
         end
     end
 
+    //! Check if the write address is in valid range.
+    always_comb begin: check_wr_addr
+        g_wr_addr_is_in_range = 1'b1;
+        if (g_slv_reg_wr_en) begin
+            case (r_axi4_lite_sigs.awaddr[AXI4_LITE_ADDR_LSB +: BIT_WIDTH_MEM_ADDR])
+                BIT_WIDTH_MEM_ADDR'('h0):;
+                BIT_WIDTH_MEM_ADDR'('h1):;
+                BIT_WIDTH_MEM_ADDR'('h2):;
+                BIT_WIDTH_MEM_ADDR'('h3):;
+                default: begin
+                    g_wr_addr_is_in_range = 1'b0;
+                end
+            endcase
+        end
+    end
+
     //! Implement memory mapped register select and write logic generation.
     //! The write data is accepted and written to memory mapped registers when AWREADY, WVALID, WREADY and WVALID are asserted.
     //! Write strobes are used to select byte enables of slave registers while writing.
@@ -208,7 +233,7 @@ module my_axi4_lite_slv_template (
             if (g_slv_reg_wr_en && ~r_axi4_lite_sigs.bvalid) begin
                 // Indicates a valid write response is available.
                 r_axi4_lite_sigs.bvalid <= 1'b1;
-                r_axi4_lite_sigs.bresp <= 2'b0; // 'OKAY' response
+                r_axi4_lite_sigs.bresp <= g_wr_addr_is_in_range ? AXI4_RESP_OKAY : AXI4_RESP_SLVERR;
                 // Work error responses in future.
             end else if (g_curr_bvalid_accepted) begin // Check if BREADY is asserted while BVALID is high (there is a possibility that BREADY is always asserted high).
                 r_axi4_lite_sigs.bvalid <= 1'b0;
@@ -250,7 +275,7 @@ module my_axi4_lite_slv_template (
             if (g_slv_reg_rd_en) begin
                 // Valid read data is available at the read data bus.
                 r_axi4_lite_sigs.rvalid <= 1'b1;
-                r_axi4_lite_sigs.rresp <= 2'b0; // 'OKAY' response
+                r_axi4_lite_sigs.rresp <= g_rd_addr_is_in_range ? AXI4_RESP_OKAY : AXI4_RESP_SLVERR;
             end else if (r_axi4_lite_sigs.rvalid && if_s_axi4_lite.rready) begin
                 // Read data is accepted by the master
                 r_axi4_lite_sigs.rvalid <= 1'b0;
@@ -262,12 +287,16 @@ module my_axi4_lite_slv_template (
     //! Slave register read enable is asserted when valid address is available and the slave is ready to accept the read address.
     always_comb begin: dec_rd_addr
         // address decoding for reading registers
+        g_rd_addr_is_in_range = 1'b1;
         case (r_axi4_lite_sigs.araddr[AXI4_LITE_ADDR_LSB +: BIT_WIDTH_MEM_ADDR])
             BIT_WIDTH_MEM_ADDR'('h0): r_reg_data_out = r_slv_reg0;
             BIT_WIDTH_MEM_ADDR'('h1): r_reg_data_out = r_slv_reg1;
             BIT_WIDTH_MEM_ADDR'('h2): r_reg_data_out = r_slv_reg2;
             BIT_WIDTH_MEM_ADDR'('h3): r_reg_data_out = r_slv_reg3;
-            default: r_reg_data_out = '0;
+            default: begin
+                g_rd_addr_is_in_range = 1'b0;
+                r_reg_data_out = '0;
+            end
         endcase
     end
 
