@@ -51,7 +51,7 @@ typedef struct {
     //logic rvalid;
     logic rready;
 } axi4_lite_mst_out_sigs_t;
-axi4_lite_mst_out_sigs_t axi4_lite_mst_out_sigs;
+var axi4_lite_mst_out_sigs_t axi4_lite_mst_out_sigs;
 
 assign axi4_lite_if_0.awaddr = axi4_lite_mst_out_sigs.awaddr;
 assign axi4_lite_if_0.awprot = axi4_lite_mst_out_sigs.awprot;
