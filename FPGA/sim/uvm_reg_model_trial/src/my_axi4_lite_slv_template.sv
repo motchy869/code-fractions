@@ -11,8 +11,8 @@ module my_axi4_lite_slv_template (
     aix4_lite_if.slv_port if_s_axi4_lite //! AXI4-Lite slave interface
 );
     // ---------- parameters ----------
-    localparam int AXI4_LITE_DATA_BIT_WIDTH = 32; //! bit width of AXI4-Lite data bus
     localparam int AXI4_LITE_ADDR_BIT_WIDTH = 4; //! bit width of AXI4-Lite address bus
+    localparam int AXI4_LITE_DATA_BIT_WIDTH = 32; //! bit width of AXI4-Lite data bus
 
     //! example-specific design signals
     //! local parameter for addressing 32 bit / 64 bit AXI4_LITE_DATA_BIT_WIDTH
@@ -22,6 +22,13 @@ module my_axi4_lite_slv_template (
     localparam int AXI4_LITE_ADDR_LSB = (AXI4_LITE_DATA_BIT_WIDTH/32) + 1;
     localparam int BIT_WIDTH_MEM_ADDR = 2; //! typically log2(number of registers)
     // --------------------
+
+    //! parameter validation
+    generate
+        if (if_s_axi4_lite.ADDR_BIT_WIDTH != AXI4_LITE_ADDR_BIT_WIDTH || if_s_axi4_lite.DATA_BIT_WIDTH != AXI4_LITE_DATA_BIT_WIDTH) begin: gen_axi4_lite_param_validation
+            $error("AXI4-Lite interface parameter mismatch.");
+        end
+    endgenerate
 
     // ---------- internal signal and storage ----------
     typedef struct {
