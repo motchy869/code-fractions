@@ -205,7 +205,7 @@ module my_axi4_lite_slv_template (
             r_axi4_lite_sigs.bvalid <= 1'b0;
             r_axi4_lite_sigs.bresp <= '0;
         end else begin
-            if (r_axi4_lite_sigs.awready && if_s_axi4_lite.awvalid && ~r_axi4_lite_sigs.bvalid && r_axi4_lite_sigs.wready && if_s_axi4_lite.wvalid) begin
+            if (g_slv_reg_wr_en && ~r_axi4_lite_sigs.bvalid) begin
                 // Indicates a valid write response is available.
                 r_axi4_lite_sigs.bvalid <= 1'b1;
                 r_axi4_lite_sigs.bresp <= 2'b0; // 'OKAY' response
