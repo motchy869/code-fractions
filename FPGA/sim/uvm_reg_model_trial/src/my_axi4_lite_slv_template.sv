@@ -265,13 +265,13 @@ module my_axi4_lite_slv_template (
         end
     end
 
-    //! Implement ARVALID generation.
+    //! Implement RVALID generation.
     //! RVALID is asserted for **one** AXI4-Lite clock cycle when both ARVALID and ARREADY are asserted.
     //! The slave registers data are available on the RDATA bus at this instance.
     //! The assertion of RVALID marks the validity of read data on the bus and RRESP indicates the status of read transaction.
     //! RVALID is de-asserted on reset (active high).
     //! RRESP and RDATA are cleared to zero on reset (active high).
-    always_ff @(posedge i_clk) begin: gen_arvalid
+    always_ff @(posedge i_clk) begin: gen_rvalid
         if (i_sync_rst) begin
             r_axi4_lite_sigs.rvalid <= 1'b0;
             r_axi4_lite_sigs.rresp <= 2'b0;

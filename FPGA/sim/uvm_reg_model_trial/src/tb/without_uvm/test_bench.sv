@@ -14,7 +14,7 @@ timeprecision 1ps;
 module test_bench;
 // ---------- parameters ----------
 localparam int CLK_PERIOD_NS = 8; //! clock period in ns
-localparam int SIM_DURATION_NS = 100; //! simulation duration in ns
+localparam int SIM_TIME_LIMIT_NS = 300; //! simulation time limit in ns
 localparam int RELEASE_RST_AFTER_CLK = 2; //! Reset signal deasserts right after this clock rising-edge.
 
 localparam int AXI4_LITE_ADDR_BIT_WIDTH = 4; //! bit width of AXI4-Lite address bus
@@ -107,7 +107,8 @@ task automatic axi4_lite_read(
     dut_if_drv_sigs.arvalid = 1'b1;
     dut_if_drv_sigs.rready = 1'b1;
 
-    wait(dut_if_mon_sigs.arready && dut_if_mon_sigs.arvalid);
+    wait(dut_if_mon_sigs.arready);
+    wait(dut_if_mon_sigs.rvalid);
     data = dut_if_mon_sigs.rdata;
 
     @(posedge r_clk); #1;
@@ -197,24 +198,35 @@ always_comb begin: mon_dut_if_sig
 end
 
 task automatic reg_check();
-    axi4_lite_write(g_dut_if_mon_sigs, r_dut_if_drv_sigs, AXI4_LITE_ADDR_BIT_WIDTH'('h0), AXI4_LITE_DATA_BIT_WIDTH'('h12345678));
-    @(posedge r_clk);
-    axi4_lite_write(g_dut_if_mon_sigs, r_dut_if_drv_sigs, AXI4_LITE_ADDR_BIT_WIDTH'('h4), AXI4_LITE_DATA_BIT_WIDTH'('h87654321));
-    @(posedge r_clk);
+    const var bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] write_data[4] = {'h12345678, 'h87654321, 'hABCDEF01, 'h10FEDCBA};
+    var bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] read_back_data;
+
+    for (int i=0; i<4; ++i) begin
+        axi4_lite_write(g_dut_if_mon_sigs, r_dut_if_drv_sigs, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), write_data[i]);
+        @(posedge r_clk);
+    end
+
+    for (int i=0; i<4; ++i) begin
+        axi4_lite_read(g_dut_if_mon_sigs, r_dut_if_drv_sigs, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), read_back_data);
+        $info("Read back data from address %0H: %0H", i*4, read_back_data);
+        @(posedge r_clk);
+    end
 endtask
 
 task automatic scenario();
     drive_rst();
     @(posedge r_clk);
     reg_check();
+    @(posedge r_clk);
+    $finish;
 endtask
 
-//! Wait for end time.
+//! Launch scenario and manage time limit.
 initial begin
     fork
         scenario();
     join_none
-    #SIM_DURATION_NS;
+    #SIM_TIME_LIMIT_NS;
     $finish;
 end
 
