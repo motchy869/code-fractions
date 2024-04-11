@@ -8,7 +8,7 @@
 module my_axi4_lite_slv_template (
     input wire i_clk, //! clock signal
     input wire i_sync_rst, //! reset signal synchronous to clock
-    aix4_lite_if.slv_port if_s_axi4_lite //! AXI4-Lite slave interface
+    axi4_lite_if.slv_port if_s_axi4_lite //! AXI4-Lite slave interface
 );
     // ---------- parameters ----------
     localparam int AXI4_LITE_ADDR_BIT_WIDTH = 4; //! bit width of AXI4-Lite address bus
