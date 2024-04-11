@@ -100,7 +100,8 @@ endtask
 task automatic axi4_lite_write(
     ref axi4_lite_mst_out_sigs_t axi4_lite_mst_out_sigs,
     input bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr,
-    input bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] data
+    input bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] data,
+    input bit [(AXI4_LITE_DATA_BIT_WIDTH/8)-1:0] wstrb = '1
 );
     if (axi4_lite_mst_out_sigs.awvalid || axi4_lite_mst_out_sigs.wvalid) begin
         $info("There is a write transaction in progress. Waiting for it to complete.");
@@ -111,6 +112,7 @@ task automatic axi4_lite_write(
     axi4_lite_mst_out_sigs.awaddr = addr;
     axi4_lite_mst_out_sigs.awvalid = 1'b1;
     axi4_lite_mst_out_sigs.wdata = data;
+    axi4_lite_mst_out_sigs.wstrb = wstrb;
     axi4_lite_mst_out_sigs.wvalid = 1'b1;
 
     wait(axi4_lite_if_0.awready && axi4_lite_if_0.wready);
