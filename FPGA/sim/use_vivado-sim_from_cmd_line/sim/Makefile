@@ -4,7 +4,7 @@
 #  $ make -f <path/to/this/Makefile> dump wave
 #
 # Note:
-#  1. All simulation output files & directories are created in 'sim' directory.
+#  1. All simulation output files & directories are created in the same directory as the directory containing this Makefile.
 #  2. The current directory of the shell which calls this Makefile doesn't affect the result at all.
 #
 # Typical Usage:
