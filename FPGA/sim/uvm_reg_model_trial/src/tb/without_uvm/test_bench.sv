@@ -133,6 +133,7 @@ task automatic axi4_lite_write(
     dut_if_drv_sigs.wdata = data;
     dut_if_drv_sigs.wstrb = wstrb;
     dut_if_drv_sigs.wvalid = 1'b1;
+    dut_if_drv_sigs.bready = 1'b1;
 
     // debug code
     // repeat (10) begin
