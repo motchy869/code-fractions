@@ -31,7 +31,7 @@ module my_axi4_lite_slv_template (
     endgenerate
 
     // ---------- internal signal and storage ----------
-    typedef enum {
+    typedef enum bit [1:0] {
         AXI4_RESP_OKAY = 2'b00,
         AXI4_RESP_EXOKAY = 2'b01,
         AXI4_RESP_SLVERR = 2'b10,
