@@ -20,7 +20,7 @@ module my_axi4_lite_slv_template (
     //! AXI4_LITE_ADDR_LSB = 2 for 32 bits (n downto 2)
     //! AXI4_LITE_ADDR_LSB = 3 for 64 bits (n downto 3)
     localparam int AXI4_LITE_ADDR_LSB = (AXI4_LITE_DATA_BIT_WIDTH/32) + 1;
-    localparam int BIT_WIDTH_MEM_ADDR = 2; //! typically log2(number of registers)
+    localparam int BIT_WIDTH_WORD_ADDR = 2; //! Bit width of word address. Typically log2(number of registers)
     // --------------------
 
     //! parameter validation
@@ -58,6 +58,8 @@ module my_axi4_lite_slv_template (
     var logic [AXI4_LITE_DATA_BIT_WIDTH-1:0] r_slv_reg3; //! register 3
 
     wire g_latch_awaddr; //! AWADDR latch timing signal.
+    wire [BIT_WIDTH_WORD_ADDR-1:0] g_wr_word_addr; //! write word address
+    wire [BIT_WIDTH_WORD_ADDR-1:0] g_rd_word_addr; //! read word address
     var logic g_rd_addr_is_in_range; //! Indicates that the read address is in valid range.
     var logic g_wr_addr_is_in_range; //! Indicates that the write address is in valid range.
     wire g_slv_reg_rd_en; //! register read enable
@@ -67,6 +69,8 @@ module my_axi4_lite_slv_template (
     var logic r_listen_to_wr_req; //! Indicates that there is no in-progress write transaction, and the slave listen to the next write request.
 
     assign g_latch_awaddr = ~r_axi4_lite_sigs.awready && if_s_axi4_lite.awvalid && if_s_axi4_lite.wvalid && r_listen_to_wr_req;
+    assign g_wr_word_addr = r_axi4_lite_sigs.awaddr[AXI4_LITE_ADDR_LSB +: BIT_WIDTH_WORD_ADDR];
+    assign g_rd_word_addr = r_axi4_lite_sigs.araddr[AXI4_LITE_ADDR_LSB +: BIT_WIDTH_WORD_ADDR];
     assign g_slv_reg_rd_en = r_axi4_lite_sigs.arready && if_s_axi4_lite.arvalid && ~r_axi4_lite_sigs.rvalid;
     assign g_slv_reg_wr_en = r_axi4_lite_sigs.wready && if_s_axi4_lite.wvalid && r_axi4_lite_sigs.awready && if_s_axi4_lite.awvalid;
     assign g_curr_bvalid_accepted = if_s_axi4_lite.bready && r_axi4_lite_sigs.bvalid;
@@ -149,11 +153,11 @@ module my_axi4_lite_slv_template (
     always_comb begin: check_wr_addr
         g_wr_addr_is_in_range = 1'b1;
         if (g_slv_reg_wr_en) begin
-            case (r_axi4_lite_sigs.awaddr[AXI4_LITE_ADDR_LSB +: BIT_WIDTH_MEM_ADDR])
-                BIT_WIDTH_MEM_ADDR'('h0):;
-                BIT_WIDTH_MEM_ADDR'('h1):;
-                BIT_WIDTH_MEM_ADDR'('h2):;
-                BIT_WIDTH_MEM_ADDR'('h3):;
+            case (g_wr_word_addr)
+                BIT_WIDTH_WORD_ADDR'('h0):;
+                BIT_WIDTH_WORD_ADDR'('h1):;
+                BIT_WIDTH_WORD_ADDR'('h2):;
+                BIT_WIDTH_WORD_ADDR'('h3):;
                 default: begin
                     g_wr_addr_is_in_range = 1'b0;
                 end
@@ -174,8 +178,8 @@ module my_axi4_lite_slv_template (
             r_slv_reg3 <= '0;
         end else begin
             if (g_slv_reg_wr_en) begin
-                case (r_axi4_lite_sigs.awaddr[AXI4_LITE_ADDR_LSB +: BIT_WIDTH_MEM_ADDR])
-                    BIT_WIDTH_MEM_ADDR'('h0): begin
+                case (g_wr_word_addr)
+                    BIT_WIDTH_WORD_ADDR'('h0): begin
                         for (int byte_index = 0; byte_index <= (AXI4_LITE_DATA_BIT_WIDTH/8)-1; byte_index += 1) begin
                             if (if_s_axi4_lite.wstrb[byte_index]) begin
                                 // Respective byte enables are asserted as per write strobes.
@@ -184,7 +188,7 @@ module my_axi4_lite_slv_template (
                             end
                         end
                     end
-                    BIT_WIDTH_MEM_ADDR'('h1): begin
+                    BIT_WIDTH_WORD_ADDR'('h1): begin
                         for (int byte_index = 0; byte_index <= (AXI4_LITE_DATA_BIT_WIDTH/8)-1; byte_index += 1) begin
                             if (if_s_axi4_lite.wstrb[byte_index]) begin
                                 // Respective byte enables are asserted as per write strobes.
@@ -193,7 +197,7 @@ module my_axi4_lite_slv_template (
                             end
                         end
                     end
-                    BIT_WIDTH_MEM_ADDR'('h2): begin
+                    BIT_WIDTH_WORD_ADDR'('h2): begin
                         for (int byte_index = 0; byte_index <= (AXI4_LITE_DATA_BIT_WIDTH/8)-1; byte_index += 1) begin
                             if (if_s_axi4_lite.wstrb[byte_index]) begin
                                 // Respective byte enables are asserted as per write strobes.
@@ -202,7 +206,7 @@ module my_axi4_lite_slv_template (
                             end
                         end
                     end
-                    BIT_WIDTH_MEM_ADDR'('h3): begin
+                    BIT_WIDTH_WORD_ADDR'('h3): begin
                         for (int byte_index = 0; byte_index <= (AXI4_LITE_DATA_BIT_WIDTH/8)-1; byte_index += 1) begin
                             if (if_s_axi4_lite.wstrb[byte_index]) begin
                                 // Respective byte enables are asserted as per write strobes.
@@ -288,11 +292,11 @@ module my_axi4_lite_slv_template (
     always_comb begin: dec_rd_addr
         // address decoding for reading registers
         g_rd_addr_is_in_range = 1'b1;
-        case (r_axi4_lite_sigs.araddr[AXI4_LITE_ADDR_LSB +: BIT_WIDTH_MEM_ADDR])
-            BIT_WIDTH_MEM_ADDR'('h0): r_reg_data_out = r_slv_reg0;
-            BIT_WIDTH_MEM_ADDR'('h1): r_reg_data_out = r_slv_reg1;
-            BIT_WIDTH_MEM_ADDR'('h2): r_reg_data_out = r_slv_reg2;
-            BIT_WIDTH_MEM_ADDR'('h3): r_reg_data_out = r_slv_reg3;
+        case (g_rd_word_addr)
+            BIT_WIDTH_WORD_ADDR'('h0): r_reg_data_out = r_slv_reg0;
+            BIT_WIDTH_WORD_ADDR'('h1): r_reg_data_out = r_slv_reg1;
+            BIT_WIDTH_WORD_ADDR'('h2): r_reg_data_out = r_slv_reg2;
+            BIT_WIDTH_WORD_ADDR'('h3): r_reg_data_out = r_slv_reg3;
             default: begin
                 g_rd_addr_is_in_range = 1'b0;
                 r_reg_data_out = '0;
