@@ -32,11 +32,11 @@ initial forever #(CLK_PERIOD_NS/2) r_clk = ~r_clk;
 
 //! Drive the reset signal.
 task automatic drive_rst();
-    r_sync_rst = 1;
+    r_sync_rst <= 1'b1;
     repeat (RELEASE_RST_AFTER_CLK) begin
         @(posedge r_clk);
     end
-    r_sync_rst <= 0;
+    r_sync_rst <= 1'b0;
 endtask
 
 initial begin
