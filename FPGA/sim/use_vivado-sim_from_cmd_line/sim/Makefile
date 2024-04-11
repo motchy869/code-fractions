@@ -87,7 +87,7 @@ $(SIM_DIR)/xsim.dir/debug/xsimk: $(SRC_FILES)
 
 $(SIM_DIR)/dump_all.tcl:
 	cd $(SIM_DIR) && \
-	echo 'log_wave -r *' > $@
+	echo 'log_wave -r * -verbose' > $@
 	echo 'run all' >> $@
 	echo 'quit' >> $@
 
