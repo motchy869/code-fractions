@@ -212,10 +212,10 @@ module my_axi4_lite_slv_template (
                         end
                     end
                     default: begin
-                        r_slv_reg0 <= r_slv_reg0;
-                        r_slv_reg1 <= r_slv_reg1;
-                        r_slv_reg2 <= r_slv_reg2;
-                        r_slv_reg3 <= r_slv_reg3;
+                        // r_slv_reg0 <= r_slv_reg0;
+                        // r_slv_reg1 <= r_slv_reg1;
+                        // r_slv_reg2 <= r_slv_reg2;
+                        // r_slv_reg3 <= r_slv_reg3;
                     end
                 endcase
             end

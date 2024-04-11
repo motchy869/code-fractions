@@ -2,7 +2,7 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`include "axi4_lite_if.svh"
+`include "../../axi4_lite_if.svh"
 
 `default_nettype none
 
@@ -74,37 +74,47 @@ my_axi4_lite_slv_template dut (
 );
 
 task automatic axi4_lite_read(
-    const ref axi4_lite_if axi4_lite_if_inst,
     ref axi4_lite_mst_out_sigs_t axi4_lite_mst_out_sigs,
     input bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr,
     output bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] data
 );
-    axi4_lite_mst_out_sigs.araddr = addr;
+    if (axi4_lite_mst_out_sigs.arvalid) begin
+        $info("There is a read transaction in progress. Waiting for it to complete.");
+        wait(!axi4_lite_mst_out_sigs.arvalid);
+        @(posedge r_clk); #1;
+    end
+
+    axi4_lite_mst_out_sigs.araddr = addr; // non-blocking assignment is not allowed by VRFC 10-3140
     axi4_lite_mst_out_sigs.arvalid = 1'b1;
     axi4_lite_mst_out_sigs.rready = 1'b1;
 
-    wait(axi4_lite_if_inst.arready);
-    wait(axi4_lite_if_inst.arvalid);
+    wait(axi4_lite_if_0.arready && axi4_lite_if_0.arvalid);
+    data = axi4_lite_if_0.rdata;
 
-    @(posedge r_clk) #1;
+    @(posedge r_clk); #1;
     axi4_lite_mst_out_sigs.arvalid = 1'b0;
     axi4_lite_mst_out_sigs.rready = 1'b0;
 endtask
 
 task automatic axi4_lite_write(
-    const ref axi4_lite_if axi4_lite_if_inst,
     ref axi4_lite_mst_out_sigs_t axi4_lite_mst_out_sigs,
     input bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr,
     input bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] data
 );
+    if (axi4_lite_mst_out_sigs.awvalid || axi4_lite_mst_out_sigs.wvalid) begin
+        $info("There is a write transaction in progress. Waiting for it to complete.");
+        wait(!axi4_lite_mst_out_sigs.awvalid && !axi4_lite_mst_out_sigs.wvalid);
+        @(posedge r_clk); #1;
+    end
+
     axi4_lite_mst_out_sigs.awaddr = addr;
     axi4_lite_mst_out_sigs.awvalid = 1'b1;
     axi4_lite_mst_out_sigs.wdata = data;
     axi4_lite_mst_out_sigs.wvalid = 1'b1;
 
-    wait(axi4_lite_if_inst.awready && axi4_lite_if_inst.wready);
+    wait(axi4_lite_if_0.awready && axi4_lite_if_0.wready);
 
-    @(posedge r_clk) #1;
+    @(posedge r_clk); #1;
     axi4_lite_mst_out_sigs.awvalid = 1'b0;
     axi4_lite_mst_out_sigs.wvalid = 1'b0;
 endtask
@@ -114,16 +124,31 @@ initial forever #(CLK_PERIOD_NS/2) r_clk = ~r_clk;
 
 //! Drive the reset signal.
 task automatic drive_rst();
-    r_sync_rst = 1;
+    r_sync_rst <= 1'b1;
     repeat (RELEASE_RST_AFTER_CLK) begin
         @(posedge r_clk);
     end
-    r_sync_rst <= 0;
+    r_sync_rst <= 1'b0;
 endtask
 
-//! scenario
+task automatic reg_check();
+    axi4_lite_write(axi4_lite_mst_out_sigs_0, AXI4_LITE_ADDR_BIT_WIDTH'('h0), AXI4_LITE_DATA_BIT_WIDTH'('h12345678));
+    @(posedge r_clk);
+    axi4_lite_write(axi4_lite_mst_out_sigs_0, AXI4_LITE_ADDR_BIT_WIDTH'('h1), AXI4_LITE_DATA_BIT_WIDTH'('h87654321));
+    @(posedge r_clk);
+endtask
+
+task static scenario();
+    drive_rst();
+    @(posedge r_clk);
+    reg_check();
+endtask
+
+//! Wait for end time.
 initial begin
-    fork drive_rst(); join_none
+    fork
+        scenario();
+    join_none
     #SIM_DURATION_NS;
     $finish;
 end
