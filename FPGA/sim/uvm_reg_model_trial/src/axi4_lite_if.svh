@@ -1,6 +1,8 @@
 `ifndef AXI4_LITE_IF_SVH_INCLUDED
 `define AXI4_LITE_IF_SVH_INCLUDED
 
+`default_nettype none
+
 // Verible directive
 // verilog_lint: waive-start line-length
 
@@ -10,25 +12,25 @@ interface aix4_lite_if #(
     parameter int ADDR_BIT_WIDTH = 4, //! address bit width
     parameter int DATA_BIT_WIDTH = 32 //! data bit width
 );
-    logic [ADDR_BIT_WIDTH-1:0] awaddr;
-    logic [2:0] awprot;
-    logic awvalid;
-    logic awready;
-    logic [DATA_BIT_WIDTH-1:0] wdata;
-    logic [(DATA_BIT_WIDTH/8)-1:0] wstrb;
-    logic wvalid;
-    logic wready;
-    logic [1:0] bresp;
-    logic bvalid;
-    logic bready;
-    logic [ADDR_BIT_WIDTH-1:0] araddr;
-    logic [2:0] arprot;
-    logic arvalid;
-    logic arready;
-    logic [DATA_BIT_WIDTH-1:0] rdata;
-    logic [1:0] rresp;
-    logic rvalid;
-    logic rready;
+    wire [ADDR_BIT_WIDTH-1:0] awaddr;
+    wire [2:0] awprot;
+    wire awvalid;
+    wire awready;
+    wire [DATA_BIT_WIDTH-1:0] wdata;
+    wire [(DATA_BIT_WIDTH/8)-1:0] wstrb;
+    wire wvalid;
+    wire wready;
+    wire [1:0] bresp;
+    wire bvalid;
+    wire bready;
+    wire [ADDR_BIT_WIDTH-1:0] araddr;
+    wire [2:0] arprot;
+    wire arvalid;
+    wire arready;
+    wire [DATA_BIT_WIDTH-1:0] rdata;
+    wire [1:0] rresp;
+    wire rvalid;
+    wire rready;
 
     modport mst_port(
         //! write address (issued by master, accepted by slave)
@@ -112,5 +114,7 @@ interface aix4_lite_if #(
         input rready
     );
 endinterface
+
+`default_nettype wire
 
 `endif
