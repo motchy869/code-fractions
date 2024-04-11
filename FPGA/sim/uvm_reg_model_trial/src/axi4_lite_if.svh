@@ -1,6 +1,8 @@
 // Verible directive
 // verilog_lint: waive-start line-length
 
+//! AXI4-Lite interface.
+//! Statements in modport's descriptions are quoted from AXI4 Slave template generated from Vivado 2023.2.
 interface aix4_lite_if #(
     parameter int ADDR_BIT_WIDTH = 4, //! address bit width
     parameter int DATA_BIT_WIDTH = 32 //! data bit width
