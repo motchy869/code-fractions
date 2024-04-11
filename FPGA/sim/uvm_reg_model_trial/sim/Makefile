@@ -4,7 +4,7 @@
 #  $ make -f <path/to/this/Makefile> dump wave
 #
 # Note:
-#  1. All simulation output files & directories are created in the same directory as the directory containing this Makefile.
+#  1. All simulation output files & directories are created in `<path to Makefile>/sim_result` directory.
 #  2. The current directory of the shell which calls this Makefile doesn't affect the result at all.
 #
 # Typical Usage:
@@ -27,8 +27,8 @@ XVLOG := $(VIVADO_DIR)/bin/xvlog
 XELAB := $(VIVADO_DIR)/bin/xelab
 XSIM := $(VIVADO_DIR)/bin/xsim
 
-SIM_DIR := $(MAKEFILE_DIR)
-SRC_DIR := $(SIM_DIR)/../src
+SIM_DIR := $(MAKEFILE_DIR)/sim_result
+SRC_DIR := $(MAKEFILE_DIR)/../src
 SRC_FILES := $(shell find $(SRC_DIR) -type f -name "*.sv" | tr '\n' ' ')
 
 TB_TOP := test_bench
@@ -70,26 +70,28 @@ help: $(SIM_DIR)/help.txt
 	cat $<
 
 clean:
-	cd $(SIM_DIR) && \
-	rm -rf *.log *.jou *.pb xsim.dir *.sh *.wdb .Xil
+	rm -rf $(SIM_DIR)
 #---------------------------------------------
 
 #------------ Files --------------------------
-$(SIM_DIR)/xsim.dir/alone/axsim: $(SRC_FILES)
-	cd $(SIM_DIR) && \
-	$(XVLOG) -sv $(SRC_FILES) && \
-	$(XELAB) $(TB_TOP) -snapshot alone -standalone
+$(SIM_DIR):
+	mkdir -p $@
 
-$(SIM_DIR)/xsim.dir/debug/xsimk: $(SRC_FILES)
+$(SIM_DIR)/xsim.dir/debug/xsimk: $(SIM_DIR) $(SRC_FILES)
 	cd $(SIM_DIR) && \
 	$(XVLOG) -sv $(SRC_FILES) && \
 	$(XELAB) $(TB_TOP) -snapshot debug -debug all
 
 $(SIM_DIR)/dump_all.tcl:
 	cd $(SIM_DIR) && \
-	echo 'log_wave -r *' > $@
+	echo 'log_wave -r * -verbose' > $@
 	echo 'run all' >> $@
 	echo 'quit' >> $@
+
+$(SIM_DIR)/xsim.dir/alone/axsim: $(SIM_DIR) $(SRC_FILES)
+	cd $(SIM_DIR) && \
+	$(XVLOG) -sv $(SRC_FILES) && \
+	$(XELAB) $(TB_TOP) -snapshot alone -standalone
 
 $(SIM_DIR)/help.txt:
 	cd $(SIM_DIR) && \
