@@ -5,9 +5,9 @@
 
 `default_nettype none
 
-// `timeunit` and `timeprecision` should NOT be placed in the module.
-timeunit 1ns;
-timeprecision 1ps;
+// timescale is defined in Makefile.
+// timeunit 1ns;
+// timeprecision 1ps;
 
 module test_bench;
 // ---------- parameters ----------
