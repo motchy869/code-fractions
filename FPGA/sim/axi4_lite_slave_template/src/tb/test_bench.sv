@@ -2,7 +2,7 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`include "../../axi4_lite_if.svh"
+`include "../axi4_lite_if.svh"
 
 `default_nettype none
 
