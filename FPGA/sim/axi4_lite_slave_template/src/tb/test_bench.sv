@@ -91,11 +91,15 @@ assign axi4_lite_if_0.arvalid = r_dut_if_drv_sigs.arvalid;
 assign axi4_lite_if_0.rready = r_dut_if_drv_sigs.rready;
 // --------------------
 
+//! Perform AXI4-Lite read transaction.
+//! This task is based on the following blog post.
+//! [Testing Verilog AXI4-Lite Peripherals](https://klickverbot.at/blog/2016/01/testing-verilog-axi4-lite-peripherals/)
 task automatic axi4_lite_read(
-    /*const*/ ref axi4_lite_sigs_t dut_if_mon_sigs, // `const` leads to failure in xsim. The argument is NOT updated in real-time.
-    ref axi4_lite_mst_out_sigs_t dut_if_drv_sigs,
-    input bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr,
-    output bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] data
+    // const ref axi4_lite_sigs_t dut_if_mon_sigs, // `const` leads to failure in xsim. The argument is NOT updated in real-time.
+    ref axi4_lite_sigs_t dut_if_mon_sigs, //! A reference to the variable for monitoring the DUT interface. This variable is expected to be a mirror of the DUT interface signals.
+    ref axi4_lite_mst_out_sigs_t dut_if_drv_sigs, //! A reference to the variable for driving the DUT interface. DUT interface signals are expected to be assigned to this variable.
+    input bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr, //! address
+    output bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] data //! storage for read data
 );
     if (dut_if_mon_sigs.arvalid) begin
         $info("There is a read transaction in progress. Waiting for it to complete.");
@@ -108,7 +112,7 @@ task automatic axi4_lite_read(
     dut_if_drv_sigs.rready = 1'b1;
 
     wait(dut_if_mon_sigs.arready);
-    wait(dut_if_mon_sigs.rvalid);
+    wait(dut_if_mon_sigs.rvalid); // Note that RVALID may come AFTER the ARREADY's falling edge and `wait(dut_if_mon_sigs.arready && dut_if_mon_sigs.rvalid)` may not work.
     data = dut_if_mon_sigs.rdata;
 
     @(posedge r_clk); #1;
@@ -116,12 +120,16 @@ task automatic axi4_lite_read(
     dut_if_drv_sigs.rready = 1'b0;
 endtask
 
+//! Perform AXI4-Lite write transaction.
+//! This task is based on the following blog post.
+//! [Testing Verilog AXI4-Lite Peripherals](https://klickverbot.at/blog/2016/01/testing-verilog-axi4-lite-peripherals/)
 task automatic axi4_lite_write(
-    /*const*/ ref axi4_lite_sigs_t dut_if_mon_sigs, // `const` leads to failure in xsim. The argument is NOT updated in real-time.
-    ref axi4_lite_mst_out_sigs_t dut_if_drv_sigs,
-    input bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr,
-    input bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] data,
-    input bit [(AXI4_LITE_DATA_BIT_WIDTH/8)-1:0] wstrb = '1
+    // const ref axi4_lite_sigs_t dut_if_mon_sigs, // `const` leads to failure in xsim. The argument is NOT updated in real-time.
+    ref axi4_lite_sigs_t dut_if_mon_sigs, //! A reference to the variable for monitoring the DUT interface. This variable is expected to be a mirror of the DUT interface signals.
+    ref axi4_lite_mst_out_sigs_t dut_if_drv_sigs, //! A reference to the variable for driving the DUT interface. DUT interface signals are expected to be assigned to this variable
+    input bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr, //! address
+    input bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] data, //! data
+    input bit [(AXI4_LITE_DATA_BIT_WIDTH/8)-1:0] wstrb = '1 //! write strobe
 );
     if (dut_if_mon_sigs.awvalid || dut_if_mon_sigs.wvalid) begin
         $info("There is a write transaction in progress. Waiting for it to complete.");

@@ -4,7 +4,8 @@
 
 `default_nettype none
 
-//! AXI4-Lite slave template with 4 writable registers
+//! AXI4-Lite slave template with 4 writable registers.
+//! This is obtained by modifying the AXI4-Lite slave template generated from Vivado 2023.2.
 module my_axi4_lite_slv_template (
     input wire i_clk, //! clock signal
     input wire i_sync_rst, //! reset signal synchronous to clock
