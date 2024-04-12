@@ -17,7 +17,7 @@ localparam int CLK_PERIOD_NS = 8; //! clock period in ns
 localparam int SIM_TIME_LIMIT_NS = 300; //! simulation time limit in ns
 localparam int RELEASE_RST_AFTER_CLK = 2; //! Reset signal deasserts right after this clock rising-edge.
 
-localparam int AXI4_LITE_ADDR_BIT_WIDTH = 4; //! bit width of AXI4-Lite address bus
+localparam int AXI4_LITE_ADDR_BIT_WIDTH = 32; //! bit width of AXI4-Lite address bus
 localparam int AXI4_LITE_DATA_BIT_WIDTH = 32; //! bit width of AXI4-Lite data bus
 // --------------------
 
