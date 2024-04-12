@@ -27,6 +27,9 @@ XVLOG := $(VIVADO_DIR)/bin/xvlog
 XELAB := $(VIVADO_DIR)/bin/xelab
 XSIM := $(VIVADO_DIR)/bin/xsim
 
+XVLOG_OPT := --incr
+XELAB_OPT := --incr
+
 SIM_DIR := $(MAKEFILE_DIR)/sim_result
 SRC_DIR := $(MAKEFILE_DIR)/../src
 SRC_FILES := $(shell find $(SRC_DIR) -type f -name "*.sv" | tr '\n' ' ')
@@ -58,8 +61,8 @@ gui: $(SIM_DIR)/xsim.dir/debug/xsimk
 # Run parsing, elaboration and simulation.
 once:
 	cd $(SIM_DIR) && \
-	$(XVLOG) -sv $(SRC_FILES) && \
-	$(XELAB) $(TB_TOP) -R
+	$(XVLOG) $(XVLOG_OPT) -sv $(SRC_FILES) && \
+	$(XELAB) $(XELAB_OPT) $(TB_TOP) -R
 
 # Run parsing, elaboration, then run stand-alone simulation executable.
 alone: $(SIM_DIR)/xsim.dir/alone/axsim
@@ -79,8 +82,8 @@ $(SIM_DIR):
 
 $(SIM_DIR)/xsim.dir/debug/xsimk: $(SIM_DIR) $(SRC_FILES)
 	cd $(SIM_DIR) && \
-	$(XVLOG) -sv $(SRC_FILES) && \
-	$(XELAB) $(TB_TOP) -snapshot debug -debug all
+	$(XVLOG) $(XVLOG_OPT) -sv $(SRC_FILES) && \
+	$(XELAB) $(XELAB_OPT) $(TB_TOP) -snapshot debug -debug all
 
 $(SIM_DIR)/dump_all.tcl:
 	cd $(SIM_DIR) && \
@@ -90,8 +93,8 @@ $(SIM_DIR)/dump_all.tcl:
 
 $(SIM_DIR)/xsim.dir/alone/axsim: $(SIM_DIR) $(SRC_FILES)
 	cd $(SIM_DIR) && \
-	$(XVLOG) -sv $(SRC_FILES) && \
-	$(XELAB) $(TB_TOP) -snapshot alone -standalone
+	$(XVLOG) $(XVLOG_OPT) -sv $(SRC_FILES) && \
+	$(XELAB) $(XELAB_OPT) $(TB_TOP) -snapshot alone -standalone
 
 $(SIM_DIR)/help.txt:
 	cd $(SIM_DIR) && \

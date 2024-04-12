@@ -27,6 +27,8 @@ XVLOG := $(VIVADO_DIR)/bin/xvlog
 XELAB := $(VIVADO_DIR)/bin/xelab
 XSIM := $(VIVADO_DIR)/bin/xsim
 
+XVLOG_OPT := --incr
+
 SIM_DIR := $(MAKEFILE_DIR)/sim_result
 SRC_DIR := $(MAKEFILE_DIR)/../src
 SRC_FILES := $(shell find $(SRC_DIR) -type f -name "*.sv" | tr '\n' ' ')
@@ -79,7 +81,7 @@ $(SIM_DIR):
 
 $(SIM_DIR)/xsim.dir/debug/xsimk: $(SIM_DIR) $(SRC_FILES)
 	cd $(SIM_DIR) && \
-	$(XVLOG) -sv $(SRC_FILES) && \
+	$(XVLOG) $(XVLOG_OPT) -sv $(SRC_FILES) && \
 	$(XELAB) $(TB_TOP) -snapshot debug -debug all
 
 $(SIM_DIR)/dump_all.tcl:
@@ -90,7 +92,7 @@ $(SIM_DIR)/dump_all.tcl:
 
 $(SIM_DIR)/xsim.dir/alone/axsim: $(SIM_DIR) $(SRC_FILES)
 	cd $(SIM_DIR) && \
-	$(XVLOG) -sv $(SRC_FILES) && \
+	$(XVLOG) $(XVLOG_OPT) -sv $(SRC_FILES) && \
 	$(XELAB) $(TB_TOP) -snapshot alone -standalone
 
 $(SIM_DIR)/help.txt:
