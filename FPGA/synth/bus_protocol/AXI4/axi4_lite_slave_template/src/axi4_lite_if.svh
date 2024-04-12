@@ -9,7 +9,7 @@
 //! AXI4-Lite interface.
 //! Statements in modport's descriptions are quoted from AXI4 Slave template generated from Vivado 2023.2.
 interface axi4_lite_if #(
-    parameter int ADDR_BIT_WIDTH = 4, //! address bit width
+    parameter int ADDR_BIT_WIDTH = 32, //! address bit width
     parameter int DATA_BIT_WIDTH = 32 //! data bit width
 );
     wire [ADDR_BIT_WIDTH-1:0] awaddr;
