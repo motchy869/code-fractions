@@ -95,6 +95,7 @@ assign axi4_lite_if_0.rready = r_dut_if_drv_sigs.rready;
 //! This task is based on the following blog post.
 //! [Testing Verilog AXI4-Lite Peripherals](https://klickverbot.at/blog/2016/01/testing-verilog-axi4-lite-peripherals/)
 task automatic axi4_lite_read(
+    ref bit clk, //! clock signal
     // const ref axi4_lite_sigs_t dut_if_mon_sigs, // `const` leads to failure in xsim. The argument is NOT updated in real-time.
     ref axi4_lite_sigs_t dut_if_mon_sigs, //! A reference to the variable for monitoring the DUT interface. This variable is expected to be a mirror of the DUT interface signals.
     ref axi4_lite_mst_out_sigs_t dut_if_drv_sigs, //! A reference to the variable for driving the DUT interface. DUT interface signals are expected to be assigned to this variable.
@@ -104,7 +105,7 @@ task automatic axi4_lite_read(
     if (dut_if_mon_sigs.arvalid) begin
         $info("There is a read transaction in progress. Waiting for it to complete.");
         wait(!dut_if_mon_sigs.arvalid);
-        @(posedge r_clk); #1;
+        @(posedge clk); #1;
     end
 
     dut_if_drv_sigs.araddr = addr; // non-blocking assignment cannot be used due to VRFC 10-3140
@@ -115,16 +116,16 @@ task automatic axi4_lite_read(
 
     if (dut_if_mon_sigs.rvalid) begin
         data = dut_if_mon_sigs.rdata;
-        @(posedge r_clk); #1;
+        @(posedge clk); #1;
         dut_if_drv_sigs.arvalid = 1'b0;
         dut_if_drv_sigs.rready = 1'b0;
     end else begin
-        @(posedge r_clk); #1;
+        @(posedge clk); #1;
         dut_if_drv_sigs.arvalid = 1'b0; // Should be de-asserted here, otherwise possible protocol violation (AXI4_ERRM_ARVALID_STABLE: Once ARVALID is asserted, it must remain asserted until ARREADY is high. Spec: section A3.2.1.)
 
         wait(dut_if_mon_sigs.rvalid); // Note that RVALID may come AFTER the ARREADY's falling edge.
         data = dut_if_mon_sigs.rdata;
-        @(posedge r_clk); #1;
+        @(posedge clk); #1;
         dut_if_drv_sigs.rready = 1'b0;
     end
 endtask
@@ -133,6 +134,7 @@ endtask
 //! This task is based on the following blog post.
 //! [Testing Verilog AXI4-Lite Peripherals](https://klickverbot.at/blog/2016/01/testing-verilog-axi4-lite-peripherals/)
 task automatic axi4_lite_write(
+    ref bit clk, //! clock signal
     // const ref axi4_lite_sigs_t dut_if_mon_sigs, // `const` leads to failure in xsim. The argument is NOT updated in real-time.
     ref axi4_lite_sigs_t dut_if_mon_sigs, //! A reference to the variable for monitoring the DUT interface. This variable is expected to be a mirror of the DUT interface signals.
     ref axi4_lite_mst_out_sigs_t dut_if_drv_sigs, //! A reference to the variable for driving the DUT interface. DUT interface signals are expected to be assigned to this variable
@@ -143,7 +145,7 @@ task automatic axi4_lite_write(
     if (dut_if_mon_sigs.awvalid || dut_if_mon_sigs.wvalid) begin
         $info("There is a write transaction in progress. Waiting for it to complete.");
         wait(!dut_if_mon_sigs.awvalid && !dut_if_mon_sigs.wvalid);
-        @(posedge r_clk); #1;
+        @(posedge clk); #1;
     end
 
     dut_if_drv_sigs.awaddr = addr;
@@ -155,14 +157,14 @@ task automatic axi4_lite_write(
 
     // debug code
     // repeat (10) begin
-    //     @(posedge r_clk);
+    //     @(posedge clk);
     //     $info("MON wready: %0d, awready: %0d", dut_if_mon_sigs.wready, dut_if_mon_sigs.awready);
     //     $info("IF wready: %0d, awready: %0d", axi4_lite_if_0.wready, axi4_lite_if_0.awready);
     // end
 
     wait(dut_if_mon_sigs.awready && dut_if_mon_sigs.wready);
 
-    @(posedge r_clk); #1;
+    @(posedge clk); #1;
     dut_if_drv_sigs.awvalid = 1'b0;
     dut_if_drv_sigs.wvalid = 1'b0;
 endtask
@@ -219,12 +221,12 @@ task automatic reg_check();
     var bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] read_back_data;
 
     for (int i=0; i<4; ++i) begin
-        axi4_lite_write(g_dut_if_mon_sigs, r_dut_if_drv_sigs, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), write_data[i]);
+        axi4_lite_write(r_clk, g_dut_if_mon_sigs, r_dut_if_drv_sigs, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), write_data[i]);
         @(posedge r_clk);
     end
 
     for (int i=0; i<4; ++i) begin
-        axi4_lite_read(g_dut_if_mon_sigs, r_dut_if_drv_sigs, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), read_back_data);
+        axi4_lite_read(r_clk, g_dut_if_mon_sigs, r_dut_if_drv_sigs, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), read_back_data);
         $info("Read back data from address %0H: %0H", i*4, read_back_data);
         @(posedge r_clk);
     end
