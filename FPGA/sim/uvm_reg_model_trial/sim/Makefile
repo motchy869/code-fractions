@@ -29,14 +29,26 @@ XSIM := $(VIVADO_DIR)/bin/xsim
 
 SIM_DIR := $(MAKEFILE_DIR)/sim_result
 SRC_DIR := $(MAKEFILE_DIR)/../src
-SV_SRC_FILES := $(shell find $(SRC_DIR) -type f -name "*.sv" | tr '\n' ' ')
 
-TB_TOP := test_bench
+SV_SRC_FILES := $(shell find $(SRC_DIR) -type f -name "*.sv" | tr '\n' ' ')
+# SV_SRC_FILES := $(SRC_DIR)/my_axi4_lite_slv_template.sv \
+# 	$(SRC_DIR)/tb/my_verif_pkg.sv \
+# 	$(SRC_DIR)/tb/my_if.sv \
+# 	$(SRC_DIR)/tb/my_test_bench.sv
+
+TB_TOP := my_test_bench
 
 DEFAULT_TIME_SCALE := 1ns/1ps
 
 XVLOG_FLAGS := --incr
 XELAB_FLAGS := --incr
+
+# 0/1: not/use
+USE_UVM := 1
+ifeq ($(USE_UVM), 1)
+	XVLOG_FLAGS += -L uvm -uvm_version 1.2
+	XELAB_FLAGS += -L uvm -uvm_version 1.2
+endif
 #---------------------------------------------
 
 #------------ Commands -----------------------

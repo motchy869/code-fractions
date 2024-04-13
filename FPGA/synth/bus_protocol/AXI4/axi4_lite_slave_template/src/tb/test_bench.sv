@@ -244,7 +244,7 @@ initial begin
         scenario();
     join_none
     #SIM_TIME_LIMIT_NS;
-    $finish;
+    $fatal(2, "Simulation timeout.");
 end
 
 endmodule
