@@ -116,7 +116,8 @@ interface axi4_lite_if #(
         input rready
     );
 
-    clocking mst_cb @(posedge clk); // clocking block for master in simulation
+    // ---------- for simulation ----------
+    clocking mst_cb @(posedge clk); // clocking block for master
         default input #1 output #1;
         output awaddr;
         output awprot;
@@ -138,6 +139,29 @@ interface axi4_lite_if #(
         input rvalid;
         output rready;
     endclocking
+
+    function automatic void reset();
+        awaddr = '0;
+        awprot = '0;
+        awvalid = 1'b0;
+        awready = 1'b0;
+        wdata = '0;
+        wstrb = '0;
+        wvalid = 1'b0;
+        wready = 1'b0;
+        bresp = '0;
+        bvalid = 1'b0;
+        bready = 1'b0;
+        araddr = '0;
+        arprot = '0;
+        arvalid = 1'b0;
+        arready = 1'b0;
+        rdata = '0;
+        rresp = '0;
+        rvalid = 1'b0;
+        rready = 1'b0;
+    endfunction
+    // --------------------
 endinterface
 
 `default_nettype wire

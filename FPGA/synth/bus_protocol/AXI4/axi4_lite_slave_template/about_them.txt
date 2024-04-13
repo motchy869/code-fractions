@@ -1,0 +1,2 @@
+* without_vif: テストベンチから virtual interface を使わずに　DUT を操作している。補助用の wire, var が多く煩雑。
+* with_vif: テストベンチから virtual interface を使って DUT を操作する。interface の信号が全て registered になってしまうのが難点

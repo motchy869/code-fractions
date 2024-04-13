@@ -19,7 +19,7 @@
 module test_bench;
 // ---------- parameters ----------
 localparam int CLK_PERIOD_NS = 8; //! clock period in ns
-localparam int SIM_TIME_LIMIT_NS = 300; //! simulation time limit in ns
+localparam int SIM_TIME_LIMIT_NS = 400; //! simulation time limit in ns
 localparam int RELEASE_RST_AFTER_CLK = 2; //! Reset signal deasserts right after this clock rising-edge.
 
 localparam int AXI4_LITE_ADDR_BIT_WIDTH = 32; //! bit width of AXI4-Lite address bus
@@ -48,7 +48,13 @@ task automatic axi4_lite_read(
         wait(!vif.arvalid);
     end
 
-    @vif.mst_cb begin
+    `ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
+        `define WAIT_CLK_POSEDGE @(posedge vif.clk)
+    `else
+        `define WAIT_CLK_POSEDGE @vif.mst_cb
+    `endif
+
+    `WAIT_CLK_POSEDGE begin
         vif.araddr <= addr;
         vif.arvalid <= 1'b1;
         vif.rready <= 1'b1;
@@ -58,21 +64,23 @@ task automatic axi4_lite_read(
 
     if (vif.rvalid) begin
         data = vif.rdata;
-        @vif.mst_cb begin
+        `WAIT_CLK_POSEDGE begin
             vif.arvalid <= 1'b0;
             vif.rready <= 1'b0;
         end
     end else begin
-        @vif.mst_cb begin
+        `WAIT_CLK_POSEDGE begin
             vif.arvalid <= 1'b0; // Should be de-asserted here, otherwise possible protocol violation (AXI4_ERRM_ARVALID_STABLE: Once ARVALID is asserted, it must remain asserted until ARREADY is high. Spec: section A3.2.1.)
         end
 
         wait(vif.rvalid); // Note that RVALID may come AFTER the ARREADY's falling edge.
         data = vif.rdata;
-        @vif.mst_cb begin
+        `WAIT_CLK_POSEDGE begin
             vif.rready <= 1'b0;
         end
     end
+
+    `undef WAIT_CLK_POSEDGE
 endtask
 
 //! Perform AXI4-Lite write transaction.
@@ -89,7 +97,13 @@ task automatic axi4_lite_write(
         wait(!vif.awvalid && !vif.wvalid);
     end
 
-    @vif.mst_cb begin
+    `ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
+        `define WAIT_CLK_POSEDGE @(posedge vif.clk)
+    `else
+        `define WAIT_CLK_POSEDGE @vif.mst_cb
+    `endif
+
+    `WAIT_CLK_POSEDGE begin
         vif.awaddr <= addr;
         vif.awvalid <= 1'b1;
         vif.wdata <= data;
@@ -100,10 +114,12 @@ task automatic axi4_lite_write(
 
     wait(vif.awready && vif.wready);
 
-    @vif.mst_cb begin
+    `WAIT_CLK_POSEDGE begin
         vif.awvalid <= 1'b0;
         vif.wvalid <= 1'b0;
     end
+
+    `undef WAIT_CLK_POSEDGE
 endtask
 
 //! DUT instance
@@ -152,6 +168,7 @@ endtask
 //! Launch scenario and manage time limit.
 initial begin
     dut_vif = dut_if;
+    dut_vif.reset();
     fork
         scenario();
     join_none
