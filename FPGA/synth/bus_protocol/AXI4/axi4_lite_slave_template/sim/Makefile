@@ -29,7 +29,7 @@ XSIM := $(VIVADO_DIR)/bin/xsim
 
 SIM_DIR := $(MAKEFILE_DIR)/sim_result
 SRC_DIR := $(MAKEFILE_DIR)/../src
-SRC_FILES := $(shell find $(SRC_DIR) -type f -name "*.sv" | tr '\n' ' ')
+SV_SRC_FILES := $(shell find $(SRC_DIR) -type f -name "*.sv" | tr '\n' ' ')
 
 TB_TOP := test_bench
 
@@ -63,7 +63,7 @@ gui: $(SIM_DIR)/xsim.dir/debug/xsimk
 # Run parsing, elaboration and simulation.
 once:
 	cd $(SIM_DIR) && \
-	$(XVLOG) $(XVLOG_FLAGS) -sv $(SRC_FILES) && \
+	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) && \
 	$(XELAB) $(TB_TOP) -timescale $(DEFAULT_TIME_SCALE) $(XELAB_FLAGS) -R
 
 # Run parsing, elaboration, then run stand-alone simulation executable.
@@ -82,9 +82,9 @@ clean:
 $(SIM_DIR):
 	mkdir -p $@
 
-$(SIM_DIR)/xsim.dir/debug/xsimk: $(SIM_DIR) $(SRC_FILES)
+$(SIM_DIR)/xsim.dir/debug/xsimk: $(SIM_DIR) $(SV_SRC_FILES)
 	cd $(SIM_DIR) && \
-	$(XVLOG) $(XVLOG_FLAGS) -sv $(SRC_FILES) && \
+	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) && \
 	$(XELAB) $(TB_TOP) -timescale $(DEFAULT_TIME_SCALE) $(XELAB_FLAGS) -snapshot debug -debug all
 
 $(SIM_DIR)/dump_all.tcl:
@@ -93,9 +93,9 @@ $(SIM_DIR)/dump_all.tcl:
 	echo 'run all' >> $@
 	echo 'quit' >> $@
 
-$(SIM_DIR)/xsim.dir/alone/axsim: $(SIM_DIR) $(SRC_FILES)
+$(SIM_DIR)/xsim.dir/alone/axsim: $(SIM_DIR) $(SV_SRC_FILES)
 	cd $(SIM_DIR) && \
-	$(XVLOG) $(XVLOG_FLAGS) -sv $(SRC_FILES) && \
+	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) && \
 	$(XELAB) $(TB_TOP) -timescale $(DEFAULT_TIME_SCALE) $(XELAB_FLAGS) -snapshot alone -standalone
 
 $(SIM_DIR)/help.txt:
