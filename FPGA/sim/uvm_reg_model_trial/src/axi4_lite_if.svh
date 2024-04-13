@@ -11,26 +11,28 @@
 interface axi4_lite_if #(
     parameter int ADDR_BIT_WIDTH = 32, //! address bit width
     parameter int DATA_BIT_WIDTH = 32 //! data bit width
+)(
+    input wire clk //! clock
 );
-    wire [ADDR_BIT_WIDTH-1:0] awaddr;
-    wire [2:0] awprot;
-    wire awvalid;
-    wire awready;
-    wire [DATA_BIT_WIDTH-1:0] wdata;
-    wire [(DATA_BIT_WIDTH/8)-1:0] wstrb;
-    wire wvalid;
-    wire wready;
-    wire [1:0] bresp;
-    wire bvalid;
-    wire bready;
-    wire [ADDR_BIT_WIDTH-1:0] araddr;
-    wire [2:0] arprot;
-    wire arvalid;
-    wire arready;
-    wire [DATA_BIT_WIDTH-1:0] rdata;
-    wire [1:0] rresp;
-    wire rvalid;
-    wire rready;
+    logic [ADDR_BIT_WIDTH-1:0] awaddr;
+    logic [2:0] awprot;
+    logic awvalid;
+    logic awready;
+    logic [DATA_BIT_WIDTH-1:0] wdata;
+    logic [(DATA_BIT_WIDTH/8)-1:0] wstrb;
+    logic wvalid;
+    logic wready;
+    logic [1:0] bresp;
+    logic bvalid;
+    logic bready;
+    logic [ADDR_BIT_WIDTH-1:0] araddr;
+    logic [2:0] arprot;
+    logic arvalid;
+    logic arready;
+    logic [DATA_BIT_WIDTH-1:0] rdata;
+    logic [1:0] rresp;
+    logic rvalid;
+    logic rready;
 
     modport mst_port(
         //! write address (issued by master, accepted by slave)
@@ -113,6 +115,53 @@ interface axi4_lite_if #(
         //! Read ready. This signal indicates that the master can accept the read data and response information.
         input rready
     );
+
+    // ---------- for simulation ----------
+    clocking mst_cb @(posedge clk); // clocking block for master
+        default input #1 output #1;
+        output awaddr;
+        output awprot;
+        output awvalid;
+        input awready;
+        output wdata;
+        output wstrb;
+        output wvalid;
+        input wready;
+        input bresp;
+        input bvalid;
+        output bready;
+        output araddr;
+        output arprot;
+        output arvalid;
+        input arready;
+        input rdata;
+        input rresp;
+        input rvalid;
+        output rready;
+    endclocking
+
+    function automatic void reset();
+        awaddr = '0;
+        awprot = '0;
+        awvalid = 1'b0;
+        awready = 1'b0;
+        wdata = '0;
+        wstrb = '0;
+        wvalid = 1'b0;
+        wready = 1'b0;
+        bresp = '0;
+        bvalid = 1'b0;
+        bready = 1'b0;
+        araddr = '0;
+        arprot = '0;
+        arvalid = 1'b0;
+        arready = 1'b0;
+        rdata = '0;
+        rresp = '0;
+        rvalid = 1'b0;
+        rready = 1'b0;
+    endfunction
+    // --------------------
 endinterface
 
 `default_nettype wire

@@ -13,20 +13,20 @@ interface my_if (
     axi4_lite_if #(
         .ADDR_BIT_WIDTH(my_verif_pkg::AXI4_LITE_ADDR_BIT_WIDTH),
         .DATA_BIT_WIDTH(my_verif_pkg::AXI4_LITE_DATA_BIT_WIDTH)
-    ) axi4_lite_if_0();
+    ) axi4_lite_if_0(.clk(clk));
 
     clocking drv_cb @(posedge clk); // clocking block for driver
         default input #1 output #1;
         output sync_rst;
 
         // [SystemVerilog Clocking Blocks in Bi-Directional Interface](https://stackoverflow.com/questions/35185878/systemverilog-clocking-blocks-in-bi-directional-interface)
-        inout axi4_lite_if_0;
+        // inout axi4_lite_if_0;
     endclocking
 
     clocking col_cb @(posedge clk); // clocking block for collector
         default input #1 output #1;
         input sync_rst;
-        input axi4_lite_if_0;
+        //input axi4_lite_if_0;
     endclocking
 endinterface
 
