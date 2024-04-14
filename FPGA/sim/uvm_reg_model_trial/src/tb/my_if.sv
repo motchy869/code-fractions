@@ -1,8 +1,11 @@
 // Verible directive
 // verilog_lint: waive-start line-length
 
+`ifndef MY_VERIF_PKG_SVH_INCLUDED
+    $fatal("compile \"my_verif_pkg.sv\" instead of including this file");
+`endif
+
 `include "../axi4_lite_if.svh"
-`include "my_verif_pkg.svh"
 
 `default_nettype none
 

@@ -12,6 +12,12 @@ package my_verif_pkg;
 
     localparam int AXI4_LITE_ADDR_BIT_WIDTH = 32; //! bit width of AXI4-Lite address bus
     localparam int AXI4_LITE_DATA_BIT_WIDTH = 32; //! bit width of AXI4-Lite data bus
+
+    `include "my_bus_seq_item.svh"
+    `include "my_reg_model.svh"
+
+    `include "my_reg_adapter.svh"
+    `include "my_reg_env.svh"
 endpackage
 
 `endif
