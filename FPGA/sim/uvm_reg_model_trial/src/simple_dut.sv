@@ -4,15 +4,19 @@
 
 `default_nettype none
 
-//! AXI4-Lite slave template with 4 writable registers.
-//! This is obtained by modifying the AXI4-Lite slave template generated from Vivado 2023.2.
-module my_axi4_lite_slv_template #(
+//! A simple AXI4-Lite slave with 4 writable registers.
+//! This is based on the AXI4-Lite slave template generated from Vivado 2023.2.
+module simple_dut #(
     parameter int AXI4_LITE_ADDR_BIT_WIDTH = 32, //! bit width of AXI4-Lite address bus
     parameter int AXI4_LITE_DATA_BIT_WIDTH = 32 //! bit width of AXI4-Lite data bus
 )(
-    input wire i_clk, //! clock signal
-    input wire i_sync_rst, //! reset signal synchronous to clock
-    axi4_lite_if.slv_port if_s_axi4_lite //! AXI4-Lite slave interface
+    input wire logic i_clk, //! clock signal
+    input wire logic i_sync_rst, //! reset signal synchronous to clock
+    axi4_lite_if.slv_port if_s_axi4_lite, //! AXI4-Lite slave interface
+    output wire logic o_reg_0_or_reduc, //! OR-reduction of register 0 field data
+    output wire logic o_reg_1_and_reduc, //! AND-reduction of register 1 field data
+    output wire logic o_reg_2_xor_reduc, //! XOR-reduction of register 2 field data
+    output wire logic [$clog2(AXI4_LITE_DATA_BIT_WIDTH):0] o_reg_3_bit_cnt //! Number of bits set in register 3 field data
 );
     // ---------- parameters ----------
     //! example-specific design signals
@@ -23,6 +27,16 @@ module my_axi4_lite_slv_template #(
     localparam int AXI4_LITE_ADDR_LSB = (AXI4_LITE_DATA_BIT_WIDTH/32) + 1;
     localparam int BIT_WIDTH_WORD_ADDR = 2; //! Bit width of word address. Typically log2(number of registers)
     // --------------------
+
+    // ---------- functions ----------
+    function automatic logic [$clog2(AXI4_LITE_DATA_BIT_WIDTH):0] count_reg_bits(input logic [AXI4_LITE_DATA_BIT_WIDTH-1:0] data);
+        var logic [$clog2(AXI4_LITE_DATA_BIT_WIDTH):0] bit_cnt;
+        for (int i = 0; i < AXI4_LITE_DATA_BIT_WIDTH; i += 1) begin
+            bit_cnt += data[i];
+        end
+        return bit_cnt;
+    endfunction
+    // ----------
 
     // ---------- internal signal and storage ----------
     typedef enum bit [1:0] {
@@ -81,6 +95,11 @@ module my_axi4_lite_slv_template #(
     assign if_s_axi4_lite.rdata = r_axi4_lite_sigs.rdata;
     assign if_s_axi4_lite.rresp = r_axi4_lite_sigs.rresp;
     assign if_s_axi4_lite.rvalid = r_axi4_lite_sigs.rvalid;
+
+    assign o_reg_0_or_reduc = |r_slv_reg0;
+    assign o_reg_1_and_reduc = &r_slv_reg1;
+    assign o_reg_2_xor_reduc = ^r_slv_reg2;
+    assign o_reg_3_bit_cnt = count_reg_bits(r_slv_reg3);
     // --------------------
 
     //! Manage write request mask.
