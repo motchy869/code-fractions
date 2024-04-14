@@ -30,5 +30,7 @@ class my_env extends uvm_env;
 
     virtual function void connect_phase(uvm_phase phase);
         super.connect_phase(phase);
+        m_bus_agent.m_monitor.m_analysis_port_to_reg_predictor.connect(m_reg_env.m_reg_predictor.bus_in);
+        m_reg_env.m_reg_model.default_map.set_sequencer(m_bus_agent.m_sequencer, m_reg_env.m_reg_adapter);
     endfunction
 endclass

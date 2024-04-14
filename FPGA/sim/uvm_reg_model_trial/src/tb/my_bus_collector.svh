@@ -28,16 +28,10 @@ class my_bus_collector extends uvm_component;
         end
     endfunction
 
-    extern virtual task get_response();
-
-    virtual task run_phase(uvm_phase phase);
-        forever begin
-            get_response();
-        end
-    endtask
+    extern virtual task run_phase(uvm_phase phase);
 endclass
 
-task my_bus_collector::get_response();
+task my_bus_collector::run_phase(uvm_phase phase);
     bit data_is_read;
     bit data_is_written;
     my_bus_collected_item item;
@@ -50,11 +44,12 @@ task my_bus_collector::get_response();
         `endif
 
         `WAIT_CLK_POSEDGE begin
-            data_is_read = 1'b0;
-            data_is_written = 1'b0;
+            item = my_bus_collected_item::type_id::create("transaction");
+            item.data_is_read = 1'b0;
+            item.data_is_written = 1'b0;
 
             if (m_vif.rready && m_vif.rvalid) begin
-                data_is_read = 1'b1;
+                item.data_is_read = 1'b1;
                 item.rd_addr = m_vif.araddr;
                 item.rd_data = m_vif.rdata;
                 item.rresp = m_vif.rresp;
@@ -62,7 +57,7 @@ task my_bus_collector::get_response();
             end
 
             if (m_vif.awvalid && m_vif.wvalid && m_vif.bready && m_vif.awready && m_vif.wready && m_vif.bready) begin
-                data_is_written = 1'b1;
+                item.data_is_written = 1'b1;
                 item.wr_addr = m_vif.awaddr;
                 item.wr_data = m_vif.wdata;
                 item.wstrb = m_vif.wstrb;
@@ -71,7 +66,7 @@ task my_bus_collector::get_response();
             end
         end
 
-        if (data_is_read || data_is_written) begin
+        if (item.data_is_read || item.data_is_written) begin
             m_analysis_port.write(item);
         end
 

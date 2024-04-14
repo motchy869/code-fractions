@@ -17,6 +17,7 @@ class my_reg_adapter extends uvm_reg_adapter;
         this.provides_responses = 1;
     endfunction
 
+    //! Convert `uvm_reg_bus_op` instance to command for bus-driver'.
     virtual function uvm_sequence_item reg2bus(const ref uvm_reg_bus_op rw);
         my_bus_seq_item pkt = my_bus_seq_item::type_id::create("pkt");
         pkt.write = (rw.kind == UVM_WRITE);
@@ -27,6 +28,7 @@ class my_reg_adapter extends uvm_reg_adapter;
         return pkt;
     endfunction
 
+    //! Convert `uvm_sequence_item` instance (typically comes from bus-monitor) to `uvm_reg_bus_op` instance.
     virtual function void bus2reg(uvm_sequence_item bus_item, ref uvm_reg_bus_op rw);
         my_bus_seq_item pkt;
 

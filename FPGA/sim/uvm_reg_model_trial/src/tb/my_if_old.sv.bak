@@ -41,7 +41,7 @@ interface my_rt_sig_if (
         input sum_sel_reg
     );
 
-    clocking bus_drv_cb @(posedge clk); // clocking block for bus driver
+    clocking bus_drv_cb @(posedge clk); // clocking block for bus-driver
         default input #1 output #1;
         input sync_rst;
         // [SystemVerilog Clocking Blocks in Bi-Directional Interface](https://stackoverflow.com/questions/35185878/systemverilog-clocking-blocks-in-bi-directional-interface)
