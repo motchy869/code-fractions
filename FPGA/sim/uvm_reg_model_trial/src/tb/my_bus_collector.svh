@@ -23,7 +23,7 @@ class my_bus_collector extends uvm_component;
 
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        if (!uvm_config_db#(virtual axi4_lite_if)::get(uvm_root::get(), "uvm_test_top", "bus_vif", m_vif)) begin
+        if (!uvm_config_db#(virtual axi4_lite_if)::get(null, "uvm_test_top", "bus_vif", m_vif)) begin
             `uvm_fatal("NO-VIF", {"virtual interface must be set for: ", get_full_name(), ".bus_vif"})
         end
     endfunction

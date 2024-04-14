@@ -4,6 +4,7 @@
         "downto",
         "reduc",
         "regs",
+        "Testbench",
         "uvclib",
         "VERIF"
     ]

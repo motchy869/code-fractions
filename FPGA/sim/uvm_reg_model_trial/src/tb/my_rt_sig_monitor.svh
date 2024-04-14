@@ -8,11 +8,11 @@
     $fatal("compile \"my_verif_pkg.sv\" instead of including this file");
 `endif
 
-class my_bus_monitor extends uvm_monitor;
-    `uvm_component_utils(my_bus_monitor)
+class my_rt_sig_monitor extends uvm_monitor;
+    `uvm_component_utils(my_rt_sig_monitor)
 
-    uvm_analysis_imp#(my_bus_collected_item, my_bus_monitor) m_analysis_export;
-    uvm_analysis_port#(my_bus_collected_item) m_analysis_port;
+    uvm_analysis_imp#(my_rt_sig_collected_item, my_rt_sig_monitor) m_analysis_export;
+    uvm_analysis_port#(my_rt_sig_collected_item) m_analysis_port;
 
     function new(string name, uvm_component parent);
         super.new(name, parent);
@@ -20,7 +20,7 @@ class my_bus_monitor extends uvm_monitor;
         m_analysis_port = new("m_analysis_port", this);
     endfunction
 
-    function void write(my_bus_collected_item item);
+    function void write(my_rt_sig_collected_item item);
         // Do something in the future.
 
         m_analysis_port.write(item);

@@ -19,7 +19,7 @@ class my_rt_sig_driver extends uvm_driver#(my_rt_sig_seq_item);
 
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        if (!uvm_config_db#(virtual my_rt_sig_if)::get(uvm_root::get(), "uvm_test_top", "rt_sig_vif", m_vif)) begin
+        if (!uvm_config_db#(virtual my_rt_sig_if)::get(null, "uvm_test_top", "rt_sig_vif", m_vif)) begin
             `uvm_fatal("NO-VIF", {"virtual interface must be set for: ", get_full_name(), ".rt_sig_vif"})
         end
     endfunction

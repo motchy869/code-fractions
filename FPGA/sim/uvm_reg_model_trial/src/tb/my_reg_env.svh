@@ -29,7 +29,10 @@ class my_reg_env extends uvm_env;
 
         m_reg_model.build();
         m_reg_model.lock_model();
-        uvm_config_db#(my_reg_model)::set(uvm_root::get(), "uvm_test_top", "m_reg_model", m_reg_model); // It seems that `uvm_test_top` is conventionally used.
+
+        // 'uvm_test_top' is top layer created by `uvm_root`.
+        // [uvm_componentの階層構造について](https://qiita.com/triggerfish/items/1856a13422a8f08c7dbf)
+        uvm_config_db#(my_reg_model)::set(null, "uvm_test_top", "m_reg_model", m_reg_model);
     endfunction
 
     virtual function void connect_phase(uvm_phase phase);

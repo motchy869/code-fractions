@@ -22,13 +22,17 @@ package my_verif_pkg;
     `include "my_rt_sig_collected_item.svh"
     `include "my_bus_collected_item.svh"
 
+    `include "my_rt_sig_collector.svh"
     `include "my_reg_env.svh"
     `include "my_bus_collector.svh"
 
+    `include "my_rt_sig_monitor.svh"
     `include "my_bus_monitor.svh"
 
+    `include "my_rt_sig_agent.svh"
     `include "my_bus_agent.svh"
 
+    `include "my_env.svh"
 endpackage
 
 `endif

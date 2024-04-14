@@ -9,10 +9,10 @@
 `endif
 
 class my_rt_sig_collected_item extends uvm_sequence_item;
-    logic [my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH-1:0] or_in_prod;
+    logic [my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH-1:0] inner_prod;
 
     `uvm_object_utils_begin(my_rt_sig_collected_item)
-        `uvm_field_int(or_in_prod, UVM_DEFAULT | UVM_HEX)
+        `uvm_field_int(inner_prod, UVM_DEFAULT | UVM_HEX)
     `uvm_object_utils_end
 
     function new(string name = "my_rt_sig_collected_item");

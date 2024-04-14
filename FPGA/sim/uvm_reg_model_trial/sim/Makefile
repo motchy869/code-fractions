@@ -44,12 +44,14 @@ DEFAULT_TIME_SCALE := 1ns/1ps
 
 XVLOG_FLAGS := --incr
 XELAB_FLAGS := --incr
+XSIM_FLAGS := ""
 
 # 0/1: not/use
 USE_UVM := 1
 ifeq ($(USE_UVM), 1)
 	XVLOG_FLAGS += -L uvm -uvm_version 1.2
 	XELAB_FLAGS += -L uvm -uvm_version 1.2
+	XSIM_FLAGS += +UVM_CONFIG_DB_TRACE
 endif
 #---------------------------------------------
 
@@ -62,17 +64,17 @@ elab: $(SIM_DIR)/xsim.dir/debug/xsimk
 # Run simulation and dump all waveforms.
 dump: $(SIM_DIR)/xsim.dir/debug/xsimk $(SIM_DIR)/dump_all.tcl
 	cd $(SIM_DIR) && \
-	$(XSIM) debug -t ./dump_all.tcl -wdb all.wdb
+	$(XSIM) $(XSIM_FLAGS) debug -t ./dump_all.tcl -wdb all.wdb
 
 # Open waveform viewer.
 wave: $(SIM_DIR)/all.wdb
 	cd $(SIM_DIR) && \
-	$(XSIM) all.wdb -gui &
+	$(XSIM) $(XSIM_FLAGS) all.wdb -gui &
 
 # Run parsing, elaboration and simulation with GUI.
 gui: $(SIM_DIR)/xsim.dir/debug/xsimk
 	cd $(SIM_DIR) && \
-	$(XSIM) debug -gui &
+	$(XSIM) $(XSIM_FLAGS) debug -gui &
 
 # Run parsing, elaboration and simulation.
 once:

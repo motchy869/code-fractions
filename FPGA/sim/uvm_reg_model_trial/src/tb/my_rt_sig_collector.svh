@@ -1,0 +1,56 @@
+// Verible directive
+// verilog_lint: waive-start line-length
+
+//! Some techniques used in this file are based on the following source:
+//! - [UVM Register Model Example](https://www.chipverify.com/uvm/uvm-register-model-example)
+
+`ifndef MY_VERIF_PKG_SVH_INCLUDED
+    $fatal("compile \"my_verif_pkg.sv\" instead of including this file");
+`endif
+
+class my_rt_sig_collector extends uvm_component;
+    `uvm_component_utils(my_rt_sig_collector)
+
+    virtual my_rt_sig_if m_vif;
+    uvm_analysis_port#(my_rt_sig_collected_item) m_analysis_port;
+
+    function new(string name, uvm_component parent);
+        super.new(name, parent);
+        m_analysis_port = new("m_analysis_port", this);
+    endfunction
+
+    virtual function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        if (!uvm_config_db#(virtual my_rt_sig_if)::get(null, "uvm_test_top", "rt_sig_vif", m_vif)) begin
+            `uvm_fatal("NO-VIF", {"virtual interface must be set for: ", get_full_name(), ".rt_sig_vif"})
+        end
+    endfunction
+
+    extern virtual task get_response();
+
+    virtual task run_phase(uvm_phase phase);
+        forever begin
+            get_response();
+        end
+    endtask
+endclass
+
+task my_rt_sig_collector::get_response();
+    my_rt_sig_collected_item item;
+    forever begin
+        `ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
+            `define WAIT_CLK_POSEDGE @(posedge m_vif.clk)
+        `else
+            `define WAIT_CLK_POSEDGE @m_vif.mst_cb
+        `endif
+
+        `WAIT_CLK_POSEDGE begin
+            if (m_vif.inner_prod_valid) begin
+                item.inner_prod = m_vif.inner_prod;
+                m_analysis_port.write(item);
+            end
+        end
+
+        `undef WAIT_CLK_POSEDGE
+    end
+endtask
