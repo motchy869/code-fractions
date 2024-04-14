@@ -3,6 +3,8 @@
         "curr",
         "downto",
         "reduc",
+        "regs",
+        "uvclib",
         "VERIF"
     ]
 }

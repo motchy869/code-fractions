@@ -11,7 +11,7 @@
 `endif
 
 class my_reg_model_params;
-    localparam int REG_BIT_WIDTH = my_verif_pkg::AXI4_LITE_DATA_BIT_WIDTH; //! bit width of the register
+    localparam int REG_BIT_WIDTH = my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH; //! bit width of the register
     localparam int REG_SIZE_BYTE = REG_BIT_WIDTH / 8; //! size of the register in byte
 endclass
 

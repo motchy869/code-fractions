@@ -15,10 +15,10 @@ module simple_dut #(
     input wire logic i_clk, //! clock signal
     input wire logic i_sync_rst, //! reset signal synchronous to clock
     axi4_lite_if.slv_port if_s_axi4_lite, //! AXI4-Lite slave interface
-    output wire logic o_reg_0_or_reduc, //! OR-reduction of register 0 field data
-    output wire logic o_reg_1_and_reduc, //! AND-reduction of register 1 field data
-    output wire logic o_reg_2_xor_reduc, //! XOR-reduction of register 2 field data
-    output wire logic [$clog2(AXI4_LITE_DATA_BIT_WIDTH):0] o_reg_3_bit_cnt //! Number of bits set in register 3 field data
+    input wire logic [3:0][AXI4_LITE_DATA_BIT_WIDTH-1:0] i_vec, //! An input vector. Details are described in `or_in_prod`
+    input wire logic i_vec_valid, //! A valid signal for the input vector
+    output var logic [AXI4_LITE_DATA_BIT_WIDTH-1:0] or_in_prod, //!An inner product between register 0,1,2,3 fields and `i_vec`. The result is truncated to AXI4_LITE_DATA_BIT_WIDTH bits.
+    output var logic or_in_prod_valid //! A valid signal for `or_in_prod`
 );
     // ---------- parameters ----------
     //! example-specific design signals
@@ -97,11 +97,6 @@ module simple_dut #(
     assign if_s_axi4_lite.rdata = r_axi4_lite_sigs.rdata;
     assign if_s_axi4_lite.rresp = r_axi4_lite_sigs.rresp;
     assign if_s_axi4_lite.rvalid = r_axi4_lite_sigs.rvalid;
-
-    assign o_reg_0_or_reduc = |r_slv_reg0;
-    assign o_reg_1_and_reduc = &r_slv_reg1;
-    assign o_reg_2_xor_reduc = ^r_slv_reg2;
-    assign o_reg_3_bit_cnt = count_reg_bits(r_slv_reg3);
     // --------------------
 
     //! Manage write request mask.
@@ -331,9 +326,22 @@ module simple_dut #(
         end
     end
 
-    // Add user logic here.
-
-    // User logic ends.
+    // ---------- Add user logic here. ----------
+    //! Calculate the inner product of the input vector and registers 0,1,2,3.
+    always_ff @(posedge i_clk) begin: calc_inner_prod
+        if (i_sync_rst) begin
+            or_in_prod <= '0;
+            or_in_prod_valid <= 1'b0;
+        end else begin
+            if (i_vec_valid) begin
+                or_in_prod <= r_slv_reg0 * i_vec[0] + r_slv_reg1 * i_vec[1] + r_slv_reg2 * i_vec[2] + r_slv_reg3 * i_vec[3];
+                or_in_prod_valid <= 1'b1;
+            end else begin
+                or_in_prod_valid <= 1'b0;
+            end
+        end
+    end
+    // ---------- User logic ends. ----------
 endmodule
 
 `default_nettype wire
