@@ -221,7 +221,7 @@ module my_axi4_lite_slv_template #(
     end
 
     //! Implement write response logic generation.
-    //! The write response and response valid signals are asserted by the slave when WREADY, WVALID, WREADY and WVALID are asserted.
+    //! The write response and response valid signals are asserted by the slave when WREADY, WVALID, AWREADY and AWVALID are asserted.
     //! This marks the acceptance of address and indicates the status of write transaction.
     always_ff @(posedge i_clk) begin: gen_bresp
         if (i_sync_rst) begin
