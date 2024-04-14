@@ -14,6 +14,13 @@ interface axi4_lite_if #(
 )(
     input wire clk //! clock
 );
+    typedef enum bit [1:0] {
+        AXI4_RESP_OKAY = 2'b00,
+        AXI4_RESP_EXOKAY = 2'b01,
+        AXI4_RESP_SLVERR = 2'b10,
+        AXI4_RESP_DECERR = 2'b11
+    } axi4_resp_t;
+
     logic [ADDR_BIT_WIDTH-1:0] awaddr;
     logic [2:0] awprot;
     logic awvalid;
