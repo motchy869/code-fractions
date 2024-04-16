@@ -12,25 +12,25 @@ package my_verif_pkg;
 
     // Line blocks with no blank lines indicates there is no dependency.
     // Blank lines indicates dependency.
-    `include "my_rt_sig_seq_item.svh"
-    `include "my_reg_model.svh"
-    `include "my_bus_seq_item.svh"
+    `include "./rt_sig/my_rt_sig_seq_item.svh"
+    `include "./reg/my_reg_model.svh"
+    `include "./bus/my_bus_seq_item.svh"
 
-    `include "my_rt_sig_driver.svh"
-    `include "my_reg_adapter.svh"
-    `include "my_bus_driver.svh"
-    `include "my_rt_sig_collected_item.svh"
-    `include "my_bus_collected_item.svh"
+    `include "./rt_sig/my_rt_sig_driver.svh"
+    `include "./reg/my_reg_adapter.svh"
+    `include "./bus/my_bus_driver.svh"
+    `include "./rt_sig/my_rt_sig_collected_item.svh"
+    `include "./bus/my_bus_collected_item.svh"
 
-    `include "my_rt_sig_collector.svh"
-    `include "my_reg_env.svh"
-    `include "my_bus_collector.svh"
+    `include "./rt_sig/my_rt_sig_collector.svh"
+    `include "./reg/my_reg_env.svh"
+    `include "./bus/my_bus_collector.svh"
 
-    `include "my_rt_sig_monitor.svh"
-    `include "my_bus_monitor.svh"
+    `include "./rt_sig/my_rt_sig_monitor.svh"
+    `include "./bus/my_bus_monitor.svh"
 
-    `include "my_rt_sig_agent.svh"
-    `include "my_bus_agent.svh"
+    `include "./rt_sig/my_rt_sig_agent.svh"
+    `include "./bus/my_bus_agent.svh"
 
     `include "my_env.svh"
 endpackage

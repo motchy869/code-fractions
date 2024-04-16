@@ -8,7 +8,7 @@
     $fatal("compile \"my_verif_pkg.sv\" instead of including this file");
 `endif
 
-`include "../axi4_lite_if.svh"
+`include "../../axi4_lite_if.svh"
 
 class my_bus_collector extends uvm_component;
     `uvm_component_utils(my_bus_collector)
