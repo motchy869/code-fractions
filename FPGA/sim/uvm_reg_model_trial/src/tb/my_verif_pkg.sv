@@ -33,6 +33,9 @@ package my_verif_pkg;
     `include "./bus/my_bus_agent.svh"
 
     `include "my_env.svh"
+    `include "./seq/my_reset_seq.svh"
+
+    `include "./test/my_base_test.svh"
 endpackage
 
 `endif
