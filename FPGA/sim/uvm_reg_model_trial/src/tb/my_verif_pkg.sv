@@ -36,6 +36,8 @@ package my_verif_pkg;
     `include "./seq/my_reset_seq.svh"
 
     `include "./test/my_base_test.svh"
+
+    `include "./test/my_test.svh"
 endpackage
 
 `endif

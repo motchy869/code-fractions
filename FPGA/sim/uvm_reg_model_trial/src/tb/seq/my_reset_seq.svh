@@ -11,27 +11,14 @@
 class my_reset_seq extends uvm_sequence;
     `uvm_object_utils(my_reset_seq)
 
-    localparam int RESET_DURATION_CLK = 20; // AXI specification requires holding reset signal at least 16 clock cycles.
-
-    virtual my_rt_sig_if m_vif;
-
-    // Constructor
     function new(string name = "my_reset_seq");
         super.new(name);
     endfunction
 
-    // Entry task
     task body();
-        if (!uvm_config_db#(virtual my_rt_sig_if)::get(null, "uvm_test_top", "rt_sig_vif", m_vif)) begin
-            `uvm_fatal("NO-VIF", {"virtual interface must be set for: ", get_full_name(), ".rt_sig_vif"})
-        end
-
-        `uvm_info("INFO", "Resetting the DUT.", UVM_MEDIUM)
-        m_vif.sync_rst <= 1'b1;
-        repeat (RESET_DURATION_CLK) begin
-            @(posedge m_vif.clk);
-        end
-        m_vif.sync_rst <= 1'b0;
-        @(posedge m_vif.clk);
+        my_rt_sig_seq_item req;
+        `uvm_create(req)
+        req.cmd = my_rt_sig_seq_item::CMD_RESET;
+        `uvm_send(req)
     endtask
 endclass

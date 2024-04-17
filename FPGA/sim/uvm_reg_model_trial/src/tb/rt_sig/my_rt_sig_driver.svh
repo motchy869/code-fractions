@@ -24,35 +24,71 @@ class my_rt_sig_driver extends uvm_driver#(my_rt_sig_seq_item);
         end
     endfunction
 
-    virtual task run_phase(uvm_phase phase);
-        my_rt_sig_seq_item item;
-
-        phase.raise_objection(this);
-
-        m_vif.input_vec <= '0;
-        m_vif.input_vec_valid <= 1'b0;
-
-        forever begin
-            `ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
-                `define WAIT_CLK_POSEDGE @(posedge m_vif.clk)
-            `else
-                `define WAIT_CLK_POSEDGE @m_vif.mst_cb
-            `endif
-
-            `WAIT_CLK_POSEDGE
-            seq_item_port.try_next_item(item);
-            if (item == null) begin
-                m_vif.input_vec_valid <= 1'b0;
-            end else begin
-                m_vif.input_vec <= item.input_vec;
-                m_vif.input_vec_valid <= 1'b1;
-                `uvm_info("INFO", {"Sent input vector."}, UVM_MEDIUM);
-                if (item.is_last_item) begin
-                    phase.drop_objection(this);
-                end
-            end
-
-            `undef WAIT_CLK_POSEDGE
-        end
-    endtask
+    extern virtual task reset_dut();
+    extern virtual task input_vec(logic [3:0][my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH-1:0] input_vec);
+    extern virtual task run_phase(uvm_phase phase);
 endclass
+
+task my_rt_sig_driver::reset_dut();
+    localparam int RESET_DURATION_CLK = 20; // AXI specification requires holding reset signal at least 16 clock cycles.
+
+    `ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
+        `define WAIT_CLK_POSEDGE @(posedge m_vif.clk)
+    `else
+        `define WAIT_CLK_POSEDGE @m_vif.mst_cb
+    `endif
+
+    `uvm_info("INFO", "Resetting the DUT.", UVM_MEDIUM)
+    m_vif.sync_rst <= 1'b1;
+    repeat (RESET_DURATION_CLK) begin
+        `WAIT_CLK_POSEDGE;
+    end
+    m_vif.sync_rst <= 1'b0;
+    `uvm_info("INFO", "Release the dut from reset.", UVM_MEDIUM)
+    `WAIT_CLK_POSEDGE;
+
+    `undef WAIT_CLK_POSEDGE
+endtask
+
+task my_rt_sig_driver::input_vec(logic [3:0][my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH-1:0] input_vec);
+    m_vif.input_vec <= input_vec;
+    m_vif.input_vec_valid <= 1'b1;
+    `uvm_info("INFO", {"input vector."}, UVM_MEDIUM);
+endtask
+
+task my_rt_sig_driver::run_phase(uvm_phase phase);
+    my_rt_sig_seq_item item;
+
+    phase.raise_objection(this);
+
+    m_vif.sync_rst <= 1'b0;
+    m_vif.input_vec <= '0;
+    m_vif.input_vec_valid <= 1'b0;
+
+    forever begin
+        `ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
+            `define WAIT_CLK_POSEDGE @(posedge m_vif.clk)
+        `else
+            `define WAIT_CLK_POSEDGE @m_vif.mst_cb
+        `endif
+
+        `WAIT_CLK_POSEDGE
+        seq_item_port.try_next_item(item);
+        if (item == null) begin
+            m_vif.input_vec_valid <= 1'b0;
+        end else begin
+            unique case (item.cmd)
+                my_rt_sig_seq_item::CMD_RESET:
+                    reset_dut();
+                my_rt_sig_seq_item::CMD_INPUT_VEC:
+                    input_vec(item.input_vec);
+            endcase
+
+            if (item.is_last_item) begin
+                break;
+            end
+        end
+        `undef WAIT_CLK_POSEDGE
+    end
+    phase.drop_objection(this);
+endtask

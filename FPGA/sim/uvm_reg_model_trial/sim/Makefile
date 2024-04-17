@@ -44,14 +44,17 @@ DEFAULT_TIME_SCALE := 1ns/1ps
 
 XVLOG_FLAGS := --incr
 XELAB_FLAGS := --incr
-XSIM_FLAGS := ""
+# This defines an empty string.
+XSIM_FLAGS :=
 
 # 0/1: not/use
 USE_UVM := 1
+UVM_TESTNAME := my_test
 ifeq ($(USE_UVM), 1)
 	XVLOG_FLAGS += -L uvm -uvm_version 1.2
 	XELAB_FLAGS += -L uvm -uvm_version 1.2
-	XSIM_FLAGS += +UVM_CONFIG_DB_TRACE
+	XSIM_FLAGS += --testplusarg "UVM_CONFIG_DB_TRACE"
+	XSIM_FLAGS += --testplusarg "UVM_TESTNAME=$(UVM_TESTNAME)"
 endif
 #---------------------------------------------
 
