@@ -17,7 +17,7 @@ class my_reg_env extends uvm_env;
 
     `uvm_component_utils(my_reg_env)
 
-    function new (string name = "my_reg_env", uvm_component parent);
+    function new(string name = "my_reg_env", uvm_component parent);
         super.new(name, parent);
     endfunction
 
@@ -32,7 +32,7 @@ class my_reg_env extends uvm_env;
 
         // 'uvm_test_top' is top layer created by `uvm_root`.
         // [uvm_componentの階層構造について](https://qiita.com/triggerfish/items/1856a13422a8f08c7dbf)
-        uvm_config_db#(my_reg_model)::set(null, "uvm_test_top", "m_reg_model", m_reg_model);
+        uvm_config_db#(my_reg_model)::set(null, "uvm_test_top", "g_reg_model", m_reg_model);
     endfunction
 
     virtual function void connect_phase(uvm_phase phase);

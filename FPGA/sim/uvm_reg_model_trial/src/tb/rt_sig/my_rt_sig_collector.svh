@@ -21,8 +21,8 @@ class my_rt_sig_collector extends uvm_component;
 
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        if (!uvm_config_db#(virtual my_rt_sig_if)::get(null, "uvm_test_top", "rt_sig_vif", m_vif)) begin
-            `uvm_fatal("NO-VIF", {"virtual interface must be set for: ", "uvm_test_top", ".rt_sig_vif"})
+        if (!uvm_config_db#(virtual my_rt_sig_if)::get(null, "uvm_test_top", "g_rt_sig_vif", m_vif)) begin
+            `uvm_fatal("NO-VIF", {"virtual interface must be set for: ", "uvm_test_top", ".g_rt_sig_vif"})
         end
     endfunction
 

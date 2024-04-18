@@ -21,8 +21,8 @@ class my_bus_driver extends uvm_driver#(my_bus_seq_item);
 
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        if (!uvm_config_db#(virtual axi4_lite_if)::get(null, "uvm_test_top", "bus_vif", m_vif)) begin
-            `uvm_fatal("NO-VIF", {"virtual interface must be set for: ", "uvm_test_top", ".bus_vif"})
+        if (!uvm_config_db#(virtual axi4_lite_if)::get(null, "uvm_test_top", "g_bus_vif", m_vif)) begin
+            `uvm_fatal("NO-VIF", {"virtual interface must be set for: ", "uvm_test_top", ".g_bus_vif"})
         end
     endfunction
 
@@ -40,6 +40,12 @@ class my_bus_driver extends uvm_driver#(my_bus_seq_item);
     extern virtual task run_phase(uvm_phase phase);
 endclass
 
+`ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
+    `define WAIT_CLK_POSEDGE @(posedge m_vif.clk)
+`else
+    `define WAIT_CLK_POSEDGE @m_vif.mst_cb
+`endif
+
 task my_bus_driver::read_access(
     input bit [my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr,
     ref bit [my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH-1:0] data
@@ -48,12 +54,6 @@ task my_bus_driver::read_access(
         `uvm_info("INFO", "There is a read transaction in progress. Waiting for it to complete.", UVM_MEDIUM);
         wait(!m_vif.arvalid);
     end
-
-    `ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
-        `define WAIT_CLK_POSEDGE @(posedge m_vif.clk)
-    `else
-        `define WAIT_CLK_POSEDGE @m_vif.mst_cb
-    `endif
 
     `WAIT_CLK_POSEDGE begin
         m_vif.araddr <= addr;
@@ -80,8 +80,6 @@ task my_bus_driver::read_access(
             m_vif.rready <= 1'b0;
         end
     end
-
-    `undef WAIT_CLK_POSEDGE
 endtask
 
 task my_bus_driver::write_access(
@@ -93,12 +91,6 @@ task my_bus_driver::write_access(
         `uvm_info("INFO", "There is a write transaction in progress. Waiting for it to complete.", UVM_MEDIUM);
         wait(!m_vif.awvalid && !m_vif.wvalid);
     end
-
-    `ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
-        `define WAIT_CLK_POSEDGE @(posedge m_vif.clk)
-    `else
-        `define WAIT_CLK_POSEDGE @m_vif.mst_cb
-    `endif
 
     `WAIT_CLK_POSEDGE begin
         m_vif.awaddr <= addr;
@@ -115,26 +107,13 @@ task my_bus_driver::write_access(
         m_vif.awvalid <= 1'b0;
         m_vif.wvalid <= 1'b0;
     end
-
-    `undef WAIT_CLK_POSEDGE
 endtask
 
 task my_bus_driver::run_phase(uvm_phase phase);
     my_bus_seq_item pkt;
 
     phase.raise_objection(this);
-
-    m_vif.awaddr <= '0;
-    m_vif.awprot <= '0;
-    m_vif.awvalid <= 1'b0;
-    m_vif.wdata <= '0;
-    m_vif.wstrb <= '0;
-    m_vif.wvalid <= 1'b0;
-    m_vif.bready <= 1'b0;
-    m_vif.araddr <= '0;
-    m_vif.arprot <= '0;
-    m_vif.arvalid <= 1'b0;
-    m_vif.rready <= 1'b0;
+    m_vif.reset_mst_port();
 
     forever begin
         seq_item_port.get_next_item(pkt);
@@ -150,3 +129,5 @@ task my_bus_driver::run_phase(uvm_phase phase);
         end
     end
 endtask
+
+`undef WAIT_CLK_POSEDGE

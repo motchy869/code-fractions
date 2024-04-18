@@ -13,7 +13,6 @@ module my_test_bench;
 
     // ---------- parameters ----------
     localparam int CLK_PERIOD_NS = 8; //! clock period in ns
-    localparam int SIM_TIME_LIMIT_NS = 300; //! simulation time limit in ns
     // --------------------
 
     // ---------- internal signal and storage ----------
@@ -44,13 +43,12 @@ module my_test_bench;
     //! Drive the clock.
     initial forever #(CLK_PERIOD_NS/2) r_clk = ~r_clk;
 
-    //! Launch scenario and manage time limit.
+    //! Run test.
     initial begin
-        uvm_top.set_timeout(SIM_TIME_LIMIT_NS, 0);
         bus_vif = bus_if;
         rt_sig_vif = rt_sig_if;
-        uvm_config_db#(virtual axi4_lite_if)::set(null, "uvm_test_top", "bus_vif", bus_vif);
-        uvm_config_db#(virtual my_rt_sig_if)::set(null, "uvm_test_top", "rt_sig_vif", rt_sig_vif);
+        uvm_config_db#(virtual axi4_lite_if)::set(null, "uvm_test_top", "g_bus_vif", bus_vif);
+        uvm_config_db#(virtual my_rt_sig_if)::set(null, "uvm_test_top", "g_rt_sig_vif", rt_sig_vif);
         run_test();
     end
 endmodule

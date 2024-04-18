@@ -19,8 +19,8 @@ class my_rt_sig_driver extends uvm_driver#(my_rt_sig_seq_item);
 
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        if (!uvm_config_db#(virtual my_rt_sig_if)::get(null, "uvm_test_top", "rt_sig_vif", m_vif)) begin
-            `uvm_fatal("NO-VIF", {"virtual interface must be set for: ", "uvm_test_top", ".rt_sig_vif"})
+        if (!uvm_config_db#(virtual my_rt_sig_if)::get(null, "uvm_test_top", "g_rt_sig_vif", m_vif)) begin
+            `uvm_fatal("NO-VIF", {"virtual interface must be set for: ", "uvm_test_top", ".g_rt_sig_vif"})
         end
     endfunction
 
@@ -29,14 +29,14 @@ class my_rt_sig_driver extends uvm_driver#(my_rt_sig_seq_item);
     extern virtual task run_phase(uvm_phase phase);
 endclass
 
+`ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
+    `define WAIT_CLK_POSEDGE @(posedge m_vif.clk)
+`else
+    `define WAIT_CLK_POSEDGE @m_vif.mst_cb
+`endif
+
 task my_rt_sig_driver::reset_dut();
     localparam int RESET_DURATION_CLK = 20; // AXI specification requires holding reset signal at least 16 clock cycles.
-
-    `ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
-        `define WAIT_CLK_POSEDGE @(posedge m_vif.clk)
-    `else
-        `define WAIT_CLK_POSEDGE @m_vif.mst_cb
-    `endif
 
     `uvm_info("INFO", "Resetting the DUT.", UVM_MEDIUM)
     m_vif.sync_rst <= 1'b1;
@@ -46,8 +46,6 @@ task my_rt_sig_driver::reset_dut();
     m_vif.sync_rst <= 1'b0;
     `uvm_info("INFO", "Release the dut from reset.", UVM_MEDIUM)
     `WAIT_CLK_POSEDGE;
-
-    `undef WAIT_CLK_POSEDGE
 endtask
 
 task my_rt_sig_driver::input_vec(logic [3:0][my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH-1:0] input_vec);
@@ -66,12 +64,6 @@ task my_rt_sig_driver::run_phase(uvm_phase phase);
     m_vif.input_vec_valid <= 1'b0;
 
     forever begin
-        `ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
-            `define WAIT_CLK_POSEDGE @(posedge m_vif.clk)
-        `else
-            `define WAIT_CLK_POSEDGE @m_vif.mst_cb
-        `endif
-
         `WAIT_CLK_POSEDGE
         seq_item_port.try_next_item(item); // Get the next item from the sequencer if there is one.
         if (item == null) begin
@@ -88,7 +80,8 @@ task my_rt_sig_driver::run_phase(uvm_phase phase);
                 break;
             end
         end
-        `undef WAIT_CLK_POSEDGE
     end
     phase.drop_objection(this);
 endtask
+
+`undef WAIT_CLK_POSEDGE

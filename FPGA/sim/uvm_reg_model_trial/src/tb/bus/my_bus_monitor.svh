@@ -25,14 +25,14 @@ class my_bus_monitor extends uvm_monitor;
     function void write(my_bus_collected_item item);
         // Create an item for uvm_reg_predictor.
         if (item.data_is_read) begin
-            my_bus_seq_item pkt;
+            my_bus_seq_item pkt = my_bus_seq_item::type_id::create("pkt");
             pkt.addr = item.rd_addr;
             pkt.data = item.rd_data;
             pkt.status = (item.rresp == my_verif_params_pkg::AXI4_RESP_OKAY) ? UVM_IS_OK : UVM_NOT_OK;
             m_analysis_port_to_reg_predictor.write(pkt);
         end
         if (item.data_is_written) begin
-            my_bus_seq_item pkt;
+            my_bus_seq_item pkt = my_bus_seq_item::type_id::create("pkt");
             pkt.addr = item.wr_addr;
             pkt.data = item.wr_data;
             pkt.write = 1;

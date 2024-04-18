@@ -18,7 +18,7 @@ virtual class my_base_test extends uvm_test;
         return type_name;
     endfunction
 
-    function new (string name = "my_base_test", uvm_component parent);
+    function new(string name = "my_base_test", uvm_component parent);
         super.new(name, parent);
     endfunction
 
