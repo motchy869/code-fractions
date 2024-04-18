@@ -30,6 +30,8 @@ XSIM := $(VIVADO_DIR)/bin/xsim
 SIM_DIR := $(MAKEFILE_DIR)/sim_result
 SRC_DIR := $(MAKEFILE_DIR)/../src
 
+SIM_CONSOLE_LOG_FILE_PATH := $(SIM_DIR)/sim_console.log
+
 # Must take care of the compile order.
 # Note that changes in svh files are NOT detected, so you need to change timestamp of any sv files and re-run make.
 SV_SRC_FILES := $(shell find $(SRC_DIR) -not -path '$(SRC_DIR)/tb/*' -type f -name "*.sv" | tr '\n' ' ')
@@ -67,7 +69,7 @@ elab: $(SIM_DIR)/xsim.dir/debug/xsimk
 # Run simulation and dump all waveforms.
 dump: $(SIM_DIR)/xsim.dir/debug/xsimk $(SIM_DIR)/dump_all.tcl
 	cd $(SIM_DIR) && \
-	$(XSIM) $(XSIM_FLAGS) debug -t ./dump_all.tcl -wdb all.wdb
+	$(XSIM) $(XSIM_FLAGS) debug -t ./dump_all.tcl -wdb all.wdb | tee $(SIM_CONSOLE_LOG_FILE_PATH)
 
 # Open waveform viewer.
 wave: $(SIM_DIR)/all.wdb
