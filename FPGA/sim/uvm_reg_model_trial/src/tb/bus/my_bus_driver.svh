@@ -116,7 +116,9 @@ task my_bus_driver::run_phase(uvm_phase phase);
     m_vif.reset_mst_port();
 
     forever begin
+        `uvm_info("INFO", "Waiting for a packet", UVM_DEBUG);
         seq_item_port.get_next_item(pkt);
+        `uvm_info("INFO", "Got a packet", UVM_DEBUG);
         if (pkt.write) begin
             write_access(pkt.addr, pkt.data, pkt.wstrb);
         end else begin

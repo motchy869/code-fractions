@@ -43,6 +43,9 @@ task my_test::main_phase(uvm_phase phase);
     end
 
     reg_model.REG_FILE_0.REG_0.write(reg_acc_status, 32'h12345678);
+    // DEBUG: 2024-04-18; Doesn't reach here.
+    `uvm_info("INFO", {"write to register 0: ", reg_acc_status.name()}, UVM_DEBUG)
+
     reg_model.REG_FILE_0.REG_1.write(reg_acc_status, 32'h87654321);
     phase.drop_objection(this);
 endtask
