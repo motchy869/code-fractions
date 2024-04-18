@@ -147,26 +147,31 @@ interface axi4_lite_if #(
         output rready;
     endclocking
 
-    function automatic void reset();
-        awaddr = '0;
-        awprot = '0;
-        awvalid = 1'b0;
-        awready = 1'b0;
-        wdata = '0;
-        wstrb = '0;
-        wvalid = 1'b0;
-        wready = 1'b0;
-        bresp = '0;
-        bvalid = 1'b0;
-        bready = 1'b0;
-        araddr = '0;
-        arprot = '0;
-        arvalid = 1'b0;
-        arready = 1'b0;
-        rdata = '0;
-        rresp = '0;
-        rvalid = 1'b0;
-        rready = 1'b0;
+    //! Reset the master port signals.
+    function automatic void reset_mst_port();
+        awaddr <= '0;
+        awprot <= '0;
+        awvalid <= 1'b0;
+        wdata <= '0;
+        wstrb <= '0;
+        wvalid <= 1'b0;
+        bready <= 1'b0;
+        araddr <= '0;
+        arprot <= '0;
+        arvalid <= 1'b0;
+        rready <= 1'b0;
+    endfunction
+
+    //! Reset the slave port signals.
+    function automatic void reset_slv_port();
+        awready <= 1'b0;
+        wready <= 1'b0;
+        bresp <= '0;
+        bvalid <= 1'b0;
+        arready <= 1'b0;
+        rdata <= '0;
+        rresp <= '0;
+        rvalid <= 1'b0;
     endfunction
     // --------------------
 endinterface
