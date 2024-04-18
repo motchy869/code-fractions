@@ -73,7 +73,7 @@ task my_rt_sig_driver::run_phase(uvm_phase phase);
         `endif
 
         `WAIT_CLK_POSEDGE
-        seq_item_port.try_next_item(item);
+        seq_item_port.try_next_item(item); // Get the next item from the sequencer if there is one.
         if (item == null) begin
             m_vif.input_vec_valid <= 1'b0;
         end else begin
@@ -83,7 +83,7 @@ task my_rt_sig_driver::run_phase(uvm_phase phase);
                 my_rt_sig_seq_item::CMD_INPUT_VEC:
                     input_vec(item.input_vec);
             endcase
-
+            seq_item_port.item_done(); // Tell the sequencer that the item is done.
             if (item.is_last_item) begin
                 break;
             end
