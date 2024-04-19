@@ -2,6 +2,7 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
+`include "../axi4_lite_if_pkg.svh"
 `include "../axi4_lite_if.svh"
 
 `default_nettype none
@@ -101,7 +102,8 @@ task automatic axi4_lite_read(
     ref axi4_lite_sigs_t dut_if_mon_sigs, //! A reference to the variable for monitoring the DUT interface. This variable is expected to be a mirror of the DUT interface signals.
     ref axi4_lite_mst_out_sigs_t dut_if_drv_sigs, //! A reference to the variable for driving the DUT interface. DUT interface signals are expected to be assigned to this variable.
     input bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr, //! address
-    output bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] data //! storage for read data
+    output bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] data, //! storage for read data
+    output axi4_lite_if_pkg::axi4_resp_t resp //! storage for response
 );
     if (dut_if_mon_sigs.arvalid) begin
         $info("There is a read transaction in progress. Waiting for it to complete.");
@@ -140,7 +142,8 @@ task automatic axi4_lite_write(
     ref axi4_lite_mst_out_sigs_t dut_if_drv_sigs, //! A reference to the variable for driving the DUT interface. DUT interface signals are expected to be assigned to this variable
     input bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr, //! address
     input bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] data, //! data
-    input bit [(AXI4_LITE_DATA_BIT_WIDTH/8)-1:0] wstrb = '1 //! write strobe
+    input bit [(AXI4_LITE_DATA_BIT_WIDTH/8)-1:0] wstrb = '1, //! write strobe
+    output axi4_lite_if_pkg::axi4_resp_t resp //! storage for response
 );
     if (dut_if_mon_sigs.awvalid || dut_if_mon_sigs.wvalid) begin
         $info("There is a write transaction in progress. Waiting for it to complete.");
@@ -256,14 +259,15 @@ end
 task automatic reg_check();
     const var bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] write_data[4] = {'h12345678, 'h87654321, 'hABCDEF01, 'h10FEDCBA};
     var bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] read_back_data;
+    axi4_lite_if_pkg::axi4_resp_t resp;
 
     for (int i=0; i<4; ++i) begin
-        axi4_lite_write(g_vip_slv_port_mon_sigs, r_axi4_vip_slv_port_drv_sigs, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), write_data[i]);
+        axi4_lite_write(g_vip_slv_port_mon_sigs, r_axi4_vip_slv_port_drv_sigs, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), write_data[i], '1, resp);
         @(posedge r_clk);
     end
 
     for (int i=0; i<4; ++i) begin
-        axi4_lite_read(g_vip_slv_port_mon_sigs, r_axi4_vip_slv_port_drv_sigs, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), read_back_data);
+        axi4_lite_read(g_vip_slv_port_mon_sigs, r_axi4_vip_slv_port_drv_sigs, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), read_back_data, resp);
         $info("Read back data from address %0H: %0H", i*4, read_back_data);
         @(posedge r_clk);
     end

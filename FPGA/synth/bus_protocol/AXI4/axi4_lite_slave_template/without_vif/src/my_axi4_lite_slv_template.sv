@@ -2,6 +2,9 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
+`include "axi4_lite_if_pkg.svh"
+`include "axi4_lite_if.svh"
+
 `default_nettype none
 
 //! AXI4-Lite slave template with 4 writable registers.
@@ -224,7 +227,7 @@ module my_axi4_lite_slv_template #(
             if (g_slv_reg_wr_en && ~r_axi4_lite_sigs.bvalid) begin
                 // Indicates a valid write response is available.
                 r_axi4_lite_sigs.bvalid <= 1'b1;
-                r_axi4_lite_sigs.bresp <= g_wr_addr_is_in_range ? if_s_axi4_lite.AXI4_RESP_OKAY : if_s_axi4_lite.AXI4_RESP_SLVERR;
+                r_axi4_lite_sigs.bresp <= g_wr_addr_is_in_range ? axi4_lite_if_pkg::AXI4_RESP_OKAY : axi4_lite_if_pkg::AXI4_RESP_SLVERR;
                 // Work error responses in future.
             end else if (g_curr_bvalid_accepted) begin // Check if BREADY is asserted while BVALID is high (there is a possibility that BREADY is always asserted high).
                 r_axi4_lite_sigs.bvalid <= 1'b0;
@@ -266,7 +269,7 @@ module my_axi4_lite_slv_template #(
             if (g_slv_reg_rd_en) begin
                 // Valid read data is available at the read data bus.
                 r_axi4_lite_sigs.rvalid <= 1'b1;
-                r_axi4_lite_sigs.rresp <= g_rd_addr_is_in_range ? if_s_axi4_lite.AXI4_RESP_OKAY : if_s_axi4_lite.AXI4_RESP_SLVERR;
+                r_axi4_lite_sigs.rresp <= g_rd_addr_is_in_range ? axi4_lite_if_pkg::AXI4_RESP_OKAY : axi4_lite_if_pkg::AXI4_RESP_SLVERR;
             end else if (r_axi4_lite_sigs.rvalid && if_s_axi4_lite.rready) begin
                 // Read data is accepted by the master
                 r_axi4_lite_sigs.rvalid <= 1'b0;

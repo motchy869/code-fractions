@@ -2,6 +2,7 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
+`include "../axi4_lite_if_pkg.svh"
 `include "../axi4_lite_if.svh"
 
 `default_nettype none
@@ -39,7 +40,8 @@ virtual interface axi4_lite_if vif__tb_vip; //! virtual interface between test b
 task automatic axi4_lite_read(
     virtual interface axi4_lite_if vif, //! virtual interface to DUT
     input bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr, //! address
-    output bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] data //! storage for read data
+    output bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] data, //! storage for read data
+    output axi4_lite_if_pkg::axi4_resp_t resp //! storage for response
 );
     if (vif.arvalid) begin
         $info("There is a read transaction in progress. Waiting for it to complete.");
@@ -73,6 +75,7 @@ task automatic axi4_lite_read(
 
         wait(vif.rvalid); // Note that RVALID may come AFTER the ARREADY's falling edge.
         data = vif.rdata;
+        resp = axi4_lite_if_pkg::axi4_resp_t'(vif.rresp);
         `WAIT_CLK_POSEDGE begin
             vif.rready <= 1'b0;
         end
@@ -88,7 +91,8 @@ task automatic axi4_lite_write(
     virtual interface axi4_lite_if vif, //! virtual interface to DUT
     input bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr, //! address
     input bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] data, //! data
-    input bit [(AXI4_LITE_DATA_BIT_WIDTH/8)-1:0] wstrb = '1 //! write strobe
+    input bit [(AXI4_LITE_DATA_BIT_WIDTH/8)-1:0] wstrb = '1, //! write strobe
+    output axi4_lite_if_pkg::axi4_resp_t resp //! storage for response
 );
     if (vif.awvalid || vif.wvalid) begin
         $info("There is a write transaction in progress. Waiting for it to complete.");
@@ -116,6 +120,14 @@ task automatic axi4_lite_write(
         vif.awvalid <= 1'b0;
         vif.wvalid <= 1'b0;
     end
+
+    // Note that BRESP can comes after WREADY.
+    if (!(vif.bready && vif.bvalid)) begin
+        wait(vif.bready && vif.bvalid);
+        `WAIT_CLK_POSEDGE;
+    end
+
+    resp = axi4_lite_if_pkg::axi4_resp_t'(vif.bresp);
 
     `undef WAIT_CLK_POSEDGE
 endtask
@@ -184,16 +196,17 @@ task automatic drive_rst();
 endtask
 
 task automatic reg_check();
-    const var bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] write_data[4] = {'h12345678, 'h87654321, 'hABCDEF01, 'h10FEDCBA};
-    var bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] read_back_data;
+    const bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] write_data[4] = {'h12345678, 'h87654321, 'hABCDEF01, 'h10FEDCBA};
+    bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] read_back_data;
+    axi4_lite_if_pkg::axi4_resp_t resp;
 
     for (int i=0; i<4; ++i) begin
-        axi4_lite_write(vif__tb_vip, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), write_data[i]);
+        axi4_lite_write(vif__tb_vip, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), write_data[i], '1, resp);
         @(posedge r_clk);
     end
 
     for (int i=0; i<4; ++i) begin
-        axi4_lite_read(vif__tb_vip, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), read_back_data);
+        axi4_lite_read(vif__tb_vip, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), read_back_data, resp);
         $info("Read back data from address %0H: %0H", i*4, read_back_data);
         @(posedge r_clk);
     end
