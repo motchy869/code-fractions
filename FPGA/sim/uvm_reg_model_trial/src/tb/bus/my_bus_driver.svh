@@ -28,13 +28,15 @@ class my_bus_driver extends uvm_driver#(my_bus_seq_item);
 
     extern virtual task read_access(
         input bit [my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr,
-        ref bit [my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH-1:0] data
+        ref bit [my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH-1:0] data,
+        ref uvm_status_e status
     );
 
     extern virtual task write_access(
         input bit [my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr,
         input bit [my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH-1:0] data,
-        input bit [my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH/8-1:0] wstrb
+        input bit [my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH/8-1:0] wstrb,
+        ref uvm_status_e status
     );
 
     extern virtual task run_phase(uvm_phase phase);
@@ -48,7 +50,8 @@ endclass
 
 task my_bus_driver::read_access(
     input bit [my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr,
-    ref bit [my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH-1:0] data
+    ref bit [my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH-1:0] data,
+    ref uvm_status_e status
 );
     if (m_vif.arvalid) begin
         `uvm_info("INFO", "There is a read transaction in progress. Waiting for it to complete.", UVM_MEDIUM);
@@ -76,6 +79,7 @@ task my_bus_driver::read_access(
 
         wait(m_vif.rvalid); // Note that RVALID may come AFTER the ARREADY's falling edge.
         data = m_vif.rdata;
+        status = (m_vif.rresp == my_verif_params_pkg::AXI4_RESP_OKAY) ? UVM_IS_OK : UVM_NOT_OK;
         `WAIT_CLK_POSEDGE begin
             m_vif.rready <= 1'b0;
         end
@@ -85,7 +89,8 @@ endtask
 task my_bus_driver::write_access(
     input bit [my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr,
     input bit [my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH-1:0] data,
-    input bit [my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH/8-1:0] wstrb
+    input bit [my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH/8-1:0] wstrb,
+    ref uvm_status_e status
 );
     if (m_vif.awvalid || m_vif.wvalid) begin
         `uvm_info("INFO", "There is a write transaction in progress. Waiting for it to complete.", UVM_MEDIUM);
@@ -107,6 +112,14 @@ task my_bus_driver::write_access(
         m_vif.awvalid <= 1'b0;
         m_vif.wvalid <= 1'b0;
     end
+
+    // Note that BRESP can comes after WREADY.
+    if (!(m_vif.bready && m_vif.bvalid)) begin
+        wait(m_vif.bready && m_vif.bvalid);
+        `WAIT_CLK_POSEDGE;
+    end
+
+    status = (m_vif.bresp == my_verif_params_pkg::AXI4_RESP_OKAY) ? UVM_IS_OK : UVM_NOT_OK;
 endtask
 
 task my_bus_driver::run_phase(uvm_phase phase);
@@ -116,15 +129,17 @@ task my_bus_driver::run_phase(uvm_phase phase);
     m_vif.reset_mst_port();
 
     forever begin
-        `uvm_info("INFO", "Waiting for a packet", UVM_DEBUG);
+        // `uvm_info("INFO", "Waiting for a packet", UVM_DEBUG);
         seq_item_port.get_next_item(pkt);
-        `uvm_info("INFO", "Got a packet", UVM_DEBUG);
+        // `uvm_info("INFO", "Got a packet", UVM_DEBUG);
         if (pkt.write) begin
-            write_access(pkt.addr, pkt.data, pkt.wstrb);
+            write_access(pkt.addr, pkt.data, pkt.wstrb, pkt.status);
         end else begin
-            read_access(pkt.addr, pkt.data);
+            read_access(pkt.addr, pkt.data, pkt.status);
         end
-        seq_item_port.item_done();
+
+        // If `provides_responses` is set to 1 in `uvm_adapter` (or its child) class, `item_done` method in `uvm_driver` (or its child) must return an `uvm_sequence_item`, otherwise `uvm_reg.read` and `uvm_reg.write` method get stuck.
+        seq_item_port.item_done(pkt);
 
         if (pkt.is_last_item) begin
             phase.drop_objection(this);
