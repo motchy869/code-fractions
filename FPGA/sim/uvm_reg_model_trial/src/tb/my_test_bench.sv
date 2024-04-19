@@ -12,7 +12,6 @@ module my_test_bench;
     import my_verif_pkg::*;
 
     // ---------- parameters ----------
-    localparam int CLK_PERIOD_NS = 8; //! clock period in ns
     // --------------------
 
     // ---------- internal signal and storage ----------
@@ -41,7 +40,7 @@ module my_test_bench;
     );
 
     //! Drive the clock.
-    initial forever #(CLK_PERIOD_NS/2) r_clk = ~r_clk;
+    initial forever #(my_verif_params_pkg::CLK_PERIOD_NS/2) r_clk = ~r_clk;
 
     //! Run test.
     initial begin

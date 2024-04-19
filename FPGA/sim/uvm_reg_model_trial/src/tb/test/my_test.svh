@@ -12,10 +12,16 @@
 class my_test extends my_base_test;
     `uvm_component_utils(my_test)
 
-    localparam int SIM_TIME_LIMIT_NS = 500; //! simulation time limit in ns
+    localparam int SIM_TIME_LIMIT_NS = 600; //! simulation time limit in ns
+    my_rt_sig_seq m_rt_sig_seq;
 
     function new(string name = "my_test", uvm_component parent);
         super.new(name, parent);
+    endfunction
+
+    virtual function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        m_rt_sig_seq = my_rt_sig_seq::type_id::create("m_rt_sig_seq", this);
     endfunction
 
     virtual function void end_of_elaboration_phase(uvm_phase phase);
@@ -42,10 +48,21 @@ task my_test::main_phase(uvm_phase phase);
         `uvm_fatal("NO-REG_MODEL", {"register model must be set for: ", "uvm_test_top", ".g_reg_model"})
     end
 
-    reg_model.REG_FILE_0.REG_0.write(reg_acc_status, 32'h12345678);
-    // DEBUG: 2024-04-18; Doesn't reach here.
-    `uvm_info("INFO", {"write to register 0: ", reg_acc_status.name()}, UVM_DEBUG)
+    reg_model.REG_FILE_0.REG_0.write(reg_acc_status, 32'h01234567);
+    reg_model.REG_FILE_0.REG_1.write(reg_acc_status, 32'h76543210);
+    reg_model.REG_FILE_1.REG_2.write(reg_acc_status, 32'hABCDEF01);
+    reg_model.REG_FILE_1.REG_3.write(reg_acc_status, 32'hFEDCBA10);
 
-    reg_model.REG_FILE_0.REG_1.write(reg_acc_status, 32'h87654321);
+    m_rt_sig_seq.start(m_env.m_rt_sig_agent.m_sequencer);
+    #(m_rt_sig_seq.DURATION_CYCLES*my_verif_params_pkg::CLK_PERIOD_NS + 1);
+
+    reg_model.REG_FILE_0.REG_0.write(reg_acc_status, 32'h02468ACE);
+    reg_model.REG_FILE_0.REG_1.write(reg_acc_status, 32'hECA86420);
+    reg_model.REG_FILE_1.REG_2.write(reg_acc_status, 32'h13579BDF);
+    reg_model.REG_FILE_1.REG_3.write(reg_acc_status, 32'hFD9B7531);
+
+    m_rt_sig_seq.start(m_env.m_rt_sig_agent.m_sequencer);
+    #(m_rt_sig_seq.DURATION_CYCLES*my_verif_params_pkg::CLK_PERIOD_NS + 1);
+
     phase.drop_objection(this);
 endtask

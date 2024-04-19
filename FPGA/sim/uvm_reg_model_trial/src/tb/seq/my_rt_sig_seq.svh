@@ -11,10 +11,25 @@
 class my_rt_sig_seq extends uvm_sequence;
     `uvm_object_utils(my_rt_sig_seq)
 
+    localparam int DURATION_CYCLES = 3;
+
     function new(string name = "my_rt_sig_seq");
         super.new(name);
     endfunction
 
     task body();
+        my_rt_sig_seq_item req;
+
+        for (int i=0; i<DURATION_CYCLES; ++i) begin
+            `uvm_create(req)
+            req.cmd = my_rt_sig_seq_item::CMD_INPUT_VEC;
+            req.input_vec = {
+                my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH'(1+3*i),
+                my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH'(2+3*i),
+                my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH'(3+3*i),
+                my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH'(4+3*i)
+            };
+            `uvm_send(req)
+        end
     endtask
 endclass

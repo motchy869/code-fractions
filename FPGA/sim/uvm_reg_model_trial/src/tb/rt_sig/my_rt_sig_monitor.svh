@@ -21,6 +21,7 @@ class my_rt_sig_monitor extends uvm_monitor;
     endfunction
 
     function void write(my_rt_sig_collected_item item);
+        `uvm_info("INFO", $sformatf("Got a inner_prod: %08h", item.inner_prod), UVM_MEDIUM)
         // Do something in the future.
 
         m_analysis_port.write(item);

@@ -57,7 +57,7 @@ ifeq ($(USE_UVM), 1)
 	XELAB_FLAGS += -L uvm -uvm_version 1.2
 # XSIM_FLAGS += --testplusarg "UVM_CONFIG_DB_TRACE"
 	XSIM_FLAGS += --testplusarg "UVM_TESTNAME=$(UVM_TESTNAME)"
-	XSIM_FLAGS += --testplusarg "UVM_VERBOSITY=UVM_DEBUG"
+	XSIM_FLAGS += --testplusarg "UVM_VERBOSITY=UVM_MEDIUM"
 endif
 #---------------------------------------------
 
