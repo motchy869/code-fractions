@@ -30,11 +30,15 @@ XSIM := $(VIVADO_DIR)/bin/xsim
 SIM_DIR := $(MAKEFILE_DIR)/sim_result
 SRC_DIR := $(MAKEFILE_DIR)/../src
 
-SV_SRC_FILES := $(shell find $(SRC_DIR) -type f -name "*.sv" | tr '\n' ' ')
-# SV_SRC_FILES := $(SRC_DIR)/my_axi4_lite_slv_template.sv \
-# 	$(SRC_DIR)/tb/my_verif_pkg.sv \
-# 	$(SRC_DIR)/tb/my_if.sv \
-# 	$(SRC_DIR)/tb/my_test_bench.sv
+SIM_CONSOLE_LOG_FILE_PATH := $(SIM_DIR)/sim_console.log
+
+# Must take care of the compile order.
+# Note that changes in svh files are NOT detected, so you need to change timestamp of any sv files and re-run make.
+SV_SRC_FILES := $(shell find $(SRC_DIR) -not -path '$(SRC_DIR)/tb/*' -type f -name "*.sv" | tr '\n' ' ')
+SV_SRC_FILES += $(SRC_DIR)/tb/my_verif_params_pkg.sv \
+	$(SRC_DIR)/tb/rt_sig/my_rt_sig_if.sv \
+	$(SRC_DIR)/tb/my_verif_pkg.sv \
+	$(SRC_DIR)/tb/my_test_bench.sv
 
 TB_TOP := my_test_bench
 
@@ -42,12 +46,18 @@ DEFAULT_TIME_SCALE := 1ns/1ps
 
 XVLOG_FLAGS := --incr
 XELAB_FLAGS := --incr
+# This defines an empty string.
+XSIM_FLAGS :=
 
 # 0/1: not/use
 USE_UVM := 1
+UVM_TESTNAME := my_test
 ifeq ($(USE_UVM), 1)
 	XVLOG_FLAGS += -L uvm -uvm_version 1.2
 	XELAB_FLAGS += -L uvm -uvm_version 1.2
+# XSIM_FLAGS += --testplusarg "UVM_CONFIG_DB_TRACE"
+	XSIM_FLAGS += --testplusarg "UVM_TESTNAME=$(UVM_TESTNAME)"
+	XSIM_FLAGS += --testplusarg "UVM_VERBOSITY=UVM_MEDIUM"
 endif
 #---------------------------------------------
 
@@ -60,17 +70,17 @@ elab: $(SIM_DIR)/xsim.dir/debug/xsimk
 # Run simulation and dump all waveforms.
 dump: $(SIM_DIR)/xsim.dir/debug/xsimk $(SIM_DIR)/dump_all.tcl
 	cd $(SIM_DIR) && \
-	$(XSIM) debug -t ./dump_all.tcl -wdb all.wdb
+	$(XSIM) $(XSIM_FLAGS) debug -t ./dump_all.tcl -wdb all.wdb | tee $(SIM_CONSOLE_LOG_FILE_PATH)
 
 # Open waveform viewer.
 wave: $(SIM_DIR)/all.wdb
 	cd $(SIM_DIR) && \
-	$(XSIM) all.wdb -gui &
+	$(XSIM) $(XSIM_FLAGS) all.wdb -gui &
 
 # Run parsing, elaboration and simulation with GUI.
 gui: $(SIM_DIR)/xsim.dir/debug/xsimk
 	cd $(SIM_DIR) && \
-	$(XSIM) debug -gui &
+	$(XSIM) $(XSIM_FLAGS) debug -gui &
 
 # Run parsing, elaboration and simulation.
 once:

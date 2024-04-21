@@ -2,17 +2,23 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
+`include "axi4_lite_if.svh"
+
 `default_nettype none
 
-//! AXI4-Lite slave template with 4 writable registers.
-//! This is obtained by modifying the AXI4-Lite slave template generated from Vivado 2023.2.
-module my_axi4_lite_slv_template #(
+//! A simple AXI4-Lite slave with 4 writable registers.
+//! This is based on the AXI4-Lite slave template generated from Vivado 2023.2.
+module simple_dut #(
     parameter int AXI4_LITE_ADDR_BIT_WIDTH = 32, //! bit width of AXI4-Lite address bus
     parameter int AXI4_LITE_DATA_BIT_WIDTH = 32 //! bit width of AXI4-Lite data bus
 )(
-    input wire i_clk, //! clock signal
-    input wire i_sync_rst, //! reset signal synchronous to clock
-    axi4_lite_if.slv_port if_s_axi4_lite //! AXI4-Lite slave interface
+    input wire logic i_clk, //! clock signal
+    input wire logic i_sync_rst, //! reset signal synchronous to clock
+    axi4_lite_if.slv_port if_s_axi4_lite, //! AXI4-Lite slave interface
+    input wire logic [3:0][AXI4_LITE_DATA_BIT_WIDTH-1:0] i_vec, //! An input vector. Details are described in `or_in_prod`
+    input wire logic i_vec_valid, //! A valid signal for the input vector
+    output var logic [AXI4_LITE_DATA_BIT_WIDTH-1:0] or_in_prod, //!An inner product between register 0,1,2,3 fields and `i_vec`. The result is truncated to AXI4_LITE_DATA_BIT_WIDTH bits.
+    output var logic or_in_prod_valid //! A valid signal for `or_in_prod`
 );
     // ---------- parameters ----------
     //! example-specific design signals
@@ -24,14 +30,17 @@ module my_axi4_lite_slv_template #(
     localparam int BIT_WIDTH_WORD_ADDR = 2; //! Bit width of word address. Typically log2(number of registers)
     // --------------------
 
-    // ---------- internal signal and storage ----------
-    typedef enum bit [1:0] {
-        AXI4_RESP_OKAY = 2'b00,
-        AXI4_RESP_EXOKAY = 2'b01,
-        AXI4_RESP_SLVERR = 2'b10,
-        AXI4_RESP_DECERR = 2'b11
-    } axi4_resp_t;
+    // ---------- functions ----------
+    function automatic logic [$clog2(AXI4_LITE_DATA_BIT_WIDTH):0] count_reg_bits(input logic [AXI4_LITE_DATA_BIT_WIDTH-1:0] data);
+        var logic [$clog2(AXI4_LITE_DATA_BIT_WIDTH):0] bit_cnt;
+        for (int i = 0; i < AXI4_LITE_DATA_BIT_WIDTH; i += 1) begin
+            bit_cnt += data[i];
+        end
+        return bit_cnt;
+    endfunction
+    // ----------
 
+    // ---------- internal signal and storage ----------
     typedef struct {
         logic [AXI4_LITE_ADDR_BIT_WIDTH-1:0] awaddr;
         logic awready;
@@ -221,7 +230,7 @@ module my_axi4_lite_slv_template #(
     end
 
     //! Implement write response logic generation.
-    //! The write response and response valid signals are asserted by the slave when WREADY, WVALID, WREADY and WVALID are asserted.
+    //! The write response and response valid signals are asserted by the slave when WREADY, WVALID, AWREADY and AWVALID are asserted.
     //! This marks the acceptance of address and indicates the status of write transaction.
     always_ff @(posedge i_clk) begin: gen_bresp
         if (i_sync_rst) begin
@@ -231,7 +240,7 @@ module my_axi4_lite_slv_template #(
             if (g_slv_reg_wr_en && ~r_axi4_lite_sigs.bvalid) begin
                 // Indicates a valid write response is available.
                 r_axi4_lite_sigs.bvalid <= 1'b1;
-                r_axi4_lite_sigs.bresp <= g_wr_addr_is_in_range ? AXI4_RESP_OKAY : AXI4_RESP_SLVERR;
+                r_axi4_lite_sigs.bresp <= g_wr_addr_is_in_range ? if_s_axi4_lite.AXI4_RESP_OKAY : if_s_axi4_lite.AXI4_RESP_SLVERR;
                 // Work error responses in future.
             end else if (g_curr_bvalid_accepted) begin // Check if BREADY is asserted while BVALID is high (there is a possibility that BREADY is always asserted high).
                 r_axi4_lite_sigs.bvalid <= 1'b0;
@@ -273,7 +282,7 @@ module my_axi4_lite_slv_template #(
             if (g_slv_reg_rd_en) begin
                 // Valid read data is available at the read data bus.
                 r_axi4_lite_sigs.rvalid <= 1'b1;
-                r_axi4_lite_sigs.rresp <= g_rd_addr_is_in_range ? AXI4_RESP_OKAY : AXI4_RESP_SLVERR;
+                r_axi4_lite_sigs.rresp <= g_rd_addr_is_in_range ? if_s_axi4_lite.AXI4_RESP_OKAY : if_s_axi4_lite.AXI4_RESP_SLVERR;
             end else if (r_axi4_lite_sigs.rvalid && if_s_axi4_lite.rready) begin
                 // Read data is accepted by the master
                 r_axi4_lite_sigs.rvalid <= 1'b0;
@@ -310,9 +319,22 @@ module my_axi4_lite_slv_template #(
         end
     end
 
-    // Add user logic here.
-
-    // User logic ends.
+    // ---------- Add user logic here. ----------
+    //! Calculate the inner product of the input vector and registers 0,1,2,3.
+    always_ff @(posedge i_clk) begin: calc_inner_prod
+        if (i_sync_rst) begin
+            or_in_prod <= '0;
+            or_in_prod_valid <= 1'b0;
+        end else begin
+            if (i_vec_valid) begin
+                or_in_prod <= r_slv_reg0 * i_vec[0] + r_slv_reg1 * i_vec[1] + r_slv_reg2 * i_vec[2] + r_slv_reg3 * i_vec[3];
+                or_in_prod_valid <= 1'b1;
+            end else begin
+                or_in_prod_valid <= 1'b0;
+            end
+        end
+    end
+    // ---------- User logic ends. ----------
 endmodule
 
 `default_nettype wire
