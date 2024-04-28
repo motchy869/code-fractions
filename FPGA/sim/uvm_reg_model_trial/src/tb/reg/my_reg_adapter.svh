@@ -20,6 +20,7 @@ class my_reg_adapter extends uvm_reg_adapter;
     //! Convert `uvm_reg_bus_op` instance to command for bus-driver'.
     virtual function uvm_sequence_item reg2bus(const ref uvm_reg_bus_op rw);
         my_bus_seq_item pkt = my_bus_seq_item::type_id::create("pkt");
+        pkt.cmd = my_bus_seq_item::CMD_NORMAL;
         pkt.write = (rw.kind == UVM_WRITE);
         pkt.addr = rw.addr;
         pkt.data = rw.data;

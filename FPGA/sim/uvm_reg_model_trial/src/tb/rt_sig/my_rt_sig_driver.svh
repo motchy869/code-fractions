@@ -70,6 +70,8 @@ task my_rt_sig_driver::run_phase(uvm_phase phase);
             m_vif.input_vec_valid <= 1'b0;
         end else begin
             unique case (item.cmd)
+                my_rt_sig_seq_item::CMD_NOP:
+                    ; // nothing to do
                 my_rt_sig_seq_item::CMD_RESET:
                     reset_dut();
                 my_rt_sig_seq_item::CMD_INPUT_VEC:
@@ -77,10 +79,12 @@ task my_rt_sig_driver::run_phase(uvm_phase phase);
             endcase
             seq_item_port.item_done(); // Tell the sequencer that the item is done.
             if (item.is_last_item) begin
+                `uvm_info("INFO", "Got last item in the sequence.", UVM_MEDIUM);
                 break;
             end
         end
     end
+
     phase.drop_objection(this);
 endtask
 

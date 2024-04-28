@@ -9,7 +9,12 @@
 `endif
 
 class my_bus_seq_item extends uvm_sequence_item;
+    typedef enum bit {
+        CMD_NOP,
+        CMD_NORMAL // read / write access
+    } cmd_e;
     bit is_last_item; // Indicates the last item in the sequence
+    cmd_e cmd; // command to the driver
     bit [my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr; // address
     bit [my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH-1:0] data; // data
     bit write; // 0/1: read/write
@@ -17,11 +22,13 @@ class my_bus_seq_item extends uvm_sequence_item;
     uvm_status_e status; // result of the transaction
 
     `uvm_object_utils_begin(my_bus_seq_item)
+        `uvm_field_int(is_last_item, UVM_DEFAULT | UVM_BIN)
+        `uvm_field_enum(cmd_e, cmd, UVM_DEFAULT | UVM_HEX)
         `uvm_field_int(addr, UVM_DEFAULT | UVM_HEX)
         `uvm_field_int(data, UVM_DEFAULT | UVM_HEX)
         `uvm_field_int(write, UVM_DEFAULT | UVM_BIN)
         `uvm_field_int(wstrb, UVM_DEFAULT | UVM_HEX)
-        `uvm_field_enum(uvm_status_e, status, UVM_DEFAULT)
+        `uvm_field_enum(uvm_status_e, status, UVM_DEFAULT | UVM_HEX)
     `uvm_object_utils_end
 
     function new(string name = "my_bus_seq_item");

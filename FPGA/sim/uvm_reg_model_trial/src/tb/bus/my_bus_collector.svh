@@ -88,7 +88,6 @@ task my_bus_collector::run_phase(uvm_phase phase);
         task_monitor_write_access();
     join_none
 
-    // TODO: put items from read/write access monitor into queue and write it to analysis port.
     forever begin
         wait(m_collected_item_queue.size() > 0);
         m_analysis_port.write(m_collected_item_queue.pop_front());

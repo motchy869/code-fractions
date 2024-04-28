@@ -132,17 +132,24 @@ task my_bus_driver::run_phase(uvm_phase phase);
         // `uvm_info("INFO", "Waiting for a packet", UVM_DEBUG);
         seq_item_port.get_next_item(pkt);
         // `uvm_info("INFO", "Got a packet", UVM_DEBUG);
-        if (pkt.write) begin
-            write_access(pkt.addr, pkt.data, pkt.wstrb, pkt.status);
-        end else begin
-            read_access(pkt.addr, pkt.data, pkt.status);
-        end
-
+        unique case (pkt.cmd)
+            my_bus_seq_item::CMD_NOP:
+                ; // nothing to do
+            my_bus_seq_item::CMD_NORMAL: begin
+                if (pkt.write) begin
+                    write_access(pkt.addr, pkt.data, pkt.wstrb, pkt.status);
+                end else begin
+                    read_access(pkt.addr, pkt.data, pkt.status);
+                end
+            end
+        endcase
         // If `provides_responses` is set to 1 in `uvm_adapter` (or its child) class, `item_done` method in `uvm_driver` (or its child) must return an `uvm_sequence_item`, otherwise `uvm_reg.read` and `uvm_reg.write` method get stuck.
         seq_item_port.item_done(pkt);
 
         if (pkt.is_last_item) begin
+            `uvm_info("INFO", "Got last item in the sequence.", UVM_MEDIUM);
             phase.drop_objection(this);
+            break;
         end
     end
 endtask
