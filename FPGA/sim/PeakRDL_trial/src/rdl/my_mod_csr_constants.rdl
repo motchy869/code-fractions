@@ -1,0 +1,9 @@
+// Verilog-style macro can not be used in string (e.g. desc = "...").
+// Perl snippet is more powerful.
+
+<%
+    our $MY_MOD_VER_MAJOR = 0x0;
+    our $MY_MOD_VER_MINOR = 0x12;
+    our $MY_MOD_VER_PATCH = 0x34;
+    our $MY_MOD_VER_DEBUG = 0x567;
+%>
