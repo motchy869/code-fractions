@@ -3,7 +3,9 @@
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 # You should change the following two variables to match your project.
-RDL_DIR=$SCRIPT_DIR/../../src/rdl
+SRC_DIR=$SCRIPT_DIR/../../src
+RDL_DIR=$SRC_DIR/rdl
+RTL_DIR=$SRC_DIR/rtl/csr
 DOC_DIR=$SCRIPT_DIR/../../build-out/doc/addr_map
 RDL_FILE_PATH=$RDL_DIR/my_mod_csr.rdl
 CPUIF_NAME=axi4-lite

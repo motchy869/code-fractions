@@ -1,0 +1,14 @@
+{
+    "cSpell.words": [
+        "acked",
+        "biten",
+        "intf",
+        "regblock",
+        "rptr",
+        "strb",
+        "wptr"
+    ],
+    "cSpell.ignorePaths": [
+        "src/rtl/csr/my_mod_csr.sv"
+    ]
+}
