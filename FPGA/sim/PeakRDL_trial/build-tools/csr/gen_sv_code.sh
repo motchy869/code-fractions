@@ -11,3 +11,4 @@ RTL_FILE_NAME=${RDL_FILE_NAME%.*}.sv
 RTL_FILE_PATH=$RTL_DIR/$RTL_FILE_NAME
 
 python3 $SCRIPT_DIR/refactor_sv_code.py $RTL_FILE_PATH
+python3 $SCRIPT_DIR/gen_module_header.py $RTL_FILE_PATH

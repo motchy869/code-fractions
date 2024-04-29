@@ -17,6 +17,12 @@ def refactor_core_file(file_path: str):
         lines = [line.replace('_axil', '_axi4lite') for line in lines]
         # Replace 'axil_' with 'axi4lite_'
         lines = [line.replace('axil_', 'axi4lite_') for line in lines]
+        # Replace '_rptr' with '_rd_ptr'
+        lines = [line.replace('_rptr', '_rd_ptr') for line in lines]
+        # Replace '_wptr' with '_wr_ptr'
+        lines = [line.replace('_wptr', '_wr_ptr') for line in lines]
+        # Replace '_biten' with '_bit_en'
+        lines = [line.replace('_biten', '_bit_en') for line in lines]
         # Replace 'hwif_out' with 'hw_if_out'
         lines = [line.replace('hwif_out', 'hw_if_out') for line in lines]
         # Replace 'hwif_in' with 'hw_if_in'
@@ -47,6 +53,8 @@ def refactor_pkg_file(file_path_in: str):
         for i in range(len(lines)):
             lines[i] = re.sub(compiled_pattern, r'\1 int \2', lines[i])
 
+        # Replace '_biten' with '_bit_en'
+        lines = [line.replace('_biten', '_bit_en') for line in lines]
         # Insert Verible directives
         inserted_str = '''// Verible directive
 // verilog_lint: waive-start line-length
