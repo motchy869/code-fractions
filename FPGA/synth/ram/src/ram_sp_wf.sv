@@ -6,7 +6,8 @@
 
 `default_nettype none
 
-//! single-port wite-first RAM with optional output register
+//! Single-port wite-first RAM with optional output register.
+//! This module is intended to be inferred as a block RAM by synthesis tools.
 //!
 //! **CAUTION**: This module has **NOT** been tested yet.
 //!
@@ -19,16 +20,17 @@
 //! example timing diagram
 //! ![example](timing_diagram_example_@read_latency=2.png)
 module ram_sp_wf #(
-    parameter int DATA_BIT_WIDTH = 8, //! data bit width
+    parameter int WORD_BIT_WIDTH = 8, //! word bit width, **must be power of 2**
     parameter int DEPTH = 8, //! depth of RAM, **must be power of 2**
-    parameter int USE_OUTPUT_REG = 0 //! output register option, 0/1: use/not use
+    parameter bit USE_OUTPUT_REG = 0 //! output register option, 0/1: use/not use
 )(
     input wire i_clk, //! clock signal
     input wire i_sync_rst, //! synchronous reset signal
     input wire i_we, //! write enable signal
     input wire [$clog2(DEPTH)-1:0] i_word_addr, //! word address
-    input wire [DATA_BIT_WIDTH-1:0] i_data, //! input data
-    output wire [DATA_BIT_WIDTH-1:0] o_data //! output data
+    input wire [WORD_BIT_WIDTH-1:0] i_data, //! input data
+    input wire [WORD_BIT_WIDTH/8-1:0] i_byte_en, //! byte enable signal
+    output wire [WORD_BIT_WIDTH-1:0] o_data //! output data
 );
 // ---------- parameters ----------
 localparam int WORD_ADDR_BIT_WIDTH = $clog2(DEPTH); //! word address bit width, `$clog2(DEPTH)`
@@ -36,21 +38,21 @@ localparam int WORD_ADDR_BIT_WIDTH = $clog2(DEPTH); //! word address bit width, 
 
 // ---------- parameter validation ----------
 generate
-    if (2**WORD_ADDR_BIT_WIDTH != DEPTH) begin: gen_invalid_addr_bit_width
-        $error("DEPTH must be power of 2");
+    if (!$onehot(WORD_BIT_WIDTH)) begin: gen_invalid_WORD_bit_width
+        $error("WORD_BIT_WIDTH must be power of 2");
         nonexistent_module_to_throw_a_custom_error_message_for invalid_parameters();
     end
 
-    if (USE_OUTPUT_REG != 0 && USE_OUTPUT_REG != 1) begin: gen_invalid_output_reg_option
-        $error("USE_OUTPUT_REG must be 0 or 1");
+    if (!$onehot(DEPTH)) begin: gen_invalid_addr_bit_width
+        $error("DEPTH must be power of 2");
         nonexistent_module_to_throw_a_custom_error_message_for invalid_parameters();
     end
 endgenerate
 // --------------------
 
 // ---------- internal signal and storage ----------
-var logic [DATA_BIT_WIDTH-1:0] r_ram [DEPTH]; //! RAM
-var logic [USE_OUTPUT_REG:0][DATA_BIT_WIDTH-1:0] r_out_reg; //! output register
+var logic [WORD_BIT_WIDTH-1:0] r_ram [DEPTH]; //! RAM
+var logic [USE_OUTPUT_REG:0][WORD_BIT_WIDTH-1:0] r_out_reg; //! output register
 // --------------------
 
 // ---------- Drive output signals. ----------
@@ -60,7 +62,11 @@ assign o_data = r_out_reg[USE_OUTPUT_REG];
 //! Update RAM content.
 always_ff @(posedge i_clk) begin: update_ram
     if (!i_sync_rst && i_we) begin
-        r_ram[i_word_addr] <= i_data;
+        for (int i=0; i<WORD_BIT_WIDTH/8; ++i) begin
+            if (i_byte_en[i]) begin
+                r_ram[i_word_addr][i*8 +: 8] <= i_data[i*8 +: 8];
+            end
+        end
     end
 end
 
