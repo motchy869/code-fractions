@@ -81,4 +81,12 @@ addrmap my_mod_csr { // Type name is mandatory.
         desc = "All fields of this register can be written only once after reset.";
         field {} FIELD;
     } WRITE_ONCE;
+
+    mem {
+        sw = rw;
+        memwidth = 32;
+        mementries = 8;
+
+        desc = "test memory";
+    } external TEST_MEM;
 };
