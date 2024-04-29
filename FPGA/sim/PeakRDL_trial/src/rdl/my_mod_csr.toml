@@ -1,0 +1,5 @@
+[c-header]
+std = "latest"
+#type_style = "hier" # derived from common.sh
+subword_size = 32
+bitfields = "ltoh"
