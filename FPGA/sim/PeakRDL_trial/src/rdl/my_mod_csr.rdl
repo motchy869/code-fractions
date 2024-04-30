@@ -78,7 +78,9 @@ addrmap my_mod_csr { // Type name is mandatory.
         default sw = rw1;
         default hw = r;
 
-        desc = "All fields of this register can be written only once after reset.";
+        desc = "All fields of this register can be written only once after reset.
+
+        **CAUTION**: write-once feature has not been supported yet by PeakRDL-regblock";
         field {} FIELD[32];
     } WRITE_ONCE;
 
