@@ -79,7 +79,7 @@ addrmap my_mod_csr { // Type name is mandatory.
         default hw = r;
 
         desc = "All fields of this register can be written only once after reset.";
-        field {} FIELD;
+        field {} FIELD[32];
     } WRITE_ONCE;
 
     mem {
