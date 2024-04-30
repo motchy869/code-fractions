@@ -3,7 +3,6 @@
 // verilog_lint: waive-start line-length
 
 `include "axi4_lite_if_pkg.svh"
-`include "axi4_lite_if.svh"
 
 `default_nettype none
 

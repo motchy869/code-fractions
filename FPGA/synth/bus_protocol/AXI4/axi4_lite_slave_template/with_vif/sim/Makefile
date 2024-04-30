@@ -28,7 +28,7 @@ XELAB := $(VIVADO_DIR)/bin/xelab
 XSIM := $(VIVADO_DIR)/bin/xsim
 
 SIM_DIR := $(MAKEFILE_DIR)/sim_result
-SRC_DIR := $(MAKEFILE_DIR)/../../src
+SRC_DIR := $(MAKEFILE_DIR)/../src
 SV_SRC_FILES := $(shell find $(SRC_DIR) -type f -name "*.sv" | tr '\n' ' ')
 
 TB_TOP := test_bench
