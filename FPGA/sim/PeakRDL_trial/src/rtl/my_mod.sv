@@ -51,7 +51,7 @@ wire my_mod_csr_pkg::my_mod_csr__out_t w_csr_hw_if_out; //! output from CSR modu
 //! CSR to RAM bridge CSR-side interface
 csr_to_ram_bridge_csr_side_if #(
     .WORD_BIT_WIDTH(WORD_BIT_WIDTH),
-    .BYTE_ADDR_BIT_WIDTH(RAM_BYTE_ADDR_BIT_WIDTH),
+    .BYTE_ADDR_BIT_WIDTH(RAM_BYTE_ADDR_BIT_WIDTH)
 ) csr_to_ram_bridge_csr_side_if_0 (
     .i_clk(i_clk)
 );
