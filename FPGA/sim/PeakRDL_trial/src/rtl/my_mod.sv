@@ -111,7 +111,10 @@ ram_sp_wf #(
 
 //! CSR to RAM bridge
 csr_to_ram_bridge #(
-
+    .WORD_BIT_WIDTH(WORD_BIT_WIDTH),
+    .BYTE_ADDR_BIT_WIDTH(RAM_BYTE_ADDR_BIT_WIDTH),
+    .WORD_ADDR_BIT_WIDTH(RAM_WORD_ADDR_BIT_WIDTH),
+    .OUTPUT_REG_IS_USED_IN_RAM(USE_RAM_OUTPUT_REG)
 ) csr_to_ram_bridge_0 (
     .i_clk(i_clk),
     .i_sync_rst(i_sync_rst),
