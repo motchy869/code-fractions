@@ -22,7 +22,7 @@ module my_mod (
 localparam int WORD_BIT_WIDTH = 32; //! word bit width
 localparam int RAM_DEPTH = 8; //! depth of RAM
 localparam int USE_RAM_OUTPUT_REG = 1; //! output register option, 0/1: not use/ use
-localparam int RAM_BYTE_ADDR_BIT_WIDTH = $clog2(WORD_BIT_WIDTH*RAM_DEPTH); //! byte address bit width
+localparam int RAM_BYTE_ADDR_BIT_WIDTH = $clog2(WORD_BIT_WIDTH/8*RAM_DEPTH); //! byte address bit width
 localparam int BYTES_PER_WORD = WORD_BIT_WIDTH/8; //! byte per word
 localparam int BYTE_ADDR_BITS_PER_WORD = $clog2(BYTES_PER_WORD); //! byte address bits per word
 localparam int RAM_WORD_ADDR_BIT_WIDTH = RAM_BYTE_ADDR_BIT_WIDTH - BYTE_ADDR_BITS_PER_WORD; //! word address bit width
@@ -125,9 +125,9 @@ csr_to_ram_bridge #(
 
 assign csr_to_ram_bridge_csr_side_if_0.slv_port.acc_req = w_csr_hw_if_out.SIMPLE_MEM.req;
 assign csr_to_ram_bridge_csr_side_if_0.slv_port.byte_addr = w_csr_hw_if_out.SIMPLE_MEM.addr;
-assign csr_to_ram_bridge_csr_side_if_0.slv_port.acc_req_is_wr = w_csr_hw_if_out.req_is_wr;
-assign csr_to_ram_bridge_csr_side_if_0.slv_port.wr_data = w_csr_hw_if_out.wr_data;
-assign csr_to_ram_bridge_csr_side_if_0.slv_port.wr_bit_en = w_csr_hw_if_out.wr_bit_en;
+assign csr_to_ram_bridge_csr_side_if_0.slv_port.acc_req_is_wr = w_csr_hw_if_out.SIMPLE_MEM.req_is_wr;
+assign csr_to_ram_bridge_csr_side_if_0.slv_port.wr_data = w_csr_hw_if_out.SIMPLE_MEM.wr_data;
+assign csr_to_ram_bridge_csr_side_if_0.slv_port.wr_bit_en = w_csr_hw_if_out.SIMPLE_MEM.wr_bit_en;
 
 assign w_csr_hw_if_in.SIMPLE_MEM.rd_ack = csr_to_ram_bridge_csr_side_if_0.mst_port.rd_ack;
 assign w_csr_hw_if_in.SIMPLE_MEM.rd_data = csr_to_ram_bridge_csr_side_if_0.mst_port.rd_data;

@@ -31,7 +31,7 @@ generate
         nonexistent_module_to_throw_a_custom_error_message_for invalid_parameters();
     end
 
-    if (!if_csr_side.BYTE_ADDR_BIT_WIDTH != BYTE_ADDR_BIT_WIDTH) begin: gen_invalid_BYTE_ADDR_BIT_WIDTH
+    if (if_csr_side.BYTE_ADDR_BIT_WIDTH != BYTE_ADDR_BIT_WIDTH) begin: gen_invalid_BYTE_ADDR_BIT_WIDTH
         $error("BYTE_ADDR_BIT_WIDTH must be equal to BYTE_ADDR_BIT_WIDTH of if_csr_side");
         nonexistent_module_to_throw_a_custom_error_message_for invalid_parameters();
     end
@@ -57,7 +57,7 @@ assign if_csr_side.wr_ack = r_wr_ack;
 
 assign if_ram_side.we = if_csr_side.acc_req && if_csr_side.acc_req_is_wr;
 assign if_ram_side.word_addr = g_word_addr;
-assign if_ram_side.byte_en = g_byte_en;
+assign if_ram_side.wr_byte_en = g_byte_en;
 assign if_ram_side.wr_data = if_csr_side.wr_data;
 // --------------------
 
