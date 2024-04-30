@@ -4,7 +4,7 @@
 //! Some techniques used in this file are based on the following source:
 //! - [UVM Register Model Example](https://www.chipverify.com/uvm/uvm-register-model-example)
 
-`ifndef MY_VERIF_PKG_SVH_INCLUDED
+`ifndef INCLUDED_FROM_MY_VERIF_PKG
     $fatal("compile \"my_verif_pkg.sv\" instead of including this file");
 `endif
 

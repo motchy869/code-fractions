@@ -1,7 +1,7 @@
 // Verible directive
 // verilog_lint: waive-start line-length
 
-`ifndef MY_VERIF_PKG_SVH_INCLUDED
+`ifndef INCLUDED_FROM_MY_VERIF_PKG
     $fatal("compile \"my_verif_pkg.sv\" instead of including this file");
 `endif
 

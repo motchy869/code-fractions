@@ -6,7 +6,7 @@
 //! - [uvm_reg_file的作用](https://www.cnblogs.com/lanlancky/p/17110187.html)
 //! - [Universal Verification Methodology (UVM) 1.2 User’s Guide](https://www.accellera.org/images/downloads/standards/uvm/uvm_users_guide_1.2.pdf)
 
-`ifndef MY_VERIF_PKG_SVH_INCLUDED
+`ifndef INCLUDED_FROM_MY_VERIF_PKG
     $fatal("compile \"my_verif_pkg.sv\" instead of including this file");
 `endif
 
