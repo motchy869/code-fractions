@@ -81,7 +81,7 @@ task my_bus_driver::run_phase(uvm_phase phase);
     my_bus_seq_item pkt;
 
     phase.raise_objection(this);
-    m_vif.reset_mst_port();
+    m_vif.reset_mst_out_sigs();
 
     forever begin
         // `uvm_info("INFO", "Waiting for a packet", UVM_DEBUG);

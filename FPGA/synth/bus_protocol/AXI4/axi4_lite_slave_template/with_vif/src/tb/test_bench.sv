@@ -88,7 +88,7 @@ endtask
 //! Launch scenario and manage time limit.
 initial begin
     dut_vif = dut_if;
-    dut_vif.reset_mst_port();
+    dut_vif.reset_mst_out_sigs();
     fork
         scenario();
     join_none

@@ -131,7 +131,7 @@ endtask
 //! Launch scenario and manage time limit.
 initial begin
     vif__tb_vip = if__tb_vip;
-    if__tb_vip.reset_mst_port();
+    if__tb_vip.reset_mst_out_sigs();
     fork
         scenario();
     join_none
