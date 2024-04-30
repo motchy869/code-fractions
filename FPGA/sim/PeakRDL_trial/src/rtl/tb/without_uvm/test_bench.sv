@@ -18,7 +18,7 @@ localparam int SIM_TIME_LIMIT_NS = 300; //! simulation time limit in ns
 //! 'Holding AXI ARESETN asserted for 16 cycles of the slowest AXI clock is generally a sufficient reset pulse width for Xilinx IP. --UG1037.' (AXI VIP message)
 localparam int RELEASE_RST_AFTER_CLK = 20;
 
-localparam int AXI4_LITE_ADDR_BIT_WIDTH = 32; //! bit width of AXI4-Lite address bus
+localparam int AXI4_LITE_ADDR_BIT_WIDTH = $clog2('h40); //! bit width of AXI4-Lite address bus
 localparam int AXI4_LITE_DATA_BIT_WIDTH = 32; //! bit width of AXI4-Lite data bus
 // --------------------
 
