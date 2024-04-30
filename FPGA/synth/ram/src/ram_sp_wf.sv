@@ -9,8 +9,6 @@
 //! Single-port wite-first RAM with optional output register.
 //! This module is intended to be inferred as a block RAM by synthesis tools.
 //!
-//! **CAUTION**: This module has **NOT** been tested yet.
-//!
 //! read latency:
 //! - 1 cycle if `USE_OUTPUT_REG` is 0
 //! - 2 cycles if `USE_OUTPUT_REG` is 1
