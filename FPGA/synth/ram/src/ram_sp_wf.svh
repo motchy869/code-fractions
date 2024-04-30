@@ -2,7 +2,7 @@
 `define RAM_SP_WF_SVH_INCLUDED
 
 module ram_sp_wf #(
-    parameter int WORD_BIT_WIDTH = 8, //! word bit width, **must be power of 2**
+    parameter int WORD_BIT_WIDTH = 32, //! word bit width, **must be power of 2**
     parameter int DEPTH = 8, //! depth of RAM, **must be power of 2**
     parameter bit USE_OUTPUT_REG = 0 //! output register option, 0/1: not use/ use
 )(
