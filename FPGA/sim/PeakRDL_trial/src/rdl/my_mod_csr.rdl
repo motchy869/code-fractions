@@ -87,6 +87,6 @@ addrmap my_mod_csr { // Type name is mandatory.
         memwidth = 32;
         mementries = 8;
 
-        desc = "test memory";
-    } external TEST_MEM;
+        desc = "SW can store arbitral value to this memory.";
+    } external SIMPLE_MEM;
 };

@@ -20,17 +20,17 @@
 //! example timing diagram
 //! ![example](timing_diagram_example_@read_latency=2.png)
 module ram_sp_wf #(
-    parameter int WORD_BIT_WIDTH = 8, //! word bit width, **must be power of 2**
+    parameter int WORD_BIT_WIDTH = 32, //! word bit width, **must be power of 2**
     parameter int DEPTH = 8, //! depth of RAM, **must be power of 2**
-    parameter bit USE_OUTPUT_REG = 0 //! output register option, 0/1: use/not use
+    parameter bit USE_OUTPUT_REG = 0 //! output register option, 0/1: not use/ use
 )(
-    input wire i_clk, //! clock signal
-    input wire i_sync_rst, //! synchronous reset signal
-    input wire i_we, //! write enable signal
-    input wire [$clog2(DEPTH)-1:0] i_word_addr, //! word address
-    input wire [WORD_BIT_WIDTH-1:0] i_data, //! input data
-    input wire [WORD_BIT_WIDTH/8-1:0] i_byte_en, //! byte enable signal
-    output wire [WORD_BIT_WIDTH-1:0] o_data //! output data
+    input wire logic i_clk, //! clock signal
+    input wire logic i_sync_rst, //! synchronous reset signal
+    input wire logic i_we, //! write enable signal
+    input wire logic [$clog2(DEPTH)-1:0] i_word_addr, //! word address
+    input wire logic [WORD_BIT_WIDTH-1:0] i_data, //! input data
+    input wire logic [WORD_BIT_WIDTH/8-1:0] i_wr_byte_en, //! write byte enable signal
+    output wire logic [WORD_BIT_WIDTH-1:0] o_data //! output data
 );
 // ---------- parameters ----------
 localparam int WORD_ADDR_BIT_WIDTH = $clog2(DEPTH); //! word address bit width, `$clog2(DEPTH)`
@@ -63,7 +63,7 @@ assign o_data = r_out_reg[USE_OUTPUT_REG];
 always_ff @(posedge i_clk) begin: update_ram
     if (!i_sync_rst && i_we) begin
         for (int i=0; i<WORD_BIT_WIDTH/8; ++i) begin
-            if (i_byte_en[i]) begin
+            if (i_wr_byte_en[i]) begin
                 r_ram[i_word_addr][i*8 +: 8] <= i_data[i*8 +: 8];
             end
         end
