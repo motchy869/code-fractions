@@ -12,7 +12,7 @@
 module test_bench;
 // ---------- parameters ----------
 localparam int CLK_PERIOD_NS = 8; //! clock period in ns
-localparam int SIM_TIME_LIMIT_NS = 300; //! simulation time limit in ns
+localparam int SIM_TIME_LIMIT_NS = 600; //! simulation time limit in ns
 //! Reset signal deasserts right after this clock rising-edge.
 //!
 //! 'Holding AXI ARESETN asserted for 16 cycles of the slowest AXI clock is generally a sufficient reset pulse width for Xilinx IP. --UG1037.' (AXI VIP message)
@@ -60,8 +60,99 @@ task automatic drive_rst();
     r_sync_rst <= 1'b0;
 endtask
 
+task automatic csr_check();
+    const bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] MY_MOD_VERSION_ADDR = AXI4_LITE_ADDR_BIT_WIDTH'('h0);
+    const bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] PROTECTED_REG_ADDR = AXI4_LITE_ADDR_BIT_WIDTH'('h4);
+    const bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] UNLOCK_PROTECTED_REG_ADDR = AXI4_LITE_ADDR_BIT_WIDTH'('h8);
+    const bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] SINGLE_PULSE_ADDR = AXI4_LITE_ADDR_BIT_WIDTH'('hC);
+
+    var bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] read_back_data;
+    axi4_lite_if_pkg::axi4_resp_t resp;
+
+    // ---------- MY_MOD_VERSION ----------
+    begin
+        const bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] expected_rd_data = AXI4_LITE_DATA_BIT_WIDTH'('h01234567);
+
+        axi4_lite_if_pkg::axi4_lite_access#(
+            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
+            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
+        )::axi4_lite_read(axi4_lite_vif_0, MY_MOD_VERSION_ADDR, read_back_data, resp);
+
+        assert(read_back_data === expected_rd_data) else begin
+            $fatal(2, "MY_MOD_VERSION: read data mismatch.");
+        end
+    end
+    // --------------------
+
+    // ---------- PROTECTED_REG ----------
+    begin
+        const bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] unlock_key = '1;
+        const bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] expected_rd_data_0 = AXI4_LITE_DATA_BIT_WIDTH'('h0); // expected read data before unlock
+        const bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] expected_rd_data_1 = AXI4_LITE_DATA_BIT_WIDTH'('hC001C0DE); // expected read data after unlock
+
+        // before unlock
+        axi4_lite_if_pkg::axi4_lite_access#(
+            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
+            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
+        )::axi4_lite_write(axi4_lite_vif_0, PROTECTED_REG_ADDR, AXI4_LITE_DATA_BIT_WIDTH'('hBADCACA0), '1, resp);
+
+        axi4_lite_if_pkg::axi4_lite_access#(
+            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
+            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
+        )::axi4_lite_read(axi4_lite_vif_0, PROTECTED_REG_ADDR, read_back_data, resp);
+
+        assert(read_back_data === expected_rd_data_0) else begin
+            $fatal(2, "PROTECTED_REG: read data mismatch.");
+        end
+
+        // unlock
+        axi4_lite_if_pkg::axi4_lite_access#(
+            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
+            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
+        )::axi4_lite_write(axi4_lite_vif_0, UNLOCK_PROTECTED_REG_ADDR, unlock_key, '1, resp);
+
+        // after unlock
+        axi4_lite_if_pkg::axi4_lite_access#(
+            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
+            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
+        )::axi4_lite_write(axi4_lite_vif_0, PROTECTED_REG_ADDR, expected_rd_data_1, '1, resp);
+
+        axi4_lite_if_pkg::axi4_lite_access#(
+            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
+            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
+        )::axi4_lite_read(axi4_lite_vif_0, PROTECTED_REG_ADDR, read_back_data, resp);
+
+        assert(read_back_data === expected_rd_data_1) else begin
+            $fatal(2, "PROTECTED_REG: read data mismatch.");
+        end
+    end
+    // --------------------
+
+    // ---------- SINGLE_PULSE ----------
+    begin
+        const bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] expected_rd_data = AXI4_LITE_DATA_BIT_WIDTH'('h0);
+
+        axi4_lite_if_pkg::axi4_lite_access#(
+            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
+            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
+        )::axi4_lite_write(axi4_lite_vif_0, SINGLE_PULSE_ADDR, AXI4_LITE_DATA_BIT_WIDTH'('h1), '1, resp);
+
+        axi4_lite_if_pkg::axi4_lite_access#(
+            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
+            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
+        )::axi4_lite_read(axi4_lite_vif_0, SINGLE_PULSE_ADDR, read_back_data, resp);
+
+        assert(read_back_data === expected_rd_data) else begin
+            $fatal(2, "SINGLE_PULSE: read data mismatch.");
+        end
+    end
+    // --------------------
+endtask
+
 task automatic scenario();
     drive_rst();
+    @(posedge r_clk);
+    csr_check();
     @(posedge r_clk);
     $finish;
 endtask
@@ -69,6 +160,7 @@ endtask
 //! Launch scenario and manage time limit.
 initial begin
     axi4_lite_vif_0 = axi4_lite_if_0;
+    axi4_lite_vif_0.reset_mst_out_sigs();
     fork
         scenario();
     join_none
