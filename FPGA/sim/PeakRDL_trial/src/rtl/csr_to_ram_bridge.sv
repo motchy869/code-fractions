@@ -36,11 +36,6 @@ generate
         nonexistent_module_to_throw_a_custom_error_message_for invalid_parameters();
     end
 
-    if (if_ram_side.WORD_BIT_WIDTH != WORD_BIT_WIDTH) begin: gen_invalid_WORD_BIT_WIDTH
-        $error("WORD_BIT_WIDTH must be equal to WORD_BIT_WIDTH of if_ram_side");
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_parameters();
-    end
-
     if (if_ram_side.WORD_ADDR_BIT_WIDTH != WORD_ADDR_BIT_WIDTH) begin: gen_invalid_WORD_ADDR_BIT_WIDTH
         $error("WORD_ADDR_BIT_WIDTH must be equal to WORD_ADDR_BIT_WIDTH of if_ram_side");
         nonexistent_module_to_throw_a_custom_error_message_for invalid_parameters();
