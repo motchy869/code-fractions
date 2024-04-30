@@ -126,15 +126,17 @@ csr_to_ram_bridge #(
 // ---------- Drive output signals. ----------
 // --------------------
 
-assign csr_to_ram_bridge_csr_side_if_0.slv_port.acc_req = w_csr_hw_if_out.SIMPLE_MEM.req;
-assign csr_to_ram_bridge_csr_side_if_0.slv_port.byte_addr = w_csr_hw_if_out.SIMPLE_MEM.addr;
-assign csr_to_ram_bridge_csr_side_if_0.slv_port.acc_req_is_wr = w_csr_hw_if_out.SIMPLE_MEM.req_is_wr;
-assign csr_to_ram_bridge_csr_side_if_0.slv_port.wr_data = w_csr_hw_if_out.SIMPLE_MEM.wr_data;
-assign csr_to_ram_bridge_csr_side_if_0.slv_port.wr_bit_en = w_csr_hw_if_out.SIMPLE_MEM.wr_bit_en;
+// CSR -> bridge
+assign csr_to_ram_bridge_csr_side_if_0.acc_req = w_csr_hw_if_out.SIMPLE_MEM.req;
+assign csr_to_ram_bridge_csr_side_if_0.byte_addr = w_csr_hw_if_out.SIMPLE_MEM.addr;
+assign csr_to_ram_bridge_csr_side_if_0.acc_req_is_wr = w_csr_hw_if_out.SIMPLE_MEM.req_is_wr;
+assign csr_to_ram_bridge_csr_side_if_0.wr_data = w_csr_hw_if_out.SIMPLE_MEM.wr_data;
+assign csr_to_ram_bridge_csr_side_if_0.wr_bit_en = w_csr_hw_if_out.SIMPLE_MEM.wr_bit_en;
 
-assign w_csr_hw_if_in.SIMPLE_MEM.rd_ack = csr_to_ram_bridge_csr_side_if_0.mst_port.rd_ack;
-assign w_csr_hw_if_in.SIMPLE_MEM.rd_data = csr_to_ram_bridge_csr_side_if_0.mst_port.rd_data;
-assign w_csr_hw_if_in.SIMPLE_MEM.wr_ack = csr_to_ram_bridge_csr_side_if_0.mst_port.wr_ack;
+// CSR <- bridge
+assign w_csr_hw_if_in.SIMPLE_MEM.rd_ack = csr_to_ram_bridge_csr_side_if_0.rd_ack;
+assign w_csr_hw_if_in.SIMPLE_MEM.rd_data = csr_to_ram_bridge_csr_side_if_0.rd_data;
+assign w_csr_hw_if_in.SIMPLE_MEM.wr_ack = csr_to_ram_bridge_csr_side_if_0.wr_ack;
 
 endmodule
 
