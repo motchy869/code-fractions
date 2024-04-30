@@ -63,7 +63,7 @@ assign o_data = r_out_reg[USE_OUTPUT_REG];
 always_ff @(posedge i_clk) begin: update_ram
     if (!i_sync_rst && i_we) begin
         for (int i=0; i<WORD_BIT_WIDTH/8; ++i) begin
-            if (i_byte_en[i]) begin
+            if (i_wr_byte_en[i]) begin
                 r_ram[i_word_addr][i*8 +: 8] <= i_data[i*8 +: 8];
             end
         end
