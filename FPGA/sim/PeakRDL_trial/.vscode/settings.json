@@ -1,0 +1,20 @@
+{
+    "cSpell.words": [
+        "acked",
+        "Addrmap",
+        "BADCACA",
+        "biten",
+        "CAFEBABE",
+        "cheader",
+        "hwif",
+        "intf",
+        "regblock",
+        "rptr",
+        "strb",
+        "wptr"
+    ],
+    "cSpell.ignorePaths": [
+        "src/rtl/csr/my_mod_csr.sv",
+        "src/rtl/csr/my_mod_csr_pkg.sv"
+    ]
+}

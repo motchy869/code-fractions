@@ -3,7 +3,6 @@
 // verilog_lint: waive-start line-length
 
 `include "../axi4_lite_if_pkg.svh"
-`include "../axi4_lite_if.svh"
 
 `default_nettype none
 
@@ -36,93 +35,6 @@ axi4_lite_if dut_if (.clk(r_clk));
 virtual interface axi4_lite_if dut_vif; //! virtual interface to DUT
 // --------------------
 
-//! Perform AXI4-Lite read transaction.
-//! This task is based on the following blog post.
-//! [Testing Verilog AXI4-Lite Peripherals](https://klickverbot.at/blog/2016/01/testing-verilog-axi4-lite-peripherals/)
-task automatic axi4_lite_read(
-    virtual interface axi4_lite_if vif, //! virtual interface to DUT
-    input bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr, //! address
-    output bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] data //! storage for read data
-);
-    if (vif.arvalid) begin
-        $info("There is a read transaction in progress. Waiting for it to complete.");
-        wait(!vif.arvalid);
-    end
-
-    `ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
-        `define WAIT_CLK_POSEDGE @(posedge vif.clk)
-    `else
-        `define WAIT_CLK_POSEDGE @vif.mst_cb
-    `endif
-
-    `WAIT_CLK_POSEDGE begin
-        vif.araddr <= addr;
-        vif.arvalid <= 1'b1;
-        vif.rready <= 1'b1;
-    end
-
-    wait(vif.arready);
-
-    if (vif.rvalid) begin
-        data = vif.rdata;
-        `WAIT_CLK_POSEDGE begin
-            vif.arvalid <= 1'b0;
-            vif.rready <= 1'b0;
-        end
-    end else begin
-        `WAIT_CLK_POSEDGE begin
-            vif.arvalid <= 1'b0; // Should be de-asserted here, otherwise possible protocol violation (AXI4_ERRM_ARVALID_STABLE: Once ARVALID is asserted, it must remain asserted until ARREADY is high. Spec: section A3.2.1.)
-        end
-
-        wait(vif.rvalid); // Note that RVALID may come AFTER the ARREADY's falling edge.
-        data = vif.rdata;
-        `WAIT_CLK_POSEDGE begin
-            vif.rready <= 1'b0;
-        end
-    end
-
-    `undef WAIT_CLK_POSEDGE
-endtask
-
-//! Perform AXI4-Lite write transaction.
-//! This task is based on the following blog post.
-//! [Testing Verilog AXI4-Lite Peripherals](https://klickverbot.at/blog/2016/01/testing-verilog-axi4-lite-peripherals/)
-task automatic axi4_lite_write(
-    virtual interface axi4_lite_if vif, //! virtual interface to DUT
-    input bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr, //! address
-    input bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] data, //! data
-    input bit [(AXI4_LITE_DATA_BIT_WIDTH/8)-1:0] wstrb = '1 //! write strobe
-);
-    if (vif.awvalid || vif.wvalid) begin
-        $info("There is a write transaction in progress. Waiting for it to complete.");
-        wait(!vif.awvalid && !vif.wvalid);
-    end
-
-    `ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
-        `define WAIT_CLK_POSEDGE @(posedge vif.clk)
-    `else
-        `define WAIT_CLK_POSEDGE @vif.mst_cb
-    `endif
-
-    `WAIT_CLK_POSEDGE begin
-        vif.awaddr <= addr;
-        vif.awvalid <= 1'b1;
-        vif.wdata <= data;
-        vif.wstrb <= wstrb;
-        vif.wvalid <= 1'b1;
-        vif.bready <= 1'b1;
-    end
-
-    wait(vif.awready && vif.wready);
-
-    `WAIT_CLK_POSEDGE begin
-        vif.awvalid <= 1'b0;
-        vif.wvalid <= 1'b0;
-    end
-
-    `undef WAIT_CLK_POSEDGE
-endtask
-
 //! DUT instance
 my_axi4_lite_slv_template dut (
     .i_clk(r_clk),
@@ -145,14 +57,21 @@ endtask
 task automatic reg_check();
     const var bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] write_data[4] = {'h12345678, 'h87654321, 'hABCDEF01, 'h10FEDCBA};
     var bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] read_back_data;
+    axi4_lite_if_pkg::axi4_resp_t resp;
 
     for (int i=0; i<4; ++i) begin
-        axi4_lite_write(dut_vif, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), write_data[i]);
+        axi4_lite_if_pkg::axi4_lite_access#(
+            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
+            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
+        )::axi4_lite_write(dut_vif, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), write_data[i], '1, resp);
         @(posedge r_clk);
     end
 
     for (int i=0; i<4; ++i) begin
-        axi4_lite_read(dut_vif, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), read_back_data);
+        axi4_lite_if_pkg::axi4_lite_access#(
+            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
+            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
+        )::axi4_lite_read(dut_vif, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), read_back_data, resp);
         $info("Read back data from address %0H: %0H", i*4, read_back_data);
         @(posedge r_clk);
     end
@@ -169,7 +88,7 @@ endtask
 //! Launch scenario and manage time limit.
 initial begin
     dut_vif = dut_if;
-    dut_vif.reset_mst_port();
+    dut_vif.reset_mst_out_sigs();
     fork
         scenario();
     join_none

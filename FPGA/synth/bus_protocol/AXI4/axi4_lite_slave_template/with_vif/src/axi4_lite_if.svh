@@ -140,8 +140,8 @@ interface axi4_lite_if #(
         output rready;
     endclocking
 
-    //! Reset the master port signals.
-    function automatic void reset_mst_port();
+    //! Reset the master output signals.
+    function automatic void reset_mst_out_sigs();
         awaddr <= '0;
         awprot <= '0;
         awvalid <= 1'b0;
@@ -155,8 +155,8 @@ interface axi4_lite_if #(
         rready <= 1'b0;
     endfunction
 
-    //! Reset the slave port signals.
-    function automatic void reset_slv_port();
+    //! Reset the slave output signals.
+    function automatic void reset_slv_out_sigs();
         awready <= 1'b0;
         wready <= 1'b0;
         bresp <= '0;

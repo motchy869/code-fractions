@@ -4,11 +4,11 @@
 //! Some techniques used in this file are based on the following source:
 //! - [UVM Register Model Example](https://www.chipverify.com/uvm/uvm-register-model-example)
 
-`ifndef MY_VERIF_PKG_SVH_INCLUDED
+`ifndef INCLUDED_FROM_MY_VERIF_PKG
     $fatal("compile \"my_verif_pkg.sv\" instead of including this file");
 `endif
 
-`include "../../axi4_lite_if.svh"
+`include "../../axi4_lite_if_pkg.svh"
 
 class my_bus_driver extends uvm_driver#(my_bus_seq_item);
     `uvm_component_utils(my_bus_driver)
@@ -53,37 +53,13 @@ task my_bus_driver::read_access(
     ref bit [my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH-1:0] data,
     ref uvm_status_e status
 );
-    if (m_vif.arvalid) begin
-        `uvm_info("INFO", "There is a read transaction in progress. Waiting for it to complete.", UVM_MEDIUM);
-        wait(!m_vif.arvalid);
-    end
+    axi4_lite_if_pkg::axi4_resp_t resp;
 
-    `WAIT_CLK_POSEDGE begin
-        m_vif.araddr <= addr;
-        m_vif.arvalid <= 1'b1;
-        m_vif.rready <= 1'b1;
-    end
-
-    wait(m_vif.arready);
-
-    if (m_vif.rvalid) begin
-        data = m_vif.rdata;
-        `WAIT_CLK_POSEDGE begin
-            m_vif.arvalid <= 1'b0;
-            m_vif.rready <= 1'b0;
-        end
-    end else begin
-        `WAIT_CLK_POSEDGE begin
-            m_vif.arvalid <= 1'b0; // Should be de-asserted here, otherwise possible protocol violation (AXI4_ERRM_ARVALID_STABLE: Once ARVALID is asserted, it must remain asserted until ARREADY is high. Spec: section A3.2.1.)
-        end
-
-        wait(m_vif.rvalid); // Note that RVALID may come AFTER the ARREADY's falling edge.
-        data = m_vif.rdata;
-        status = (m_vif.rresp == my_verif_params_pkg::AXI4_RESP_OKAY) ? UVM_IS_OK : UVM_NOT_OK;
-        `WAIT_CLK_POSEDGE begin
-            m_vif.rready <= 1'b0;
-        end
-    end
+    axi4_lite_if_pkg::axi4_lite_access#(
+        .AXI4_LITE_ADDR_BIT_WIDTH(my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH),
+        .AXI4_LITE_DATA_BIT_WIDTH(my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH)
+    )::axi4_lite_read(m_vif, addr, data, resp);
+    status = (resp == axi4_lite_if_pkg::AXI4_RESP_OKAY) ? UVM_IS_OK : UVM_NOT_OK;
 endtask
 
 task my_bus_driver::write_access(
@@ -92,41 +68,20 @@ task my_bus_driver::write_access(
     input bit [my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH/8-1:0] wstrb,
     ref uvm_status_e status
 );
-    if (m_vif.awvalid || m_vif.wvalid) begin
-        `uvm_info("INFO", "There is a write transaction in progress. Waiting for it to complete.", UVM_MEDIUM);
-        wait(!m_vif.awvalid && !m_vif.wvalid);
-    end
+    axi4_lite_if_pkg::axi4_resp_t resp;
 
-    `WAIT_CLK_POSEDGE begin
-        m_vif.awaddr <= addr;
-        m_vif.awvalid <= 1'b1;
-        m_vif.wdata <= data;
-        m_vif.wstrb <= wstrb;
-        m_vif.wvalid <= 1'b1;
-        m_vif.bready <= 1'b1;
-    end
-
-    wait(m_vif.awready && m_vif.wready);
-
-    `WAIT_CLK_POSEDGE begin
-        m_vif.awvalid <= 1'b0;
-        m_vif.wvalid <= 1'b0;
-    end
-
-    // Note that BRESP can comes after WREADY.
-    if (!(m_vif.bready && m_vif.bvalid)) begin
-        wait(m_vif.bready && m_vif.bvalid);
-        `WAIT_CLK_POSEDGE;
-    end
-
-    status = (m_vif.bresp == my_verif_params_pkg::AXI4_RESP_OKAY) ? UVM_IS_OK : UVM_NOT_OK;
+    axi4_lite_if_pkg::axi4_lite_access#(
+        .AXI4_LITE_ADDR_BIT_WIDTH(my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH),
+        .AXI4_LITE_DATA_BIT_WIDTH(my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH)
+    )::axi4_lite_write(m_vif, addr, data, wstrb, resp);
+    status = (resp == axi4_lite_if_pkg::AXI4_RESP_OKAY) ? UVM_IS_OK : UVM_NOT_OK;
 endtask
 
 task my_bus_driver::run_phase(uvm_phase phase);
     my_bus_seq_item pkt;
 
     phase.raise_objection(this);
-    m_vif.reset_mst_port();
+    m_vif.reset_mst_out_sigs();
 
     forever begin
         // `uvm_info("INFO", "Waiting for a packet", UVM_DEBUG);

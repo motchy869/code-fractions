@@ -1,0 +1,94 @@
+// module hierarchy: my_mod.my_mod_csr
+
+// Macro evaluation order:
+// 1. Perl snippet evaluation
+// 2. Verilog-style macro evaluation.
+// Note: Due to the evaluation order, Perl snippet CANNOT be used in Verilog-style macro.
+
+<%
+    use strict;
+%>
+
+`include "my_mod_csr_constants.rdl"
+
+addrmap my_mod_csr { // Type name is mandatory.
+    // name = "my_mod_csr"; // Realized that setting `name` manually increases the document maintenance cost. It should be left to the compiler.
+    desc = "CSR (Control & Status Register) of my_mod";
+
+    default precedence = hw; /* If read and set at the same time, hardware wins. */
+    default regwidth = 32;
+    default accesswidth = 32;
+
+    reg {
+        // SystemRDL2.0 spec Table 12
+        default sw = r;
+        default hw = na;
+
+        // name = "my_mod_version"; // Leave to the compiler.
+        desc = "version of my_mod";
+
+        field {
+            desc = "debug version";
+        } DEBUG[12] = <%=$MY_MOD_VER_DEBUG%>;
+        field {
+            desc = "patch version";
+        } PATCH[8] = <%=$MY_MOD_VER_PATCH%>;
+        field {
+            desc = "minor version";
+        } MINOR[8] = <%=$MY_MOD_VER_MINOR%>;
+        field {
+            desc = "major version";
+        } MAJOR[4] = <%=$MY_MOD_VER_MAJOR%>;
+    } MY_MOD_VERSION;
+
+    reg {
+        default sw = rw;
+        default hw = r;
+        default reset = 0;
+        default swwe = true;
+
+        desc = "SW can store arbitral value to the fields. The fields of this register can be modified **only while all the bits of `UNLOCK_PROTECTED_REG.UNLOCK` is 1.**";
+
+        field {} FIELD[32];
+    } PROTECTED_REG;
+
+    reg {
+        default sw = rw;
+        default hw = r;
+        default reset = 0;
+
+        field {
+            desc = "Unlock the `PROTECTED_REG` for modification. SW can modify the `PROTECTED_REG` only while all the bits of this field is 1.";
+        } UNLOCK[32];
+    } UNLOCK_PROTECTED_REG;
+
+    PROTECTED_REG.FIELD->swwe = UNLOCK_PROTECTED_REG.UNLOCK->anded;
+
+    reg {
+        default sw = rw;
+        default hw = r;
+        default reset = 0;
+        default singlepulse = true;
+
+        desc = "All fields of this register assert for one cycle when written 1 and then clear back to 0 on the next clock cycle.";
+        field {} FIELD;
+    } SINGLE_PULSE;
+
+    reg {
+        default sw = rw1;
+        default hw = r;
+
+        desc = "All fields of this register can be written only once after reset.
+
+        **CAUTION**: write-once feature has not been supported yet by PeakRDL-regblock";
+        field {} FIELD[32];
+    } WRITE_ONCE;
+
+    mem {
+        sw = rw;
+        memwidth = 32;
+        mementries = 8;
+
+        desc = "SW can store arbitral value to this memory.";
+    } external SIMPLE_MEM;
+};

@@ -4,9 +4,11 @@
 //! Some techniques used in this file are based on the following source:
 //! - [UVM Register Model Example](https://www.chipverify.com/uvm/uvm-register-model-example)
 
-`ifndef MY_VERIF_PKG_SVH_INCLUDED
+`ifndef INCLUDED_FROM_MY_VERIF_PKG
     $fatal("compile \"my_verif_pkg.sv\" instead of including this file");
 `endif
+
+`include "../../axi4_lite_if_pkg.svh"
 
 class my_bus_monitor extends uvm_monitor;
     `uvm_component_utils(my_bus_monitor)
@@ -28,7 +30,7 @@ class my_bus_monitor extends uvm_monitor;
             my_bus_seq_item pkt = my_bus_seq_item::type_id::create("pkt");
             pkt.addr = item.rd_addr;
             pkt.data = item.rd_data;
-            pkt.status = (item.rresp == my_verif_params_pkg::AXI4_RESP_OKAY) ? UVM_IS_OK : UVM_NOT_OK;
+            pkt.status = (item.rresp == axi4_lite_if_pkg::AXI4_RESP_OKAY) ? UVM_IS_OK : UVM_NOT_OK;
             m_analysis_port_to_reg_predictor.write(pkt);
         end
         if (item.data_is_written) begin
@@ -37,7 +39,7 @@ class my_bus_monitor extends uvm_monitor;
             pkt.data = item.wr_data;
             pkt.write = 1;
             pkt.wstrb = item.wstrb;
-            pkt.status = (item.bresp == my_verif_params_pkg::AXI4_RESP_OKAY) ? UVM_IS_OK : UVM_NOT_OK;
+            pkt.status = (item.bresp == axi4_lite_if_pkg::AXI4_RESP_OKAY) ? UVM_IS_OK : UVM_NOT_OK;
             m_analysis_port_to_reg_predictor.write(pkt);
         end
 

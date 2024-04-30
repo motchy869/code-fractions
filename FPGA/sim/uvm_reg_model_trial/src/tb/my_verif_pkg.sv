@@ -2,8 +2,7 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`ifndef MY_VERIF_PKG_SVH_INCLUDED
-`define MY_VERIF_PKG_SVH_INCLUDED
+`define INCLUDED_FROM_MY_VERIF_PKG
 
 `include "uvm_macros.svh"
 
@@ -42,5 +41,3 @@ package my_verif_pkg;
 
     `include "./test/my_test.svh"
 endpackage
-
-`endif

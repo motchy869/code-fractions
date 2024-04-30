@@ -27,9 +27,14 @@ XVLOG := $(VIVADO_DIR)/bin/xvlog
 XELAB := $(VIVADO_DIR)/bin/xelab
 XSIM := $(VIVADO_DIR)/bin/xsim
 
-SIM_DIR := $(MAKEFILE_DIR)/sim_result
-SRC_DIR := $(MAKEFILE_DIR)/../../src
-SV_SRC_FILES := $(shell find $(SRC_DIR) -type f -name "*.sv" | tr '\n' ' ')
+SIM_DIR := $(MAKEFILE_DIR)/../../build-out/sim
+SRC_DIR := $(MAKEFILE_DIR)/../../src/rtl
+# This defines an empty string.
+INCLUDE_DIR :=
+
+SIM_CONSOLE_LOG_FILE_PATH := $(SIM_DIR)/sim_console.log
+
+SV_SRC_FILES += $(shell find $(SRC_DIR) -type f -name "*.sv" | tr '\n' ' ')
 
 TB_TOP := test_bench
 
@@ -48,7 +53,7 @@ elab: $(SIM_DIR)/xsim.dir/debug/xsimk
 # Run simulation and dump all waveforms.
 dump: $(SIM_DIR)/xsim.dir/debug/xsimk $(SIM_DIR)/dump_all.tcl
 	cd $(SIM_DIR) && \
-	$(XSIM) debug -t ./dump_all.tcl -wdb all.wdb
+	$(XSIM) debug -t ./dump_all.tcl -wdb all.wdb | tee $(SIM_CONSOLE_LOG_FILE_PATH)
 
 # Open waveform viewer.
 wave: $(SIM_DIR)/all.wdb
@@ -63,7 +68,7 @@ gui: $(SIM_DIR)/xsim.dir/debug/xsimk
 # Run parsing, elaboration and simulation.
 once:
 	cd $(SIM_DIR) && \
-	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) && \
+	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) $(shell [ ! -z "$(INCLUDE_DIR)" ] && echo "--include $(INCLUDE_DIR)") && \
 	$(XELAB) $(TB_TOP) -timescale $(DEFAULT_TIME_SCALE) $(XELAB_FLAGS) -R
 
 # Run parsing, elaboration, then run stand-alone simulation executable.
@@ -83,9 +88,8 @@ $(SIM_DIR):
 	mkdir -p $@
 
 $(SIM_DIR)/xsim.dir/debug/xsimk: $(SIM_DIR) $(SV_SRC_FILES)
-	echo $(DEFINES)
 	cd $(SIM_DIR) && \
-	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) && \
+	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) $(shell [ ! -z "$INCLUDE_DIR" ] && echo "--include $INCLUDE_DIR") && \
 	$(XELAB) $(TB_TOP) -timescale $(DEFAULT_TIME_SCALE) $(XELAB_FLAGS) -snapshot debug -debug all
 
 $(SIM_DIR)/dump_all.tcl:
@@ -96,7 +100,7 @@ $(SIM_DIR)/dump_all.tcl:
 
 $(SIM_DIR)/xsim.dir/alone/axsim: $(SIM_DIR) $(SV_SRC_FILES)
 	cd $(SIM_DIR) && \
-	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) && \
+	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) $(shell [ ! -z "$INCLUDE_DIR" ] && echo "--include $INCLUDE_DIR") && \
 	$(XELAB) $(TB_TOP) -timescale $(DEFAULT_TIME_SCALE) $(XELAB_FLAGS) -snapshot alone -standalone
 
 $(SIM_DIR)/help.txt:
