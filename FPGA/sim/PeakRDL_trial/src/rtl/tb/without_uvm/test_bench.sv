@@ -26,7 +26,10 @@ localparam int AXI4_LITE_DATA_BIT_WIDTH = 32; //! bit width of AXI4-Lite data bu
 var bit r_clk; //! clock signal
 var bit r_sync_rst; //! clock synchronous reset signal
 
-virtual interface axi4_lite_if axi4_lite_vif_0; //! AXI4-Lite virtual interface between test bench and DUT
+virtual interface axi4_lite_if #(
+    .ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
+    .DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
+) axi4_lite_vif_0; //! AXI4-Lite virtual interface between test bench and DUT
 // --------------------
 
 // ---------- instances ----------
