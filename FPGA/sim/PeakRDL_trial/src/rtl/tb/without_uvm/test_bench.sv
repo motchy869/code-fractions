@@ -18,7 +18,8 @@ localparam int SIM_TIME_LIMIT_NS = 1500; //! simulation time limit in ns
 //! 'Holding AXI ARESETN asserted for 16 cycles of the slowest AXI clock is generally a sufficient reset pulse width for Xilinx IP. --UG1037.' (AXI VIP message)
 localparam int RELEASE_RST_AFTER_CLK = 20;
 
-localparam int AXI4_LITE_ADDR_BIT_WIDTH = $clog2('h40); //! bit width of AXI4-Lite address bus
+localparam int CSR_ADDR_SPACE_SIZE_BYTE = 'h40; //! size of CSR address space in byte
+localparam int AXI4_LITE_ADDR_BIT_WIDTH = $clog2(CSR_ADDR_SPACE_SIZE_BYTE); //! bit width of AXI4-Lite address bus
 localparam int AXI4_LITE_DATA_BIT_WIDTH = 32; //! bit width of AXI4-Lite data bus
 // --------------------
 
@@ -26,10 +27,11 @@ localparam int AXI4_LITE_DATA_BIT_WIDTH = 32; //! bit width of AXI4-Lite data bu
 var bit r_clk; //! clock signal
 var bit r_sync_rst; //! clock synchronous reset signal
 
+//! AXI4-Lite virtual interface between test bench and DUT
 virtual interface axi4_lite_if #(
     .ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
     .DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-) axi4_lite_vif_0; //! AXI4-Lite virtual interface between test bench and DUT
+) axi4_lite_vif_0;
 // --------------------
 
 // ---------- instances ----------
@@ -41,6 +43,7 @@ axi4_lite_if #(
     .i_clk(r_clk)
 );
 
+//! DUT instance
 my_mod my_mod_0 (
     .i_clk(r_clk),
     .i_sync_rst(r_sync_rst),

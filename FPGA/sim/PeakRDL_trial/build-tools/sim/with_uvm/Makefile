@@ -27,14 +27,15 @@ XVLOG := $(VIVADO_DIR)/bin/xvlog
 XELAB := $(VIVADO_DIR)/bin/xelab
 XSIM := $(VIVADO_DIR)/bin/xsim
 
-SIM_DIR := $(MAKEFILE_DIR)/../../build-out/sim
-SRC_DIR := $(MAKEFILE_DIR)/../../src/rtl
+WORKSPACE_DIR := $(MAKEFILE_DIR)/../../../
+SIM_DIR := $(WORKSPACE_DIR)/build-out/sim
+SRC_DIR := $(WORKSPACE_DIR)/src/rtl
 # This defines an empty string.
 INCLUDE_DIR :=
 
 SIM_CONSOLE_LOG_FILE_PATH := $(SIM_DIR)/sim_console.log
 
-SV_SRC_FILES += $(shell find $(SRC_DIR) -type f -name "*.sv" | tr '\n' ' ')
+SV_SRC_FILES = $(shell find $(SRC_DIR) -not -path '$(SRC_DIR)/tb/without_uvm/*' -type f -name "*.sv" | tr '\n' ' ')
 
 TB_TOP := test_bench
 
@@ -42,6 +43,18 @@ DEFAULT_TIME_SCALE := 1ns/1ps
 
 XVLOG_FLAGS := --incr
 XELAB_FLAGS := --incr
+XSIM_FLAGS :=
+
+# 0/1: not/use
+USE_UVM := 1
+UVM_TESTNAME := my_test
+ifeq ($(USE_UVM), 1)
+	XVLOG_FLAGS += -L uvm -uvm_version 1.2
+	XELAB_FLAGS += -L uvm -uvm_version 1.2
+# XSIM_FLAGS += --testplusarg "UVM_CONFIG_DB_TRACE"
+	XSIM_FLAGS += --testplusarg "UVM_TESTNAME=$(UVM_TESTNAME)"
+	XSIM_FLAGS += --testplusarg "UVM_VERBOSITY=UVM_MEDIUM"
+endif
 #---------------------------------------------
 
 #------------ Commands -----------------------

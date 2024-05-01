@@ -11,6 +11,7 @@
         "regblock",
         "rptr",
         "strb",
+        "verif",
         "wptr"
     ],
     "cSpell.ignorePaths": [
