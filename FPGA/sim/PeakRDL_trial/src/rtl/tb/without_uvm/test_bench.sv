@@ -38,7 +38,7 @@ axi4_lite_if #(
     .ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
     .DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
 ) axi4_lite_if_0 (
-    .clk(r_clk)
+    .i_clk(r_clk)
 );
 
 my_mod my_mod_0 (
