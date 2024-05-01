@@ -24,8 +24,8 @@ class my_reg_env extends uvm_env;
 
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        m_reg_model = my_reg_model::type_id::create("my_reg_model", this);
-        m_reg_adapter = my_reg_adapter::type_id::create("my_reg_adapter", this);
+        m_reg_model = my_reg_model::type_id::create("m_reg_model", this);
+        m_reg_adapter = my_reg_adapter::type_id::create("m_reg_adapter", this);
         m_reg_predictor = uvm_reg_predictor#(my_bus_seq_item)::type_id::create("m_reg_predictor", this);
 
         m_reg_model.build();
