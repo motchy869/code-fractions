@@ -12,7 +12,7 @@ interface axi4_lite_if #(
     parameter int ADDR_BIT_WIDTH = 32, //! address bit width
     parameter int DATA_BIT_WIDTH = 32 //! data bit width
 )(
-    input wire clk //! clock
+    input wire i_clk //! clock
 );
     logic [ADDR_BIT_WIDTH-1:0] awaddr;
     logic [2:0] awprot;
@@ -117,7 +117,7 @@ interface axi4_lite_if #(
     );
 
     // ---------- for simulation ----------
-    clocking mst_cb @(posedge clk); // clocking block for master
+    clocking mst_cb @(posedge i_clk); // clocking block for master
         default input #1 output #1;
         output awaddr;
         output awprot;

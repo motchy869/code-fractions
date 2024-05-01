@@ -6,7 +6,7 @@
 //! An interface to DUT.
     //! This is focused on the real-time signals.
 interface my_rt_sig_if (
-    input wire logic clk //! clock
+    input wire logic i_clk //! clock
 );
     logic sync_rst;
     logic [3:0][my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH-1:0] input_vec;
@@ -24,7 +24,7 @@ interface my_rt_sig_if (
     // ...
     // );
 
-    clocking drv_cb @(posedge clk); // clocking block for driver
+    clocking drv_cb @(posedge i_clk); // clocking block for driver
         default input #1 output #1;
         output sync_rst;
         output input_vec;
@@ -33,7 +33,7 @@ interface my_rt_sig_if (
         input inner_prod_valid;
     endclocking
 
-    clocking col_cb @(posedge clk); // clocking block for collector
+    clocking col_cb @(posedge i_clk); // clocking block for collector
         default input #1 output #1;
         input sync_rst;
         input input_vec;

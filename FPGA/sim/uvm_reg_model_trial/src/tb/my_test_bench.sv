@@ -19,8 +19,8 @@ module my_test_bench;
     axi4_lite_if #(
         .ADDR_BIT_WIDTH(my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH),
         .DATA_BIT_WIDTH(my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH)
-    ) bus_if (.clk(r_clk)); //! AXI4-Lite interface between test bench and DUT
-    my_rt_sig_if rt_sig_if (.clk(r_clk)); //! real-time signal interface between test bench and DUT
+    ) bus_if (.i_clk(r_clk)); //! AXI4-Lite interface between test bench and DUT
+    my_rt_sig_if rt_sig_if (.i_clk(r_clk)); //! real-time signal interface between test bench and DUT
     virtual interface axi4_lite_if bus_vif; //! virtual interface for `bus_if`
     virtual interface my_rt_sig_if rt_sig_vif; //! virtual interface for `rt_sig_if`
     // --------------------

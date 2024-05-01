@@ -31,7 +31,7 @@ var bit r_clk; //! clock signal
 var bit r_sync_rst; //! clock synchronous reset signal
 
 // interface instance
-axi4_lite_if dut_if (.clk(r_clk));
+axi4_lite_if dut_if (.i_clk(r_clk));
 virtual interface axi4_lite_if dut_vif; //! virtual interface to DUT
 // --------------------
 

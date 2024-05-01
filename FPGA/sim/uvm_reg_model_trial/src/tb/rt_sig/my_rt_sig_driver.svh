@@ -30,7 +30,7 @@ class my_rt_sig_driver extends uvm_driver#(my_rt_sig_seq_item);
 endclass
 
 `ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
-    `define WAIT_CLK_POSEDGE @(posedge m_vif.clk)
+    `define WAIT_CLK_POSEDGE @(posedge m_vif.i_clk)
 `else
     `define WAIT_CLK_POSEDGE @m_vif.drv_cb
 `endif
