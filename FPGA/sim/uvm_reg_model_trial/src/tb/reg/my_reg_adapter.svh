@@ -31,7 +31,7 @@ class my_reg_adapter extends uvm_reg_adapter;
     endfunction
 
     //! Convert `uvm_sequence_item` instance (typically comes from bus-monitor) to `uvm_reg_bus_op` instance.
-    virtual function void bus2reg(uvm_sequence_item bus_item, ref uvm_reg_bus_op rw);
+    virtual function void bus2reg(const ref uvm_sequence_item bus_item, ref uvm_reg_bus_op rw);
         my_bus_seq_item pkt;
 
         if (!$cast(pkt, bus_item)) begin
