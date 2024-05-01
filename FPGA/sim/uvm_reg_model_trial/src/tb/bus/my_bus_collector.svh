@@ -46,7 +46,7 @@ task my_bus_collector::task_monitor_read_access();
     forever begin
         `WAIT_CLK_POSEDGE begin
             if (m_vif.rready && m_vif.rvalid) begin
-                my_bus_collected_item item = my_bus_collected_item::type_id::create("transaction");
+                my_bus_collected_item item = my_bus_collected_item::type_id::create("item");
                 item.data_is_read = 1'b1;
                 item.rd_addr = m_vif.araddr;
                 item.rd_data = m_vif.rdata;
@@ -62,7 +62,7 @@ task my_bus_collector::task_monitor_write_access();
     forever begin
         `WAIT_CLK_POSEDGE begin
             if (m_vif.awvalid && m_vif.wvalid && m_vif.bready && m_vif.awready && m_vif.wready) begin
-                my_bus_collected_item item = my_bus_collected_item::type_id::create("transaction");
+                my_bus_collected_item item = my_bus_collected_item::type_id::create("item");
                 item.data_is_written = 1'b1;
                 item.wr_addr = m_vif.awaddr;
                 item.wr_data = m_vif.wdata;
