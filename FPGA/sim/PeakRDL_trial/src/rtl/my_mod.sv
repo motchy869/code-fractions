@@ -102,11 +102,11 @@ ram_sp_wf #(
     .i_clk(i_clk),
     .i_sync_rst(i_sync_rst),
 
-    .i_we(csr_to_ram_bridge_ram_side_if_0.slv_port.we),
-    .i_word_addr(csr_to_ram_bridge_ram_side_if_0.slv_port.word_addr),
-    .i_data(csr_to_ram_bridge_ram_side_if_0.slv_port.wr_data),
-    .i_wr_byte_en(csr_to_ram_bridge_ram_side_if_0.slv_port.wr_byte_en),
-    .o_data(csr_to_ram_bridge_ram_side_if_0.slv_port.rd_data)
+    .i_we(csr_to_ram_bridge_ram_side_if_0.we),
+    .i_word_addr(csr_to_ram_bridge_ram_side_if_0.word_addr),
+    .i_data(csr_to_ram_bridge_ram_side_if_0.wr_data),
+    .i_wr_byte_en(csr_to_ram_bridge_ram_side_if_0.wr_byte_en),
+    .o_data(csr_to_ram_bridge_ram_side_if_0.rd_data)
 );
 
 //! CSR to RAM bridge
