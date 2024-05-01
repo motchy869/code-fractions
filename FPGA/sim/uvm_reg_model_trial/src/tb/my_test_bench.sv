@@ -16,7 +16,7 @@ module my_test_bench;
 
     // ---------- internal signal and storage ----------
     var bit r_clk; //! clock signal
-    virtual interface axi4_lite_if bus_vif; //! virtual interface for `bus_if`
+    bus_vif_t bus_vif; //! virtual interface for `bus_if`
     virtual interface my_rt_sig_if rt_sig_vif; //! virtual interface for `rt_sig_if`
     // --------------------
 
@@ -52,7 +52,7 @@ module my_test_bench;
     initial begin
         bus_vif = bus_if;
         rt_sig_vif = rt_sig_if;
-        uvm_config_db#(virtual axi4_lite_if)::set(null, "uvm_test_top", "g_bus_vif", bus_vif);
+        uvm_config_db#(bus_vif_t)::set(null, "uvm_test_top", "g_bus_vif", bus_vif);
         uvm_config_db#(virtual my_rt_sig_if)::set(null, "uvm_test_top", "g_rt_sig_vif", rt_sig_vif);
         run_test();
     end

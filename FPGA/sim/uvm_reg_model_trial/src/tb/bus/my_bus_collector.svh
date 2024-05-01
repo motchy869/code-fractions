@@ -11,7 +11,7 @@
 `include "../../axi4_lite_if.svh"
 
 class my_bus_collector extends uvm_component;
-    virtual axi4_lite_if m_vif;
+    bus_vif_t m_vif;
     uvm_analysis_port#(my_bus_collected_item) m_analysis_port;
     my_bus_collected_item m_collected_item_queue[$];
 
@@ -26,7 +26,7 @@ class my_bus_collector extends uvm_component;
 
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        if (!uvm_config_db#(virtual axi4_lite_if)::get(null, "uvm_test_top", "g_bus_vif", m_vif)) begin
+        if (!uvm_config_db#(bus_vif_t)::get(null, "uvm_test_top", "g_bus_vif", m_vif)) begin
             `uvm_fatal("NO-VIF", {"virtual interface must be set for: ", "uvm_test_top", ".g_bus_vif"})
         end
     endfunction
