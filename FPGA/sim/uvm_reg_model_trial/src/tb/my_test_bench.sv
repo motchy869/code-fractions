@@ -16,14 +16,19 @@ module my_test_bench;
 
     // ---------- internal signal and storage ----------
     var bit r_clk; //! clock signal
-    axi4_lite_if #(
-        .ADDR_BIT_WIDTH(my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH),
-        .DATA_BIT_WIDTH(my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH)
-    ) bus_if (.i_clk(r_clk)); //! AXI4-Lite interface between test bench and DUT
-    my_rt_sig_if rt_sig_if (.i_clk(r_clk)); //! real-time signal interface between test bench and DUT
     virtual interface axi4_lite_if bus_vif; //! virtual interface for `bus_if`
     virtual interface my_rt_sig_if rt_sig_vif; //! virtual interface for `rt_sig_if`
     // --------------------
+
+    // ---------- instances ----------
+    //! AXI4-Lite interface between test bench and DUT
+    axi4_lite_if #(
+        .ADDR_BIT_WIDTH(my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH),
+        .DATA_BIT_WIDTH(my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH)
+    ) bus_if (.i_clk(r_clk));
+
+    //! real-time signal interface between test bench and DUT
+    my_rt_sig_if rt_sig_if (.i_clk(r_clk));
 
     //! DUT instance
     simple_dut #(
@@ -38,6 +43,7 @@ module my_test_bench;
         .or_in_prod(rt_sig_if.inner_prod),
         .or_in_prod_valid(rt_sig_if.inner_prod_valid)
     );
+    // --------------------
 
     //! Drive the clock.
     initial forever #(my_verif_params_pkg::CLK_PERIOD_NS/2) r_clk = ~r_clk;
