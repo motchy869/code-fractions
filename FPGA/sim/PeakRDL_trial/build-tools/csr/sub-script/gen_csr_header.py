@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
-# Generate a SystemVerilog module header file from a .sv file.
+# Generate a CSR header file from the CSR SV file.
 
 import argparse
 import re
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Generate a SystemVerilog module header file from a .sv file.')
+    parser = argparse.ArgumentParser(description='Generate a CSR header file from the CSR SV file.')
     parser.add_argument('file_path', type=str, help='target file path')
     args = parser.parse_args()
 
