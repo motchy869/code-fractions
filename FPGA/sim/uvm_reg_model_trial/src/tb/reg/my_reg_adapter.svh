@@ -14,8 +14,8 @@ class my_reg_adapter extends uvm_reg_adapter;
 
     function new(string name = "my_reg_adapter");
         super.new(name);
-        this.supports_byte_enable = 1;
-        this.provides_responses = 1;
+        this.supports_byte_enable = 1'b1;
+        this.provides_responses = 1'b1;
     endfunction
 
     //! Convert `uvm_reg_bus_op` instance to command for bus-driver'.
