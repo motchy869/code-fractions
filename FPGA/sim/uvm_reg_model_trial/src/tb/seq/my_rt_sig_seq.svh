@@ -22,7 +22,7 @@ class my_rt_sig_seq extends uvm_sequence;
 
         for (int i=0; i<DURATION_CYCLES; ++i) begin
             `uvm_create(req)
-            req.cmd = my_rt_sig_seq_item::CMD_INPUT_VEC;
+            req.drv_cmd = my_rt_sig_seq_item::DRV_CMD_INPUT_VEC;
             req.input_vec = {
                 my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH'(1+3*i),
                 my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH'(2+3*i),

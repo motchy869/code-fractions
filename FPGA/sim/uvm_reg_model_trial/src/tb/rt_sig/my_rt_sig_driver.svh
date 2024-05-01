@@ -69,12 +69,12 @@ task my_rt_sig_driver::run_phase(uvm_phase phase);
         if (item == null) begin
             m_vif.input_vec_valid <= 1'b0;
         end else begin
-            unique case (item.cmd)
-                my_rt_sig_seq_item::CMD_NOP:
+            unique case (item.drv_cmd)
+                my_rt_sig_seq_item::DRV_CMD_NOP:
                     ; // nothing to do
-                my_rt_sig_seq_item::CMD_RESET:
+                my_rt_sig_seq_item::DRV_CMD_RESET:
                     reset_dut();
-                my_rt_sig_seq_item::CMD_INPUT_VEC:
+                my_rt_sig_seq_item::DRV_CMD_INPUT_VEC:
                     input_vec(item.input_vec);
             endcase
             seq_item_port.item_done(); // Tell the sequencer that the item is done.

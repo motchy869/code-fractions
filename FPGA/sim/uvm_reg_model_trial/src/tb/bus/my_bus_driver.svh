@@ -87,10 +87,10 @@ task my_bus_driver::run_phase(uvm_phase phase);
         // `uvm_info("INFO", "Waiting for a packet", UVM_DEBUG);
         seq_item_port.get_next_item(pkt);
         // `uvm_info("INFO", "Got a packet", UVM_DEBUG);
-        unique case (pkt.cmd)
-            my_bus_seq_item::CMD_NOP:
+        unique case (pkt.drv_cmd)
+            my_bus_seq_item::DRV_CMD_NOP:
                 ; // nothing to do
-            my_bus_seq_item::CMD_NORMAL: begin
+            my_bus_seq_item::DRV_CMD_BUS_ACCESS: begin
                 if (pkt.write) begin
                     write_access(pkt.addr, pkt.data, pkt.wstrb, pkt.status);
                 end else begin

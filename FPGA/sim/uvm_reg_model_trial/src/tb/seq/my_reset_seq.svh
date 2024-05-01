@@ -18,7 +18,7 @@ class my_reset_seq extends uvm_sequence;
     task body();
         my_rt_sig_seq_item req;
         `uvm_create(req)
-        req.cmd = my_rt_sig_seq_item::CMD_RESET;
+        req.drv_cmd = my_rt_sig_seq_item::DRV_CMD_RESET;
         `uvm_send(req)
     endtask
 endclass

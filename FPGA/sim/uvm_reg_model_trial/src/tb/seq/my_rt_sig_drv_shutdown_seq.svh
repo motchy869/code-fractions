@@ -17,7 +17,7 @@ class my_rt_sig_drv_shutdown_seq extends uvm_sequence;
         my_rt_sig_seq_item req;
 
         `uvm_create(req)
-        req.cmd = my_rt_sig_seq_item::CMD_NOP;
+        req.drv_cmd = my_rt_sig_seq_item::DRV_CMD_NOP;
         req.is_last_item = 1;
         `uvm_send(req)
     endtask
