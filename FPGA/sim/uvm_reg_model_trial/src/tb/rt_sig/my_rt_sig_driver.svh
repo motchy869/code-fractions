@@ -32,7 +32,7 @@ endclass
 `ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
     `define WAIT_CLK_POSEDGE @(posedge m_vif.clk)
 `else
-    `define WAIT_CLK_POSEDGE @m_vif.mst_cb
+    `define WAIT_CLK_POSEDGE @m_vif.drv_cb
 `endif
 
 task my_rt_sig_driver::reset_dut();
