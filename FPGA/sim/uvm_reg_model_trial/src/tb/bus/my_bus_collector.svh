@@ -5,7 +5,8 @@
 //! - [UVM Register Model Example](https://www.chipverify.com/uvm/uvm-register-model-example)
 
 `ifndef INCLUDED_FROM_MY_VERIF_PKG
-    $fatal("compile \"my_verif_pkg.sv\" instead of including this file");
+    $fatal(2, "compile \"my_verif_pkg.sv\" instead of including this file");
+    nonexistent_module_to_throw_a_custom_error_message_for invalid_inclusion();
 `endif
 
 `include "../../axi4_lite_if.svh"

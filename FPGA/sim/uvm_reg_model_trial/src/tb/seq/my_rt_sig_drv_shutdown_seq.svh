@@ -2,7 +2,8 @@
 // verilog_lint: waive-start line-length
 
 `ifndef INCLUDED_FROM_MY_VERIF_PKG
-    $fatal("compile \"my_verif_pkg.sv\" instead of including this file");
+    $fatal(2, "compile \"my_verif_pkg.sv\" instead of including this file");
+    nonexistent_module_to_throw_a_custom_error_message_for invalid_inclusion();
 `endif
 
 // Shutdown real-time signal driver.
