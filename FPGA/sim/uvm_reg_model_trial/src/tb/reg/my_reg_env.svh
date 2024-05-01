@@ -10,7 +10,7 @@
 `endif
 
 //! Put top-level register block, register adapter, and register predictor together.
-//! Note that bus agent is not included, unlike the configuration in the "UVM Register Model Example".
+//! Note that bus agent is not included (because bus agent should not be dedicated to register operation), unlike the configuration in the "UVM Register Model Example" in aforementioned Web page.
 class my_reg_env extends uvm_env;
     my_reg_model m_reg_model; // register model
     my_reg_adapter m_reg_adapter; // register adapter
