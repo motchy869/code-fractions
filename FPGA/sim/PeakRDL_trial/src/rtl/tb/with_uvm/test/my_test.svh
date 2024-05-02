@@ -41,13 +41,99 @@ endclass
 task my_test::main_phase(uvm_phase phase);
     my_mod_csr_uvm_reg_model_pkg::my_mod_csr reg_model;
     uvm_status_e reg_acc_status;
+    bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] read_back_data;
 
     phase.raise_objection(this);
     if (!uvm_config_db#(my_mod_csr_uvm_reg_model_pkg::my_mod_csr)::get(null, "uvm_test_top", "g_reg_model", reg_model)) begin
         `uvm_fatal("NO-REG_MODEL", {"register model must be set for: ", "uvm_test_top", ".g_reg_model"})
     end
 
-    // TODO: register operations
+    begin // MY_MOD_VERSION
+        const bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] expected_rd_data = AXI4_LITE_DATA_BIT_WIDTH'('h01234567);
+        reg_model.MY_MOD_VERSION.read(reg_acc_status, read_back_data);
+        assert(read_back_data == expected_rd_data) else begin
+            $fatal(2, "MY_MOD_VERSION: read data mismatch.");
+        end
+    end
+
+    begin // PROTECTED_REG
+        const bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] unlock_key = '1;
+        const bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] expected_rd_data_0 = AXI4_LITE_DATA_BIT_WIDTH'('h0); // expected read data before unlock
+        const bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] expected_rd_data_1 = AXI4_LITE_DATA_BIT_WIDTH'('hC001C0DE); // expected read data after unlock
+
+        // before unlock
+        reg_model.PROTECTED_REG.write(reg_acc_status, AXI4_LITE_DATA_BIT_WIDTH'('hBADCACA0));
+        reg_model.PROTECTED_REG.read(reg_acc_status, read_back_data);
+
+        assert(read_back_data == expected_rd_data_0) else begin
+            $fatal(2, "PROTECTED_REG: read data mismatch.");
+        end
+
+        // unlock
+        reg_model.UNLOCK_PROTECTED_REG.write(reg_acc_status, unlock_key);
+
+        // after unlock
+        reg_model.PROTECTED_REG.write(reg_acc_status, expected_rd_data_1);
+        reg_model.PROTECTED_REG.read(reg_acc_status, read_back_data);
+
+        assert(read_back_data == expected_rd_data_1) else begin
+            $fatal(2, "PROTECTED_REG: read data mismatch.");
+        end
+    end
+
+    begin // SINGLE_PULSE
+        const bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] expected_rd_data = AXI4_LITE_DATA_BIT_WIDTH'('h0);
+
+        reg_model.SINGLE_PULSE.write(reg_acc_status, AXI4_LITE_DATA_BIT_WIDTH'('h1));
+        reg_model.SINGLE_PULSE.read(reg_acc_status, read_back_data);
+
+        assert(read_back_data == expected_rd_data) else begin
+            $fatal(2, "SINGLE_PULSE: read data mismatch.");
+        end
+    end
+
+    begin // WRITE_ONCE
+        const bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] expected_rd_data = AXI4_LITE_DATA_BIT_WIDTH'('hC001FACE);
+        const bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] wr_data_2nd = AXI4_LITE_DATA_BIT_WIDTH'('hCAFEBABE);
+
+        // 1 st write
+        reg_model.WRITE_ONCE.write(reg_acc_status, expected_rd_data);
+        reg_model.WRITE_ONCE.read(reg_acc_status, read_back_data);
+
+        assert(read_back_data == expected_rd_data) else begin
+            $fatal(2, "WRITE_ONCE: read data mismatch.");
+        end
+
+        // 2nd write
+        reg_model.WRITE_ONCE.write(reg_acc_status, wr_data_2nd);
+        reg_model.WRITE_ONCE.read(reg_acc_status, read_back_data);
+
+        assert(read_back_data == expected_rd_data) else begin
+            //$fatal(2, "WRITE_ONCE: read data mismatch."); // `w1` and `rw1` has not been supported yet.
+        end
+    end
+
+    begin // SIMPLE_MEM
+        const int ram_depth = reg_model.SIMPLE_MEM.m_mem.get_size();
+        `uvm_info("INFO", $sformatf("SIMPLE_MEM: ram_depth=%0d", ram_depth), UVM_DEBUG)
+        // write
+        for (int i=0; i<ram_depth; ++i) begin
+            /* const */ bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] offset_byte_addr = AXI4_LITE_ADDR_BIT_WIDTH'(i*AXI4_LITE_DATA_BIT_WIDTH/8); // `const` gets compilation stuck.
+            // Vivado 2023.2 crushes in `write` method.
+            reg_model.SIMPLE_MEM.m_mem.write(reg_acc_status, offset_byte_addr, AXI4_LITE_DATA_BIT_WIDTH'(i));
+        end
+
+        // read
+        for (int i=0; i<ram_depth; ++i) begin
+            /* const */ bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] offset_byte_addr = AXI4_LITE_ADDR_BIT_WIDTH'(i*AXI4_LITE_DATA_BIT_WIDTH/8);
+            // Vivado 2023.2 crushes in `read` method.
+            reg_model.SIMPLE_MEM.m_mem.read(reg_acc_status, offset_byte_addr, read_back_data);
+
+            assert(read_back_data == AXI4_LITE_DATA_BIT_WIDTH'(i)) else begin
+                $fatal(2, "SIMPLE_MEM: read data mismatch.");
+            end
+        end
+    end
 
     phase.drop_objection(this);
 endtask
