@@ -46,7 +46,11 @@ module test_bench;
     // --------------------
 
     //! Drive the clock.
-    initial forever #(my_verif_pkg::CLK_PERIOD_NS/2) r_clk = ~r_clk;
+    initial begin
+        #my_verif_pkg::CLK_PHASE_OFFSET_NS;
+        r_clk = ~r_clk;
+        forever #(my_verif_pkg::CLK_PERIOD_NS/2) r_clk = ~r_clk;
+    end
 
     //! Run test.
     initial begin

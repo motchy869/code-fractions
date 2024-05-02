@@ -50,6 +50,7 @@ endtask
 
 task my_rt_sig_driver::run_phase(uvm_phase phase);
     my_rt_sig_seq_item item;
+    time curr_time;
 
     phase.raise_objection(this);
 
@@ -57,13 +58,21 @@ task my_rt_sig_driver::run_phase(uvm_phase phase);
 
     forever begin
         seq_item_port.get_next_item(item);
+
+        curr_time = $time;
+        if (curr_time != 0 && (curr_time - my_verif_pkg::CLK_PHASE_OFFSET_NS)%CLK_PERIOD_NS != 0) begin
+            `uvm_warning("WARNING", $sformatf("Current time is not aligned with the clock edge. Current time: %0d", curr_time))
+        end
+
         unique case (item.drv_cmd)
             my_rt_sig_seq_item::DRV_CMD_NOP:
                 ; // nothing to do
             my_rt_sig_seq_item::DRV_CMD_RESET:
                 reset_dut();
         endcase
+
         seq_item_port.item_done(); // Tell the sequencer that the item is done.
+
         if (item.is_last_item) begin
             `uvm_info("INFO", "Got last item in the sequence.", UVM_MEDIUM);
             break;
