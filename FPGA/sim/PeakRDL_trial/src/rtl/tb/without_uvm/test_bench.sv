@@ -185,20 +185,20 @@ task automatic csr_check();
     begin // SIMPLE_MEM
         // write
         for (int i=0; i<my_mod.RAM_DEPTH; ++i) begin
-            const bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] word_addr = SIMPLE_MEM_ADDR + AXI4_LITE_ADDR_BIT_WIDTH'(i*my_mod.BYTES_PER_WORD);
+            const bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] byte_addr = SIMPLE_MEM_ADDR + AXI4_LITE_ADDR_BIT_WIDTH'(i*my_mod.BYTES_PER_WORD);
             axi4_lite_if_pkg::axi4_lite_access#(
                 .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
                 .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-            )::axi4_lite_write(axi4_lite_vif_0, word_addr, AXI4_LITE_DATA_BIT_WIDTH'(i), '1, resp);
+            )::axi4_lite_write(axi4_lite_vif_0, byte_addr, AXI4_LITE_DATA_BIT_WIDTH'(i), '1, resp);
         end
 
         // read
         for (int i=0; i<my_mod.RAM_DEPTH; ++i) begin
-            const bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] word_addr = SIMPLE_MEM_ADDR + AXI4_LITE_ADDR_BIT_WIDTH'(i*my_mod.BYTES_PER_WORD);
+            const bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] byte_addr = SIMPLE_MEM_ADDR + AXI4_LITE_ADDR_BIT_WIDTH'(i*my_mod.BYTES_PER_WORD);
             axi4_lite_if_pkg::axi4_lite_access#(
                 .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
                 .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-            )::axi4_lite_read(axi4_lite_vif_0, word_addr, read_back_data, resp);
+            )::axi4_lite_read(axi4_lite_vif_0, byte_addr, read_back_data, resp);
 
             assert(read_back_data == AXI4_LITE_DATA_BIT_WIDTH'(i)) else begin
                 $fatal(2, "SIMPLE_MEM: read data mismatch.");
