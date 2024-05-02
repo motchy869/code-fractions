@@ -5,7 +5,8 @@
 //! - [UVM Register Model Example](https://www.chipverify.com/uvm/uvm-register-model-example)
 
 `ifndef INCLUDED_FROM_MY_VERIF_PKG
-    $fatal("compile \"my_verif_pkg.sv\" instead of including this file");
+    $fatal(2, "compile \"my_verif_pkg.sv\" instead of including this file");
+    nonexistent_module_to_throw_a_custom_error_message_for invalid_inclusion();
 `endif
 
 class my_rt_sig_collector extends uvm_component;
@@ -38,9 +39,9 @@ endclass
 task my_rt_sig_collector::get_response();
     forever begin
         `ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
-            `define WAIT_CLK_POSEDGE @(posedge m_vif.clk)
+            `define WAIT_CLK_POSEDGE @(posedge m_vif.i_clk)
         `else
-            `define WAIT_CLK_POSEDGE @m_vif.mst_cb
+            `define WAIT_CLK_POSEDGE @m_vif.col_cb
         `endif
 
         `WAIT_CLK_POSEDGE begin

@@ -29,8 +29,8 @@ var bit r_clk; //! clock signal
 var bit r_sync_rst; //! clock synchronous reset signal
 
 // interface instance
-axi4_lite_if if__vip_dut (.clk(r_clk)); // interface between AXI4 VIP and DUT
-axi4_lite_if if__tb_vip (.clk(r_clk)); // interface between test bench and AXI4 VIP
+axi4_lite_if if__vip_dut (.i_clk(r_clk)); // interface between AXI4 VIP and DUT
+axi4_lite_if if__tb_vip (.i_clk(r_clk)); // interface between test bench and AXI4 VIP
 virtual interface axi4_lite_if vif__tb_vip; //! virtual interface between test bench and AXI4 VIP
 // --------------------
 

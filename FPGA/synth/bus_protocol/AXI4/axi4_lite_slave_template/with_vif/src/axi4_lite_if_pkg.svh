@@ -20,6 +20,12 @@ package axi4_lite_if_pkg;
         parameter int AXI4_LITE_ADDR_BIT_WIDTH = 32,
         parameter int AXI4_LITE_DATA_BIT_WIDTH = 32
     );
+        `ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
+            `define WAIT_CLK_POSEDGE @(posedge vif.i_clk)
+        `else
+            `define WAIT_CLK_POSEDGE @vif.mst_cb
+        `endif
+
         //! Perform AXI4-Lite read transaction.
         //! This task is based on the following blog post.
         //! [Testing Verilog AXI4-Lite Peripherals](https://klickverbot.at/blog/2016/01/testing-verilog-axi4-lite-peripherals/)
@@ -42,12 +48,6 @@ package axi4_lite_if_pkg;
                 wait(!vif.arvalid);
             end
 
-            `ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
-                `define WAIT_CLK_POSEDGE @(posedge vif.clk)
-            `else
-                `define WAIT_CLK_POSEDGE @vif.mst_cb
-            `endif
-
             `WAIT_CLK_POSEDGE begin
                 vif.araddr <= addr;
                 vif.arvalid <= 1'b1;
@@ -58,6 +58,7 @@ package axi4_lite_if_pkg;
 
             if (vif.rvalid) begin
                 data = vif.rdata;
+                resp = axi4_resp_t'(vif.rresp);
                 `WAIT_CLK_POSEDGE begin
                     vif.arvalid <= 1'b0;
                     vif.rready <= 1'b0;
@@ -74,8 +75,6 @@ package axi4_lite_if_pkg;
                     vif.rready <= 1'b0;
                 end
             end
-
-            `undef WAIT_CLK_POSEDGE
         endtask
 
         //! Perform AXI4-Lite write transaction.
@@ -101,12 +100,6 @@ package axi4_lite_if_pkg;
                 wait(!vif.awvalid && !vif.wvalid);
             end
 
-            `ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
-                `define WAIT_CLK_POSEDGE @(posedge vif.clk)
-            `else
-                `define WAIT_CLK_POSEDGE @vif.mst_cb
-            `endif
-
             `WAIT_CLK_POSEDGE begin
                 vif.awaddr <= addr;
                 vif.awvalid <= 1'b1;
@@ -130,9 +123,9 @@ package axi4_lite_if_pkg;
             end
 
             resp = axi4_resp_t'(vif.bresp);
-
-            `undef WAIT_CLK_POSEDGE
         endtask
+
+        `undef WAIT_CLK_POSEDGE
     endclass
     // --------------------
 endpackage

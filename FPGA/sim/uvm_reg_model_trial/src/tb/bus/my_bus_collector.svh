@@ -5,13 +5,14 @@
 //! - [UVM Register Model Example](https://www.chipverify.com/uvm/uvm-register-model-example)
 
 `ifndef INCLUDED_FROM_MY_VERIF_PKG
-    $fatal("compile \"my_verif_pkg.sv\" instead of including this file");
+    $fatal(2, "compile \"my_verif_pkg.sv\" instead of including this file");
+    nonexistent_module_to_throw_a_custom_error_message_for invalid_inclusion();
 `endif
 
 `include "../../axi4_lite_if.svh"
 
 class my_bus_collector extends uvm_component;
-    virtual axi4_lite_if m_vif;
+    bus_vif_t m_vif;
     uvm_analysis_port#(my_bus_collected_item) m_analysis_port;
     my_bus_collected_item m_collected_item_queue[$];
 
@@ -26,7 +27,7 @@ class my_bus_collector extends uvm_component;
 
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        if (!uvm_config_db#(virtual axi4_lite_if)::get(null, "uvm_test_top", "g_bus_vif", m_vif)) begin
+        if (!uvm_config_db#(bus_vif_t)::get(null, "uvm_test_top", "g_bus_vif", m_vif)) begin
             `uvm_fatal("NO-VIF", {"virtual interface must be set for: ", "uvm_test_top", ".g_bus_vif"})
         end
     endfunction
@@ -37,7 +38,7 @@ class my_bus_collector extends uvm_component;
 endclass
 
 `ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
-    `define WAIT_CLK_POSEDGE @(posedge m_vif.clk)
+    `define WAIT_CLK_POSEDGE @(posedge m_vif.i_clk)
 `else
     `define WAIT_CLK_POSEDGE @m_vif.mst_cb
 `endif
@@ -46,7 +47,7 @@ task my_bus_collector::task_monitor_read_access();
     forever begin
         `WAIT_CLK_POSEDGE begin
             if (m_vif.rready && m_vif.rvalid) begin
-                my_bus_collected_item item = my_bus_collected_item::type_id::create("transaction");
+                my_bus_collected_item item = my_bus_collected_item::type_id::create("item");
                 item.data_is_read = 1'b1;
                 item.rd_addr = m_vif.araddr;
                 item.rd_data = m_vif.rdata;
@@ -62,7 +63,7 @@ task my_bus_collector::task_monitor_write_access();
     forever begin
         `WAIT_CLK_POSEDGE begin
             if (m_vif.awvalid && m_vif.wvalid && m_vif.bready && m_vif.awready && m_vif.wready) begin
-                my_bus_collected_item item = my_bus_collected_item::type_id::create("transaction");
+                my_bus_collected_item item = my_bus_collected_item::type_id::create("item");
                 item.data_is_written = 1'b1;
                 item.wr_addr = m_vif.awaddr;
                 item.wr_data = m_vif.wdata;

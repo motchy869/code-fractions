@@ -5,16 +5,17 @@
 //! - [UVM Register Model Example](https://www.chipverify.com/uvm/uvm-register-model-example)
 
 `ifndef INCLUDED_FROM_MY_VERIF_PKG
-    $fatal("compile \"my_verif_pkg.sv\" instead of including this file");
+    $fatal(2, "compile \"my_verif_pkg.sv\" instead of including this file");
+    nonexistent_module_to_throw_a_custom_error_message_for invalid_inclusion();
 `endif
 
 class my_bus_seq_item extends uvm_sequence_item;
     typedef enum bit {
-        CMD_NOP,
-        CMD_NORMAL // read / write access
-    } cmd_e;
+        DRV_CMD_NOP,
+        DRV_CMD_BUS_ACCESS // read / write access
+    } drv_cmd_e;
     bit is_last_item; // Indicates the last item in the sequence
-    cmd_e cmd; // command to the driver
+    drv_cmd_e drv_cmd; // command to the driver
     bit [my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr; // address
     bit [my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH-1:0] data; // data
     bit write; // 0/1: read/write
@@ -23,7 +24,7 @@ class my_bus_seq_item extends uvm_sequence_item;
 
     `uvm_object_utils_begin(my_bus_seq_item)
         `uvm_field_int(is_last_item, UVM_DEFAULT | UVM_BIN)
-        `uvm_field_enum(cmd_e, cmd, UVM_DEFAULT | UVM_HEX)
+        `uvm_field_enum(drv_cmd_e, drv_cmd, UVM_DEFAULT | UVM_HEX)
         `uvm_field_int(addr, UVM_DEFAULT | UVM_HEX)
         `uvm_field_int(data, UVM_DEFAULT | UVM_HEX)
         `uvm_field_int(write, UVM_DEFAULT | UVM_BIN)

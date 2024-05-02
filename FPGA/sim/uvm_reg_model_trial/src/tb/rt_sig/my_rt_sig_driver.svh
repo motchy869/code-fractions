@@ -5,7 +5,8 @@
 //! - [UVM Register Model Example](https://www.chipverify.com/uvm/uvm-register-model-example)
 
 `ifndef INCLUDED_FROM_MY_VERIF_PKG
-    $fatal("compile \"my_verif_pkg.sv\" instead of including this file");
+    $fatal(2, "compile \"my_verif_pkg.sv\" instead of including this file");
+    nonexistent_module_to_throw_a_custom_error_message_for invalid_inclusion();
 `endif
 
 class my_rt_sig_driver extends uvm_driver#(my_rt_sig_seq_item);
@@ -30,9 +31,9 @@ class my_rt_sig_driver extends uvm_driver#(my_rt_sig_seq_item);
 endclass
 
 `ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
-    `define WAIT_CLK_POSEDGE @(posedge m_vif.clk)
+    `define WAIT_CLK_POSEDGE @(posedge m_vif.i_clk)
 `else
-    `define WAIT_CLK_POSEDGE @m_vif.mst_cb
+    `define WAIT_CLK_POSEDGE @m_vif.drv_cb
 `endif
 
 task my_rt_sig_driver::reset_dut();
@@ -52,10 +53,13 @@ task my_rt_sig_driver::input_vec(logic [3:0][my_verif_params_pkg::AXI4_LITE_DATA
     m_vif.input_vec <= input_vec;
     m_vif.input_vec_valid <= 1'b1;
     `uvm_info("INFO", {"input vector."}, UVM_MEDIUM);
+    `WAIT_CLK_POSEDGE;
+    m_vif.input_vec_valid <= 1'b0; // Will be overwritten after +0 ns if there is next input vector in `seq_item_port`.
 endtask
 
 task my_rt_sig_driver::run_phase(uvm_phase phase);
     my_rt_sig_seq_item item;
+    time curr_time;
 
     phase.raise_objection(this);
 
@@ -64,24 +68,27 @@ task my_rt_sig_driver::run_phase(uvm_phase phase);
     m_vif.input_vec_valid <= 1'b0;
 
     forever begin
-        `WAIT_CLK_POSEDGE
-        seq_item_port.try_next_item(item); // Get the next item from the sequencer if there is one.
-        if (item == null) begin
-            m_vif.input_vec_valid <= 1'b0;
-        end else begin
-            unique case (item.cmd)
-                my_rt_sig_seq_item::CMD_NOP:
-                    ; // nothing to do
-                my_rt_sig_seq_item::CMD_RESET:
-                    reset_dut();
-                my_rt_sig_seq_item::CMD_INPUT_VEC:
-                    input_vec(item.input_vec);
-            endcase
-            seq_item_port.item_done(); // Tell the sequencer that the item is done.
-            if (item.is_last_item) begin
-                `uvm_info("INFO", "Got last item in the sequence.", UVM_MEDIUM);
-                break;
-            end
+        seq_item_port.get_next_item(item);
+
+        curr_time = $time;
+        if (curr_time != 0 && (curr_time - my_verif_params_pkg::CLK_PHASE_OFFSET_NS)%my_verif_params_pkg::CLK_PERIOD_NS != 0) begin
+            `uvm_warning("WARNING", $sformatf("Current time is not aligned with the clock edge. Current time: %0d", curr_time))
+        end
+
+        unique case (item.drv_cmd)
+            my_rt_sig_seq_item::DRV_CMD_NOP:
+                ; // nothing to do
+            my_rt_sig_seq_item::DRV_CMD_RESET:
+                reset_dut();
+            my_rt_sig_seq_item::DRV_CMD_INPUT_VEC:
+                input_vec(item.input_vec);
+        endcase
+
+        seq_item_port.item_done(); // Tell the sequencer that the item is done.
+
+        if (item.is_last_item) begin
+            `uvm_info("INFO", "Got last item in the sequence.", UVM_MEDIUM);
+            break;
         end
     end
 

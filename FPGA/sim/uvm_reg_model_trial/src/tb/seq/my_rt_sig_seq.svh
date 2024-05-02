@@ -5,7 +5,8 @@
 //! - [UVM Register Model Example](https://www.chipverify.com/uvm/uvm-register-model-example)
 
 `ifndef INCLUDED_FROM_MY_VERIF_PKG
-    $fatal("compile \"my_verif_pkg.sv\" instead of including this file");
+    $fatal(2, "compile \"my_verif_pkg.sv\" instead of including this file");
+    nonexistent_module_to_throw_a_custom_error_message_for invalid_inclusion();
 `endif
 
 class my_rt_sig_seq extends uvm_sequence;
@@ -22,7 +23,7 @@ class my_rt_sig_seq extends uvm_sequence;
 
         for (int i=0; i<DURATION_CYCLES; ++i) begin
             `uvm_create(req)
-            req.cmd = my_rt_sig_seq_item::CMD_INPUT_VEC;
+            req.drv_cmd = my_rt_sig_seq_item::DRV_CMD_INPUT_VEC;
             req.input_vec = {
                 my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH'(1+3*i),
                 my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH'(2+3*i),

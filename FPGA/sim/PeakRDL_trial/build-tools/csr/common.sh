@@ -18,3 +18,6 @@ CPUIF_NAME=axi4-lite-flat
 # behaviour of "lexical" is described in "Generated type naming rules" in "SystemRDL 2.0 Register Description Language"
 # "lexical" results in terrible struct type name.
 TYPE_STYLE=hier
+
+# Used in later scripts.
+RDL_FILE_NAME=$(basename $RDL_FILE_PATH)

@@ -5,7 +5,8 @@
 //! - [UVM Register Model Example](https://www.chipverify.com/uvm/uvm-register-model-example)
 
 `ifndef INCLUDED_FROM_MY_VERIF_PKG
-    $fatal("compile \"my_verif_pkg.sv\" instead of including this file");
+    $fatal(2, "compile \"my_verif_pkg.sv\" instead of including this file");
+    nonexistent_module_to_throw_a_custom_error_message_for invalid_inclusion();
 `endif
 
 class my_reg_adapter extends uvm_reg_adapter;
@@ -13,14 +14,14 @@ class my_reg_adapter extends uvm_reg_adapter;
 
     function new(string name = "my_reg_adapter");
         super.new(name);
-        this.supports_byte_enable = 1;
-        this.provides_responses = 1;
+        this.supports_byte_enable = 1'b1;
+        this.provides_responses = 1'b1;
     endfunction
 
     //! Convert `uvm_reg_bus_op` instance to command for bus-driver'.
     virtual function uvm_sequence_item reg2bus(const ref uvm_reg_bus_op rw);
         my_bus_seq_item pkt = my_bus_seq_item::type_id::create("pkt");
-        pkt.cmd = my_bus_seq_item::CMD_NORMAL;
+        pkt.drv_cmd = my_bus_seq_item::DRV_CMD_BUS_ACCESS;
         pkt.write = (rw.kind == UVM_WRITE);
         pkt.addr = rw.addr;
         pkt.data = rw.data;
@@ -30,7 +31,7 @@ class my_reg_adapter extends uvm_reg_adapter;
     endfunction
 
     //! Convert `uvm_sequence_item` instance (typically comes from bus-monitor) to `uvm_reg_bus_op` instance.
-    virtual function void bus2reg(uvm_sequence_item bus_item, ref uvm_reg_bus_op rw);
+    virtual function void bus2reg(const ref uvm_sequence_item bus_item, ref uvm_reg_bus_op rw);
         my_bus_seq_item pkt;
 
         if (!$cast(pkt, bus_item)) begin

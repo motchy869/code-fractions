@@ -5,7 +5,8 @@
 //! - [UVM Register Model Example](https://www.chipverify.com/uvm/uvm-register-model-example)
 
 `ifndef INCLUDED_FROM_MY_VERIF_PKG
-    $fatal("compile \"my_verif_pkg.sv\" instead of including this file");
+    $fatal(2, "compile \"my_verif_pkg.sv\" instead of including this file");
+    nonexistent_module_to_throw_a_custom_error_message_for invalid_inclusion();
 `endif
 
 class my_reset_seq extends uvm_sequence;
@@ -18,7 +19,7 @@ class my_reset_seq extends uvm_sequence;
     task body();
         my_rt_sig_seq_item req;
         `uvm_create(req)
-        req.cmd = my_rt_sig_seq_item::CMD_RESET;
+        req.drv_cmd = my_rt_sig_seq_item::DRV_CMD_RESET;
         `uvm_send(req)
     endtask
 endclass

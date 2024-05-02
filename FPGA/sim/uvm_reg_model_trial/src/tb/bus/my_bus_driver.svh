@@ -5,7 +5,8 @@
 //! - [UVM Register Model Example](https://www.chipverify.com/uvm/uvm-register-model-example)
 
 `ifndef INCLUDED_FROM_MY_VERIF_PKG
-    $fatal("compile \"my_verif_pkg.sv\" instead of including this file");
+    $fatal(2, "compile \"my_verif_pkg.sv\" instead of including this file");
+    nonexistent_module_to_throw_a_custom_error_message_for invalid_inclusion();
 `endif
 
 `include "../../axi4_lite_if_pkg.svh"
@@ -13,7 +14,7 @@
 class my_bus_driver extends uvm_driver#(my_bus_seq_item);
     `uvm_component_utils(my_bus_driver)
 
-    virtual axi4_lite_if m_vif;
+    bus_vif_t m_vif;
 
     function new(string name = "my_bus_driver", uvm_component parent);
         super.new(name, parent);
@@ -21,7 +22,7 @@ class my_bus_driver extends uvm_driver#(my_bus_seq_item);
 
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        if (!uvm_config_db#(virtual axi4_lite_if)::get(null, "uvm_test_top", "g_bus_vif", m_vif)) begin
+        if (!uvm_config_db#(bus_vif_t)::get(null, "uvm_test_top", "g_bus_vif", m_vif)) begin
             `uvm_fatal("NO-VIF", {"virtual interface must be set for: ", "uvm_test_top", ".g_bus_vif"})
         end
     endfunction
@@ -41,12 +42,6 @@ class my_bus_driver extends uvm_driver#(my_bus_seq_item);
 
     extern virtual task run_phase(uvm_phase phase);
 endclass
-
-`ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
-    `define WAIT_CLK_POSEDGE @(posedge m_vif.clk)
-`else
-    `define WAIT_CLK_POSEDGE @m_vif.mst_cb
-`endif
 
 task my_bus_driver::read_access(
     input bit [my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr,
@@ -87,10 +82,10 @@ task my_bus_driver::run_phase(uvm_phase phase);
         // `uvm_info("INFO", "Waiting for a packet", UVM_DEBUG);
         seq_item_port.get_next_item(pkt);
         // `uvm_info("INFO", "Got a packet", UVM_DEBUG);
-        unique case (pkt.cmd)
-            my_bus_seq_item::CMD_NOP:
+        unique case (pkt.drv_cmd)
+            my_bus_seq_item::DRV_CMD_NOP:
                 ; // nothing to do
-            my_bus_seq_item::CMD_NORMAL: begin
+            my_bus_seq_item::DRV_CMD_BUS_ACCESS: begin
                 if (pkt.write) begin
                     write_access(pkt.addr, pkt.data, pkt.wstrb, pkt.status);
                 end else begin
@@ -108,5 +103,3 @@ task my_bus_driver::run_phase(uvm_phase phase);
         end
     end
 endtask
-
-`undef WAIT_CLK_POSEDGE

@@ -27,14 +27,15 @@ XVLOG := $(VIVADO_DIR)/bin/xvlog
 XELAB := $(VIVADO_DIR)/bin/xelab
 XSIM := $(VIVADO_DIR)/bin/xsim
 
-SIM_DIR := $(MAKEFILE_DIR)/../../build-out/sim
-SRC_DIR := $(MAKEFILE_DIR)/../../src/rtl
+WORKSPACE_DIR := $(MAKEFILE_DIR)/../../../
+SIM_DIR := $(WORKSPACE_DIR)/build-out/sim
+SRC_DIR := $(WORKSPACE_DIR)/src/rtl
 # This defines an empty string.
 INCLUDE_DIR :=
 
 SIM_CONSOLE_LOG_FILE_PATH := $(SIM_DIR)/sim_console.log
 
-SV_SRC_FILES += $(shell find $(SRC_DIR) -type f -name "*.sv" | tr '\n' ' ')
+SV_SRC_FILES = $(shell find $(SRC_DIR) -not -path '$(SRC_DIR)/tb/with_uvm/*' -type f -name "*.sv" | tr '\n' ' ')
 
 TB_TOP := test_bench
 

@@ -6,11 +6,13 @@
         "biten",
         "CAFEBABE",
         "cheader",
+        "curr",
         "hwif",
         "intf",
         "regblock",
         "rptr",
         "strb",
+        "verif",
         "wptr"
     ],
     "cSpell.ignorePaths": [
