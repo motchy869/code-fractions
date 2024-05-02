@@ -52,3 +52,7 @@ Details are described in [`build-tools/sim/without_uvm/Makefile`](build-tools/si
 This is very similar to the test bench without UVM.
 The only difference is the Makefile used.
 Use `build-tools/sim/with_uvm/Makefile` instead of `build-tools/sim/without_uvm/Makefile`.
+
+#### 3.2.1. Limitation
+
+- Accessing `uvm_mem` instance causes Vivado Simulator to crash. In this test bench, test for `uvm_mem` instance is skipped.
