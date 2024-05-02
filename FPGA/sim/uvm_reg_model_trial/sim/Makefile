@@ -51,6 +51,8 @@ XELAB_FLAGS := --incr
 # This defines an empty string.
 XSIM_FLAGS :=
 
+XVLOG_FLAGS += --define ALLOW_NON_SYNTHESIZABLE
+
 # 0/1: not/use
 USE_UVM := 1
 UVM_TESTNAME := my_test

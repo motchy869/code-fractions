@@ -45,6 +45,8 @@ XVLOG_FLAGS := --incr
 XELAB_FLAGS := --incr
 XSIM_FLAGS :=
 
+XVLOG_FLAGS += --define ALLOW_NON_SYNTHESIZABLE
+
 # 0/1: not/use
 USE_UVM := 1
 UVM_TESTNAME := my_test

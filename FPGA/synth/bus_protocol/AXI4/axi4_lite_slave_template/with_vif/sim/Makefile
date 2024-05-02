@@ -37,6 +37,8 @@ DEFAULT_TIME_SCALE := 1ns/1ps
 
 XVLOG_FLAGS := --incr
 XELAB_FLAGS := --incr
+
+XVLOG_FLAGS += --define ALLOW_NON_SYNTHESIZABLE
 #---------------------------------------------
 
 #------------ Commands -----------------------
