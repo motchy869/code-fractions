@@ -56,22 +56,17 @@ task my_rt_sig_driver::run_phase(uvm_phase phase);
     m_vif.sync_rst <= 1'b0;
 
     forever begin
-        `WAIT_CLK_POSEDGE
-        seq_item_port.try_next_item(item); // Get the next item from the sequencer if there is one.
-        if (item == null) begin
-            ; // nothing to do
-        end else begin
-            unique case (item.drv_cmd)
-                my_rt_sig_seq_item::DRV_CMD_NOP:
-                    ; // nothing to do
-                my_rt_sig_seq_item::DRV_CMD_RESET:
-                    reset_dut();
-            endcase
-            seq_item_port.item_done(); // Tell the sequencer that the item is done.
-            if (item.is_last_item) begin
-                `uvm_info("INFO", "Got last item in the sequence.", UVM_MEDIUM);
-                break;
-            end
+        seq_item_port.get_next_item(item);
+        unique case (item.drv_cmd)
+            my_rt_sig_seq_item::DRV_CMD_NOP:
+                ; // nothing to do
+            my_rt_sig_seq_item::DRV_CMD_RESET:
+                reset_dut();
+        endcase
+        seq_item_port.item_done(); // Tell the sequencer that the item is done.
+        if (item.is_last_item) begin
+            `uvm_info("INFO", "Got last item in the sequence.", UVM_MEDIUM);
+            break;
         end
     end
 
