@@ -21,7 +21,7 @@ package axi4_lite_if_pkg;
             parameter int AXI4_LITE_ADDR_BIT_WIDTH = 32,
             parameter int AXI4_LITE_DATA_BIT_WIDTH = 32
         );
-            `ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
+            `ifdef XILINX_SIMULATOR // Vivado 2023.2 crashes with SIGSEGV when clocking block is used.
                 `define WAIT_CLK_POSEDGE @(posedge vif.i_clk)
             `else
                 `define WAIT_CLK_POSEDGE @vif.mst_cb

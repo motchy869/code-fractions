@@ -38,7 +38,7 @@ endclass
 
 task my_rt_sig_collector::get_response();
     forever begin
-        `ifdef XILINX_SIMULATOR // Vivado 2023.2 crushes with SIGSEGV when clocking block is used.
+        `ifdef XILINX_SIMULATOR // Vivado 2023.2 crashes with SIGSEGV when clocking block is used.
             `define WAIT_CLK_POSEDGE @(posedge m_vif.i_clk)
         `else
             `define WAIT_CLK_POSEDGE @m_vif.col_cb
