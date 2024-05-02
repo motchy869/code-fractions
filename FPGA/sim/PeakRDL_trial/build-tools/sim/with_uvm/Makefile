@@ -66,17 +66,17 @@ elab: $(SIM_DIR)/xsim.dir/debug/xsimk
 # Run simulation and dump all waveforms.
 dump: $(SIM_DIR)/xsim.dir/debug/xsimk $(SIM_DIR)/dump_all.tcl
 	cd $(SIM_DIR) && \
-	$(XSIM) debug -t ./dump_all.tcl -wdb all.wdb | tee $(SIM_CONSOLE_LOG_FILE_PATH)
+	$(XSIM) $(XSIM_FLAGS) debug -t ./dump_all.tcl -wdb all.wdb | tee $(SIM_CONSOLE_LOG_FILE_PATH)
 
 # Open waveform viewer.
 wave: $(SIM_DIR)/all.wdb
 	cd $(SIM_DIR) && \
-	$(XSIM) all.wdb -gui &
+	$(XSIM) $(XSIM_FLAGS) all.wdb -gui &
 
 # Run parsing, elaboration and simulation with GUI.
 gui: $(SIM_DIR)/xsim.dir/debug/xsimk
 	cd $(SIM_DIR) && \
-	$(XSIM) debug -gui &
+	$(XSIM) $(XSIM_FLAGS) debug -gui &
 
 # Run parsing, elaboration and simulation.
 once:
