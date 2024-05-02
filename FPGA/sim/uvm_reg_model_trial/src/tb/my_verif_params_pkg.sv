@@ -6,5 +6,5 @@ package my_verif_params_pkg;
     localparam int AXI4_LITE_DATA_BIT_WIDTH = 32; //! bit width of AXI4-Lite data bus
 
     localparam int CLK_PERIOD_NS = 8; //! clock period in ns
-    parameter int CLK_PHASE_OFFSET_NS = CLK_PERIOD_NS/2; //! Clock phase offset in ns
+    localparam int CLK_PHASE_OFFSET_NS = CLK_PERIOD_NS/2; //! Clock phase offset in ns
 endpackage

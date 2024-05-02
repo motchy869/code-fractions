@@ -13,8 +13,8 @@
 `include "uvm_macros.svh"
 
 package my_verif_pkg;
-    parameter int CLK_PERIOD_NS = 8; //! Clock period in ns
-    parameter int CLK_PHASE_OFFSET_NS = CLK_PERIOD_NS/2; //! Clock phase offset in ns
+    localparam int CLK_PERIOD_NS = 8; //! Clock period in ns
+    localparam int CLK_PHASE_OFFSET_NS = CLK_PERIOD_NS/2; //! Clock phase offset in ns
 
     localparam int CSR_ADDR_SPACE_SIZE_BYTE = 'h40; //! size of CSR address space in byte
     localparam int AXI4_LITE_ADDR_BIT_WIDTH = $clog2(CSR_ADDR_SPACE_SIZE_BYTE); //! bit width of AXI4-Lite address bus
