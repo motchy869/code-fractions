@@ -1,3 +1,6 @@
+`ifndef MY_RT_SIG_IF_SVH_INCLUDED
+`define MY_RT_SIG_IF_SVH_INCLUDED
+
 // Verible directive
 // verilog_lint: waive-start line-length
 
@@ -44,3 +47,5 @@ interface my_rt_sig_if (
 endinterface
 
 `default_nettype wire
+
+`endif

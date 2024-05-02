@@ -1,3 +1,6 @@
+`ifndef MY_VERIF_PARAMS_PKG_SVH_INCLUDED
+`define MY_VERIF_PARAMS_PKG_SVH_INCLUDED
+
 // Verible directive
 // verilog_lint: waive-start parameter-name-style
 
@@ -8,3 +11,5 @@ package my_verif_params_pkg;
     localparam int CLK_PERIOD_NS = 8; //! clock period in ns
     localparam int CLK_PHASE_OFFSET_NS = CLK_PERIOD_NS/2; //! Clock phase offset in ns
 endpackage
+
+`endif

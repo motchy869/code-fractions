@@ -4,6 +4,8 @@
 
 `define INCLUDED_FROM_MY_VERIF_PKG
 
+`include "my_verif_params_pkg.svh"
+`include "rt_sig/my_rt_sig_if.svh"
 `include "../axi4_lite_if.svh"
 `include "uvm_macros.svh"
 

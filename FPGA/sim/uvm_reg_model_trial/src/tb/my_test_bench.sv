@@ -2,21 +2,20 @@
 // verilog_lint: waive-start line-length
 // verilog_lint: waive-start parameter-name-style
 
-`include "../axi4_lite_if.svh"
+`include "my_verif_pkg.svh"
 
 `default_nettype none
 
 //! test bench top module
 module my_test_bench;
     import uvm_pkg::*;
-    import my_verif_pkg::*;
 
     // ---------- parameters ----------
     // --------------------
 
     // ---------- internal signal and storage ----------
     var bit r_clk; //! clock signal
-    bus_vif_t bus_vif; //! virtual interface for `bus_if`
+    my_verif_pkg::bus_vif_t bus_vif; //! virtual interface for `bus_if`
     virtual interface my_rt_sig_if rt_sig_vif; //! virtual interface for `rt_sig_if`
     // --------------------
 
@@ -56,7 +55,7 @@ module my_test_bench;
     initial begin
         bus_vif = bus_if;
         rt_sig_vif = rt_sig_if;
-        uvm_config_db#(bus_vif_t)::set(null, "uvm_test_top", "g_bus_vif", bus_vif);
+        uvm_config_db#(my_verif_pkg::bus_vif_t)::set(null, "uvm_test_top", "g_bus_vif", bus_vif);
         uvm_config_db#(virtual my_rt_sig_if)::set(null, "uvm_test_top", "g_rt_sig_vif", rt_sig_vif);
         run_test();
     end

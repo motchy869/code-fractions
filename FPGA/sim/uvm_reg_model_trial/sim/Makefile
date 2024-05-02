@@ -32,13 +32,15 @@ SRC_DIR := $(MAKEFILE_DIR)/../src
 
 SIM_CONSOLE_LOG_FILE_PATH := $(SIM_DIR)/sim_console.log
 
-# Must take care of the compile order.
-# Note that changes in svh files are NOT detected, so you need to change timestamp of any sv files and re-run make.
-SV_SRC_FILES := $(shell find $(SRC_DIR) -not -path '$(SRC_DIR)/tb/*' -type f -name "*.sv" | tr '\n' ' ')
-SV_SRC_FILES += $(SRC_DIR)/tb/my_verif_params_pkg.sv \
-	$(SRC_DIR)/tb/rt_sig/my_rt_sig_if.sv \
-	$(SRC_DIR)/tb/my_verif_pkg.sv \
-	$(SRC_DIR)/tb/my_test_bench.sv
+# # Must take care of the compile order.
+# # Note that changes in svh files are NOT detected, so you need to change timestamp of any sv files and re-run make.
+# SV_SRC_FILES := $(shell find $(SRC_DIR) -not -path '$(SRC_DIR)/tb/*' -type f -name "*.sv" | tr '\n' ' ')
+# SV_SRC_FILES += $(SRC_DIR)/tb/my_verif_params_pkg.sv \
+# 	$(SRC_DIR)/tb/rt_sig/my_rt_sig_if.sv \
+# 	$(SRC_DIR)/tb/my_verif_pkg.sv \
+# 	$(SRC_DIR)/tb/my_test_bench.sv
+
+SV_SRC_FILES = $(shell find $(SRC_DIR) -type f -name "*.sv" | tr '\n' ' ')
 
 TB_TOP := my_test_bench
 
