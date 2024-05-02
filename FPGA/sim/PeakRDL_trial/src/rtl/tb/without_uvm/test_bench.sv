@@ -35,7 +35,7 @@ virtual interface axi4_lite_if #(
 // --------------------
 
 // ---------- instances ----------
-//! AXI4-Lite interface for DUT.
+//! AXI4-Lite interface for DUT
 axi4_lite_if #(
     .ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
     .DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
