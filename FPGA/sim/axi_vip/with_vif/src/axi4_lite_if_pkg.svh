@@ -58,6 +58,7 @@ package axi4_lite_if_pkg;
 
             if (vif.rvalid) begin
                 data = vif.rdata;
+                resp = axi4_resp_t'(vif.rresp);
                 `WAIT_CLK_POSEDGE begin
                     vif.arvalid <= 1'b0;
                     vif.rready <= 1'b0;
