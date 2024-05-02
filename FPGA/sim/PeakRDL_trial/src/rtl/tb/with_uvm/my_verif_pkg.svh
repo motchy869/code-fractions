@@ -7,7 +7,9 @@
 
 `define INCLUDED_FROM_MY_VERIF_PKG
 
+`include "rt_sig/my_rt_sig_if.svh"
 `include "../../axi4_lite_if.svh"
+`include "../../csr/my_mod_csr_uvm_reg_model_pkg.svh"
 `include "uvm_macros.svh"
 
 package my_verif_pkg;
@@ -26,14 +28,28 @@ package my_verif_pkg;
 
     // Line blocks with no blank lines indicates there is no dependency.
     // Blank lines indicates dependency.
+    `include "./rt_sig/my_rt_sig_seq_item.svh"
     `include "./bus/my_bus_seq_item.svh"
     `include "./bus/my_bus_collected_item.svh"
+    `include "./seq/my_reset_seq.svh"
+    `include "./seq/my_rt_sig_drv_shutdown_seq.svh"
+    `include "./seq/my_bus_drv_shutdown_seq.svh"
 
+    `include "./rt_sig/my_rt_sig_driver.svh"
     `include "./bus/my_bus_driver.svh"
     `include "./bus/my_bus_collector.svh"
     `include "./bus/my_bus_monitor.svh"
+    `include "./reg/my_reg_adapter.svh"
 
+    `include "./rt_sig/my_rt_sig_agent.svh"
     `include "./bus/my_bus_agent.svh"
+    `include "./reg/my_reg_env.svh"
+
+    `include "my_env.svh"
+
+    `include "./test/my_base_test.svh"
+
+    `include "./test/my_test.svh"
 endpackage
 
 `endif
