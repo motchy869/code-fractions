@@ -1,0 +1,21 @@
+# reference:
+# - UG909::Managing Constraints for a DFX Design
+#
+# This file is a .xdc for the Zybo Z7 Rev. B
+
+# ---------- static ----------
+## clock signal
+set_property -dict {PACKAGE_PIN K17 IOSTANDARD LVCMOS33} [get_ports CLK]; # IO_L12P_T1_MRCC_35 Sch=sysclk
+create_clock -add -name sys_clk_pin -period 8.00 -waveform {0 4} [get_ports CLK];
+
+## buttons
+set_property -dict {PACKAGE_PIN Y16 IOSTANDARD LVCMOS33} [get_ports RST]; # IO_L7P_T1_34 Sch=btn[3]
+set_input_delay -clock sys_clk_pin -max 1.0 [get_ports RST]; # dummy delay
+set_input_delay -clock sys_clk_pin -min 0.0 [get_ports RST]; # dummy delay
+# --------------------
+
+# ---------- boundary ----------
+# --------------------
+
+# ---------- RM ----------
+# --------------------
