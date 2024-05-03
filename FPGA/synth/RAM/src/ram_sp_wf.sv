@@ -16,7 +16,7 @@
 //! **NOTE**: 'read latency is n' means that if address input is changed right after the k-th clock rising edge, the corresponding data is shown right after the (k+n)-th clock rising edge.
 //!
 //! example timing diagram
-//! ![example](timing_diagram_example_@read_latency=2.png)
+//! ![example](Waveme/timing_diagram_example_@read_latency=2.png)
 module ram_sp_wf #(
     parameter int WORD_BIT_WIDTH = 32, //! word bit width, **must be power of 2**
     parameter int DEPTH = 8, //! depth of RAM, **must be power of 2**
