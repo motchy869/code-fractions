@@ -55,4 +55,4 @@ Use `build-tools/sim/with_uvm/Makefile` instead of `build-tools/sim/without_uvm/
 
 #### 3.2.1. Limitation
 
-- Accessing `uvm_mem` instance causes Vivado Simulator to crash. In this test bench, test for `uvm_mem` instance is skipped.
+- Accessing `uvm_mem` instance causes Vivado Simulator to crash.
