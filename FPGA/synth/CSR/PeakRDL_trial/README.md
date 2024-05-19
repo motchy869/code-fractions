@@ -36,6 +36,7 @@ Make sure hierarchy update strategy is set to 'Automatic Update and Compile Orde
 ![hierarchy update strategy](doc/README_img/automatic_update_and_compile_order.png)
 
 Create HDL wrapper for `design_1` block design.
+Choose 'Let Vivado manage wrapper and auto-update' then press 'OK'.
 
 ![create HDL wrapper](doc/README_img/create_HDL_wrapper.png)
 
