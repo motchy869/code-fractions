@@ -19,7 +19,7 @@ module fragment_to_chunk #(
     //! @virtualbus us_side_if @dir in upstream side interface
     input wire logic i_frag_valid, //! input valid signal which indicates that the input fragment is valid
     input wire logic [$clog2(S_MAX_IN+1)-1:0] i_frag_size, //! The size of the input fragment. When this exceeds `S_MAX_IN`, `o_next_frag_ready` will be deasserted.
-    input wire logic i_pad_tail, // ! Directive to append zero or more empty (all bits are set to 0) elements to the fragment to ensure that the internal buffer has integer multiple of `S_OUT` elements. This can be used to flush the internal buffer.
+    input wire logic i_pad_tail, //! Directive to append zero or more empty (all bits are set to 0) elements to the fragment to ensure that the internal buffer has integer multiple of `S_OUT` elements. This can be used to flush the internal buffer.
     input wire T i_frag[S_MAX_IN], //! input fragment
     output wire logic o_next_frag_ready, //! Output ready signal which indicates that the upstream-side can send the next fragment. Masked by reset.
     //! @end
