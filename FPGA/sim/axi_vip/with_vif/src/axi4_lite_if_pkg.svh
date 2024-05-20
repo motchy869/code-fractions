@@ -27,6 +27,74 @@ package axi4_lite_if_pkg;
                 `define WAIT_CLK_POSEDGE @vif.mst_cb
             `endif
 
+            //! Reset the master output signals.
+            static task automatic reset_mst_out_sigs(
+                virtual interface axi4_lite_if #(
+                    .ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
+                    .DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
+                ) vif, //! virtual interface to DUT
+                input bit wait_for_clk_pos_edge = 1'b0 //! 1'b1/1'b0: wait/do not wait for the next positive edge of the clock before driving signals
+            );
+                if (wait_for_clk_pos_edge) begin
+                    `WAIT_CLK_POSEDGE begin
+                        vif.awaddr <= '0;
+                        vif.awprot <= '0;
+                        vif.awvalid <= 1'b0;
+                        vif.wdata <= '0;
+                        vif.wstrb <= '0;
+                        vif.wvalid <= 1'b0;
+                        vif.bready <= 1'b0;
+                        vif.araddr <= '0;
+                        vif.arprot <= '0;
+                        vif.arvalid <= 1'b0;
+                        vif.rready <= 1'b0;
+                    end
+                end else begin
+                    vif.awaddr = '0;
+                    vif.awprot = '0;
+                    vif.awvalid = 1'b0;
+                    vif.wdata = '0;
+                    vif.wstrb = '0;
+                    vif.wvalid = 1'b0;
+                    vif.bready = 1'b0;
+                    vif.araddr = '0;
+                    vif.arprot = '0;
+                    vif.arvalid = 1'b0;
+                    vif.rready = 1'b0;
+                end
+            endtask
+
+            //! Reset the slave output signals.
+            static task automatic reset_slv_out_sigs(
+                virtual interface axi4_lite_if #(
+                    .ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
+                    .DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
+                ) vif, //! virtual interface to DUT
+                input bit wait_for_clk_pos_edge = 1'b0 //! 1'b1/1'b0: wait/do not wait for the next positive edge of the clock before driving signals
+            );
+                if (wait_for_clk_pos_edge) begin
+                    `WAIT_CLK_POSEDGE begin
+                        vif.awready <= 1'b0;
+                        vif.wready <= 1'b0;
+                        vif.bresp <= '0;
+                        vif.bvalid <= 1'b0;
+                        vif.arready <= 1'b0;
+                        vif.rdata <= '0;
+                        vif.rresp <= '0;
+                        vif.rvalid <= 1'b0;
+                    end
+                end else begin
+                    vif.awready <= 1'b0;
+                    vif.wready <= 1'b0;
+                    vif.bresp <= '0;
+                    vif.bvalid <= 1'b0;
+                    vif.arready <= 1'b0;
+                    vif.rdata <= '0;
+                    vif.rresp <= '0;
+                    vif.rvalid <= 1'b0;
+                end
+            endtask
+
             //! Perform AXI4-Lite read transaction.
             //! This task is based on the following blog post.
             //! [Testing Verilog AXI4-Lite Peripherals](https://klickverbot.at/blog/2016/01/testing-verilog-axi4-lite-peripherals/)

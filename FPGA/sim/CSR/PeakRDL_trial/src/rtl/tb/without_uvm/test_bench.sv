@@ -218,7 +218,10 @@ endtask
 //! Launch scenario and manage time limit.
 initial begin
     axi4_lite_vif_0 = axi4_lite_if_0;
-    axi4_lite_vif_0.reset_mst_out_sigs();
+    axi4_lite_if_pkg::axi4_lite_access#(
+        .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
+        .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
+    )::reset_mst_out_sigs(axi4_lite_vif_0, 1'b0);
     fork
         scenario();
     join_none

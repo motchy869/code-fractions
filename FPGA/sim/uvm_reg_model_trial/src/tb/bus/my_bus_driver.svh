@@ -76,7 +76,10 @@ task my_bus_driver::run_phase(uvm_phase phase);
     my_bus_seq_item pkt;
 
     phase.raise_objection(this);
-    m_vif.reset_mst_out_sigs();
+    axi4_lite_if_pkg::axi4_lite_access#(
+        .AXI4_LITE_ADDR_BIT_WIDTH(my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH),
+        .AXI4_LITE_DATA_BIT_WIDTH(my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH)
+    )::reset_mst_out_sigs(m_vif, 1'b0);
 
     forever begin
         // `uvm_info("INFO", "Waiting for a packet", UVM_DEBUG);

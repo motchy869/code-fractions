@@ -131,7 +131,10 @@ endtask
 //! Launch scenario and manage time limit.
 initial begin
     vif__tb_vip = if__tb_vip;
-    if__tb_vip.reset_mst_out_sigs();
+    axi4_lite_if_pkg::axi4_lite_access#(
+        .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
+        .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
+    )::reset_mst_out_sigs(vif__tb_vip, 1'b0);
     fork
         scenario();
     join_none
