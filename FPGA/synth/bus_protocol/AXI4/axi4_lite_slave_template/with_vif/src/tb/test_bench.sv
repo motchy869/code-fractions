@@ -14,8 +14,6 @@
 //! Some techniques used in this test bench are based on the following blog post.
 //!
 //! [仮想インターフェース　(Virtual interface)](http://japanese.sugawara-systems.com/systemverilog/virtual_interface.htm)
-//!
-//! Vivado 2023.2 crashes with SIGSEGV.
 module test_bench;
 // ---------- parameters ----------
 localparam int CLK_PERIOD_NS = 8; //! clock period in ns
