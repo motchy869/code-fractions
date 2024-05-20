@@ -63,7 +63,7 @@ function automatic int calcPadFragSize(
     input int frag_size // ! the size of the input fragment
 );
     const int tail_end_ptr = calcWriteElemPointer(frag_head_ptr, frag_size);
-    if (tail_room_ptr inside {0, S_OUT}) begin
+    if (tail_end_ptr inside {0, S_OUT}) begin
         return 0;
     end else if (tail_end_ptr < S_OUT) begin
         return S_OUT - tail_end_ptr;
