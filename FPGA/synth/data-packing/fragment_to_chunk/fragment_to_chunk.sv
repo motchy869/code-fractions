@@ -78,13 +78,13 @@ endfunction
 
 // ---------- working signals and storage ----------
 wire logic g_frag_size_good; //! Indicates that the input fragment size is good.
-assign g_frag_size_good = int'(i_frag_size) <= S_MAX_IN;
+assign g_frag_size_good = i_frag_size <= $bits(i_frag_size)'(S_MAX_IN);
 
 var T r_frag_buf[FRAG_BUF_CAP]; //! buffer to store fragments, 2-page buffer
 var logic [CLOG2_FRAG_BUF_CAP-1:0] r_buf_cnt; //! count of the fragments in the buffer
 var logic r_read_page_ptr; //! Read pointer of the fragment buffer. Note that there is only 2 pages in the fragment buffer.
 wire [CLOG2_FRAG_BUF_CAP-1:0] g_write_elem_start_ptr; //! write starting pointer of the fragment buffer
-assign g_write_elem_start_ptr = (r_read_page_ptr == 1'b0) ? r_buf_cnt : CLOG2_FRAG_BUF_CAP'((int'(r_buf_cnt) < S_OUT) ? S_OUT + int'(r_buf_cnt) : int'(r_buf_cnt) - S_OUT);
+assign g_write_elem_start_ptr = (r_read_page_ptr == 1'b0) ? r_buf_cnt : (r_buf_cnt < $bits(r_buf_cnt)'(S_OUT)) ? $bits(r_buf_cnt)'(S_OUT) + r_buf_cnt : r_buf_cnt - $bits(r_buf_cnt)'(S_OUT);
 wire g_pop_en; //! enable signal to pop a chunk from the buffer
 assign g_pop_en = i_ds_ready && o_chunk_valid;
 wire g_push_en; //! enable signal to push a fragment into the buffer
@@ -94,16 +94,16 @@ assign g_pad_frag_size = i_pad_tail ? calcPadFragSize(g_write_elem_start_ptr, i_
 // --------------------
 
 // Drive output signals.
-assign o_next_frag_ready = !i_sync_rst && g_frag_size_good && (g_pop_en ? int'(r_buf_cnt) - S_OUT : int'(r_buf_cnt)) + int'(i_frag_size) <= FRAG_BUF_CAP;
-assign o_chunk_valid = !i_sync_rst && int'(r_buf_cnt) >= S_OUT;
-assign o_chunk = r_frag_buf[int'(r_read_page_ptr)*S_OUT+:S_OUT];
+assign o_next_frag_ready = !i_sync_rst && g_frag_size_good && (g_pop_en ? r_buf_cnt - $bits(r_buf_cnt)'(S_OUT) : r_buf_cnt) + i_frag_size <= $bits(r_buf_cnt)'(FRAG_BUF_CAP);
+assign o_chunk_valid = !i_sync_rst && r_buf_cnt >= $bits(r_buf_cnt)'(S_OUT);
+assign o_chunk = r_frag_buf[$bits(r_buf_cnt)'(r_read_page_ptr)*$bits(r_buf_cnt)'(S_OUT)+:S_OUT];
 
 //! Update the fragment buffer count.
 always_ff @(posedge i_clk) begin: update_buf_cnt
     if (i_sync_rst) begin
         r_buf_cnt <= '0;
     end else begin
-        r_buf_cnt <= r_buf_cnt + (g_push_en ? i_frag_size + g_pad_frag_size : '0) - (g_pop_en ? S_OUT : '0);
+        r_buf_cnt <= r_buf_cnt + (g_push_en ? i_frag_size + g_pad_frag_size : '0) - (g_pop_en ? $bits(r_buf_cnt)'(S_OUT) : '0);
     end
 end
 
@@ -122,9 +122,9 @@ always_ff @(posedge i_clk) begin: update_fragment_buffer
         r_frag_buf <= '{default:0};
         r_buf_cnt <= '0;
     end else if (g_push_en) begin
-        for (int i=0; i<S_MAX_IN; ++i) begin
+        for (logic [CLOG2_FRAG_BUF_CAP-1:0] i=0; i<CLOG2_FRAG_BUF_CAP'(S_MAX_IN); ++i) begin
             if (i < i_frag_size + g_pad_frag_size) begin
-                r_frag_buf[calcWriteElemPointer(g_write_elem_start_ptr, i)] <= (i < i_frag_size) ? i_frag[i] : '{default:'0};
+                r_frag_buf[calcWriteElemPointer(g_write_elem_start_ptr, i)] <= (i < i_frag_size) ? i_frag[$clog2(S_MAX_IN)'(i)] : '{default:'0};
             end
         end
     end
