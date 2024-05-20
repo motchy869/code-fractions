@@ -18,7 +18,7 @@ module fragment_to_chunk #(
 
     //! @virtualbus us_side_if @dir in upstream side interface
     input wire logic i_frag_valid, //! input valid signal which indicates that the input fragment is valid
-    input wire logic [$clog2(S_MAX_IN)-1:0] i_frag_size, //! The size of the input fragment. When this exceeds `S_MAX_IN`, `o_next_frag_ready` will be deasserted.
+    input wire logic [$clog2(S_MAX_IN+1)-1:0] i_frag_size, //! The size of the input fragment. When this exceeds `S_MAX_IN`, `o_next_frag_ready` will be deasserted.
     input wire logic i_pad_tail, // ! Directive to append zero or more empty (all bits are set to 0) elements to the fragment to ensure that the internal buffer has integer multiple of `S_OUT` elements. This can be used to flush the internal buffer.
     input wire T i_frag[S_MAX_IN], //! input fragment
     output wire logic o_next_frag_ready, //! Output ready signal which indicates that the upstream-side can send the next fragment. Masked by reset.
@@ -45,30 +45,33 @@ localparam int CLOG2_FRAG_BUF_CAP = $clog2(FRAG_BUF_CAP); //! $clog2 of the frag
 
 // ---------- functions ----------
 //! Calculate the write element pointer of the fragment buffer.
-function automatic int calcWriteElemPointer(
-    input int frag_head_ptr, //! the input fragment's head pointer in the fragment buffer
-    input int elem_idx //! element index in the input fragment
+function automatic logic [CLOG2_FRAG_BUF_CAP-1:0] calcWriteElemPointer(
+    input logic [CLOG2_FRAG_BUF_CAP-1:0] frag_head_ptr, //! the input fragment's head pointer in the fragment buffer
+    input logic [CLOG2_FRAG_BUF_CAP-1:0] elem_idx //! element index in the input fragment
 );
-    const int ptr = frag_head_ptr + elem_idx;
-    if (ptr < FRAG_BUF_CAP) begin
-        return ptr;
+    localparam logic [CLOG2_FRAG_BUF_CAP:0] _FRAG_BUF_CAP = (CLOG2_FRAG_BUF_CAP+1)'(FRAG_BUF_CAP);
+    const logic [CLOG2_FRAG_BUF_CAP:0] ptr = (CLOG2_FRAG_BUF_CAP+1)'(frag_head_ptr) + (CLOG2_FRAG_BUF_CAP+1)'(elem_idx);
+    if (ptr < _FRAG_BUF_CAP) begin
+        return CLOG2_FRAG_BUF_CAP'(ptr);
     end else begin
-        return ptr - FRAG_BUF_CAP;
+        return CLOG2_FRAG_BUF_CAP'(ptr - _FRAG_BUF_CAP);
     end
 endfunction
 
 //! Calculate the padding fragment size.
-function automatic int calcPadFragSize(
-    input int frag_head_ptr, //! the input fragment's head pointer in the fragment buffer
-    input int frag_size // ! the size of the input fragment
+function automatic logic [CLOG2_FRAG_BUF_CAP-1:0] calcPadFragSize(
+    input logic [CLOG2_FRAG_BUF_CAP-1:0] frag_head_ptr, //! the input fragment's head pointer in the fragment buffer
+    input logic [CLOG2_FRAG_BUF_CAP-1:0] frag_size // ! the size of the input fragment
 );
-    const int tail_end_ptr = calcWriteElemPointer(frag_head_ptr, frag_size);
-    if (tail_end_ptr inside {0, S_OUT}) begin
+    localparam logic [CLOG2_FRAG_BUF_CAP-1:0] _S_OUT = CLOG2_FRAG_BUF_CAP'(S_OUT);
+    localparam logic [CLOG2_FRAG_BUF_CAP-1:0] _FRAG_BUF_CAP = CLOG2_FRAG_BUF_CAP'(FRAG_BUF_CAP);
+    const logic [CLOG2_FRAG_BUF_CAP-1:0] tail_end_ptr = calcWriteElemPointer(frag_head_ptr, frag_size);
+    if (tail_end_ptr inside {0, _S_OUT}) begin
         return 0;
-    end else if (tail_end_ptr < S_OUT) begin
-        return S_OUT - tail_end_ptr;
+    end else if (tail_end_ptr < _S_OUT) begin
+        return _S_OUT - tail_end_ptr;
     end else begin
-        return FRAG_BUF_CAP - tail_end_ptr;
+        return _FRAG_BUF_CAP - tail_end_ptr;
     end
 endfunction
 // --------------------
