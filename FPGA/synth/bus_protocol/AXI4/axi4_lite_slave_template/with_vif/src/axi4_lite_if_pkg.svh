@@ -38,9 +38,9 @@ package axi4_lite_if_pkg;
                     .ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
                     .DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
                 ) vif, //! virtual interface to DUT
-                input bit wait_for_clk_pos_edge = 1'b0 //! 1'b1/1'b0: wait/do not wait for the next positive edge of the clock before driving signals
+                input bit wait_for_next_clk_pos_edge = 1'b0 //! 1'b1/1'b0: wait/do not wait for the next positive edge of the clock before driving signals
             );
-                if (wait_for_clk_pos_edge) begin
+                if (wait_for_next_clk_pos_edge) begin
                     `WAIT_CLK_POSEDGE begin
                         vif.awaddr <= '0;
                         vif.awprot <= '0;
@@ -72,9 +72,9 @@ package axi4_lite_if_pkg;
             //! Reset the slave output signals.
             static task automatic reset_slv_out_sigs(
                 vif_t vif, //! virtual interface to DUT
-                input bit wait_for_clk_pos_edge = 1'b0 //! 1'b1/1'b0: wait/do not wait for the next positive edge of the clock before driving signals
+                input bit wait_for_next_clk_pos_edge = 1'b0 //! 1'b1/1'b0: wait/do not wait for the next positive edge of the clock before driving signals
             );
-                if (wait_for_clk_pos_edge) begin
+                if (wait_for_next_clk_pos_edge) begin
                     `WAIT_CLK_POSEDGE begin
                         vif.awready <= 1'b0;
                         vif.wready <= 1'b0;
