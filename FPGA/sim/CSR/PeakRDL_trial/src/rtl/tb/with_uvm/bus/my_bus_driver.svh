@@ -14,6 +14,11 @@
 class my_bus_driver extends uvm_driver#(my_bus_seq_item);
     `uvm_component_utils(my_bus_driver)
 
+    typedef axi4_lite_if_pkg::axi4_lite_access#(
+        .AXI4_LITE_ADDR_BIT_WIDTH(my_verif_pkg::AXI4_LITE_ADDR_BIT_WIDTH),
+        .AXI4_LITE_DATA_BIT_WIDTH(my_verif_pkg::AXI4_LITE_DATA_BIT_WIDTH)
+    ) axi4_lite_access_t;
+
     bus_vif_t m_vif;
 
     function new(string name = "my_bus_driver", uvm_component parent);
@@ -50,10 +55,7 @@ task my_bus_driver::read_access(
 );
     axi4_lite_if_pkg::axi4_resp_t resp;
 
-    axi4_lite_if_pkg::axi4_lite_access#(
-        .AXI4_LITE_ADDR_BIT_WIDTH(my_verif_pkg::AXI4_LITE_ADDR_BIT_WIDTH),
-        .AXI4_LITE_DATA_BIT_WIDTH(my_verif_pkg::AXI4_LITE_DATA_BIT_WIDTH)
-    )::axi4_lite_read(m_vif, addr, data, resp);
+    axi4_lite_access_t::axi4_lite_read(m_vif, addr, data, resp);
     status = (resp == axi4_lite_if_pkg::AXI4_RESP_OKAY) ? UVM_IS_OK : UVM_NOT_OK;
 endtask
 
@@ -65,10 +67,7 @@ task my_bus_driver::write_access(
 );
     axi4_lite_if_pkg::axi4_resp_t resp;
 
-    axi4_lite_if_pkg::axi4_lite_access#(
-        .AXI4_LITE_ADDR_BIT_WIDTH(my_verif_pkg::AXI4_LITE_ADDR_BIT_WIDTH),
-        .AXI4_LITE_DATA_BIT_WIDTH(my_verif_pkg::AXI4_LITE_DATA_BIT_WIDTH)
-    )::axi4_lite_write(m_vif, addr, data, wstrb, resp);
+    axi4_lite_access_t::axi4_lite_write(m_vif, addr, data, wstrb, resp);
     status = (resp == axi4_lite_if_pkg::AXI4_RESP_OKAY) ? UVM_IS_OK : UVM_NOT_OK;
 endtask
 
@@ -76,10 +75,7 @@ task my_bus_driver::run_phase(uvm_phase phase);
     my_bus_seq_item pkt;
 
     phase.raise_objection(this);
-    axi4_lite_if_pkg::axi4_lite_access#(
-        .AXI4_LITE_ADDR_BIT_WIDTH(my_verif_pkg::AXI4_LITE_ADDR_BIT_WIDTH),
-        .AXI4_LITE_DATA_BIT_WIDTH(my_verif_pkg::AXI4_LITE_ADDR_BIT_WIDTH)
-    )::reset_mst_out_sigs(m_vif, 1'b0);
+    axi4_lite_access_t::reset_mst_out_sigs(m_vif, 1'b0);
 
     forever begin
         // `uvm_info("INFO", "Waiting for a packet", UVM_DEBUG);
