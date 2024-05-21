@@ -37,11 +37,14 @@ class my_bus_collector extends uvm_component;
     extern virtual task run_phase(uvm_phase phase);
 endclass
 
-`ifdef XILINX_SIMULATOR // Vivado 2023.2 crashes with SIGSEGV when clocking block is used.
-    `define WAIT_CLK_POSEDGE @(posedge m_vif.i_clk)
-`else
-    `define WAIT_CLK_POSEDGE @m_vif.mst_cb
-`endif
+// (1)
+// `ifdef XILINX_SIMULATOR // Vivado 2023.2 crashes with SIGSEGV when clocking block is used.
+//     `define WAIT_CLK_POSEDGE @(posedge vif.i_clk)
+// `else
+//     `define WAIT_CLK_POSEDGE @vif.mst_cb
+// `endif
+// (2) Clocking block is buggy in Xcelium, so we decided to simply use `@(posedge vif.i_clk)`
+`define WAIT_CLK_POSEDGE @(posedge vif.i_clk)
 
 task my_bus_collector::task_monitor_read_access();
     forever begin

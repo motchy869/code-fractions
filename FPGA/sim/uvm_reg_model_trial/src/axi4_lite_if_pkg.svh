@@ -26,11 +26,14 @@ package axi4_lite_if_pkg;
                 .DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
             ) vif_t;
 
-            `ifdef XILINX_SIMULATOR // Vivado 2023.2 crashes with SIGSEGV when clocking block is used.
-                `define WAIT_CLK_POSEDGE @(posedge vif.i_clk)
-            `else
-                `define WAIT_CLK_POSEDGE @vif.mst_cb
-            `endif
+            // (1)
+            // `ifdef XILINX_SIMULATOR // Vivado 2023.2 crashes with SIGSEGV when clocking block is used.
+            //     `define WAIT_CLK_POSEDGE @(posedge vif.i_clk)
+            // `else
+            //     `define WAIT_CLK_POSEDGE @vif.mst_cb
+            // `endif
+            // (2) Clocking block is buggy in Xcelium, so we decided to simply use `@(posedge vif.i_clk)`
+            `define WAIT_CLK_POSEDGE @(posedge vif.i_clk)
 
             //! Reset the master output signals.
             static task automatic reset_mst_out_sigs(
