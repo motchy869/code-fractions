@@ -35,7 +35,7 @@ SRC_DIR := $(MAKEFILE_DIR)/../src
 INCLUDE_DIR :=
 
 SIM_CONSOLE_LOG_FILE_PATH := $(SIM_DIR)/sim_console.log
-SRC_FILES := $(shell find $(SRC_DIR) -type f -name "*.sv" | tr '\n' ' ')
+SV_SRC_FILES := $(shell find $(SRC_DIR) -type f -name "*.sv" | tr '\n' ' ')
 
 TB_TOP := test_bench
 
