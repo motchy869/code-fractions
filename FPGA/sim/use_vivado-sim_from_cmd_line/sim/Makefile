@@ -48,7 +48,7 @@ elab: $(SIM_DIR)/xsim.dir/debug/xsimk
 # Run simulation and dump all waveforms.
 dump: $(SIM_DIR)/xsim.dir/debug/xsimk $(SIM_DIR)/dump_all.tcl
 	cd $(SIM_DIR) && \
-	$(XSIM) debug -t ./dump_all.tcl -wdb all.wdb
+	$(XSIM) debug -tclbatch ./dump_all.tcl -wdb all.wdb
 
 # Open waveform viewer.
 view: $(SIM_DIR)/all.wdb
@@ -64,7 +64,7 @@ gui: $(SIM_DIR)/xsim.dir/debug/xsimk
 once:
 	cd $(SIM_DIR) && \
 	$(XVLOG) $(XVLOG_FLAGS) -sv $(SRC_FILES) && \
-	$(XELAB) $(TB_TOP) -timescale $(DEFAULT_TIME_SCALE) $(XELAB_FLAGS) -R
+	$(XELAB) $(TB_TOP) -timescale $(DEFAULT_TIME_SCALE) $(XELAB_FLAGS) -runall
 
 # Run parsing, elaboration, then run stand-alone simulation executable.
 alone: $(SIM_DIR)/xsim.dir/alone/axsim
