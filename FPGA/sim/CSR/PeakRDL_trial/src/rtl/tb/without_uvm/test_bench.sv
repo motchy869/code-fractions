@@ -79,7 +79,7 @@ task automatic csr_check();
     const bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] SIMPLE_MEM_ADDR = AXI4_LITE_ADDR_BIT_WIDTH'('h20);
 
     var bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] read_back_data;
-    axi4_lite_if_pkg::axi4_resp_t resp;
+    var axi4_lite_if_pkg::axi4_resp_t resp;
 
     begin // MY_MOD_VERSION
         const bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] expected_rd_data = AXI4_LITE_DATA_BIT_WIDTH'('h01234567);

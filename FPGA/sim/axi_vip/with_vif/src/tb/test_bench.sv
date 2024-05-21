@@ -106,8 +106,8 @@ endtask
 
 task automatic reg_check();
     const bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] write_data[4] = {'h12345678, 'h87654321, 'hABCDEF01, 'h10FEDCBA};
-    bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] read_back_data;
-    axi4_lite_if_pkg::axi4_resp_t resp;
+    var bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] read_back_data;
+    var axi4_lite_if_pkg::axi4_resp_t resp;
 
     for (int i=0; i<4; ++i) begin
         axi4_lite_access_t::axi4_lite_write(vif__tb_vip, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), write_data[i], '1, resp);
