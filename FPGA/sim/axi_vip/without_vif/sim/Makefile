@@ -1,3 +1,5 @@
+# Makefile for Vivado Simulator
+# Known to work with Vivado 2023.2.
 # Based on [Vivado Simulator(xsim)でのロジックシミュレーションおよびデバッグ](https://qiita.com/vega77/items/be284e1fc955381d0dae), but modified.
 #
 # Example

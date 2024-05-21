@@ -1,3 +1,5 @@
+# Makefile for Vivado Simulator
+# Known to work with Vivado 2023.2.
 # Based on [Vivado Simulator(xsim)でのロジックシミュレーションおよびデバッグ](https://qiita.com/vega77/items/be284e1fc955381d0dae), but modified.
 #
 # Example
@@ -29,29 +31,19 @@ XSIM := $(VIVADO_DIR)/bin/xsim
 
 SIM_DIR := $(MAKEFILE_DIR)/sim_result
 SRC_DIR := $(MAKEFILE_DIR)/../src
+# This defines an empty string.
+INCLUDE_DIR :=
 
 SIM_CONSOLE_LOG_FILE_PATH := $(SIM_DIR)/sim_console.log
-
-# # Must take care of the compile order.
-# # Note that changes in svh files are NOT detected, so you need to change timestamp of any sv files and re-run make.
-# SV_SRC_FILES := $(shell find $(SRC_DIR) -not -path '$(SRC_DIR)/tb/*' -type f -name "*.sv" | tr '\n' ' ')
-# SV_SRC_FILES += $(SRC_DIR)/tb/my_verif_params_pkg.sv \
-# 	$(SRC_DIR)/tb/rt_sig/my_rt_sig_if.sv \
-# 	$(SRC_DIR)/tb/my_verif_pkg.sv \
-# 	$(SRC_DIR)/tb/my_test_bench.sv
-
 SV_SRC_FILES = $(shell find $(SRC_DIR) -type f -name "*.sv" | tr '\n' ' ')
 
 TB_TOP := my_test_bench
 
 DEFAULT_TIME_SCALE := 1ns/1ps
 
-XVLOG_FLAGS := --incr
+XVLOG_FLAGS := --incr --define ALLOW_NON_SYNTHESIZABLE
 XELAB_FLAGS := --incr
-# This defines an empty string.
-XSIM_FLAGS :=
-
-XVLOG_FLAGS += --define ALLOW_NON_SYNTHESIZABLE
+XSIM_FLAGS := -stats
 
 # 0/1: not/use
 USE_UVM := 1
@@ -63,6 +55,10 @@ ifeq ($(USE_UVM), 1)
 	XSIM_FLAGS += --testplusarg "UVM_TESTNAME=$(UVM_TESTNAME)"
 	XSIM_FLAGS += --testplusarg "UVM_VERBOSITY=UVM_MEDIUM"
 endif
+#---------------------------------------------
+
+#-------------- Auto-generated configs ------------------------
+INCLUDE_DIR_DIRECTIVE = $(shell [ ! -z "$(INCLUDE_DIR)" ] && echo "--include $(INCLUDE_DIR)")
 #---------------------------------------------
 
 #------------ Commands -----------------------
@@ -87,7 +83,7 @@ gui: $(SIM_DIR)/xsim.dir/debug/xsimk
 # Run parsing, elaboration and simulation.
 once:
 	cd $(SIM_DIR) && \
-	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) $(shell [ ! -z "$(INCLUDE_DIR)" ] && echo "--include $(INCLUDE_DIR)") && \
+	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) $(INCLUDE_DIR_DIRECTIVE) && \
 	$(XELAB) $(TB_TOP) -timescale $(DEFAULT_TIME_SCALE) $(XELAB_FLAGS) -runall
 
 # Run parsing, elaboration, then run stand-alone simulation executable.
@@ -108,7 +104,7 @@ $(SIM_DIR):
 
 $(SIM_DIR)/xsim.dir/debug/xsimk: $(SIM_DIR) $(SV_SRC_FILES)
 	cd $(SIM_DIR) && \
-	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) $(shell [ ! -z "$(INCLUDE_DIR)" ] && echo "--include $(INCLUDE_DIR)") && \
+	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) $(INCLUDE_DIR_DIRECTIVE) && \
 	$(XELAB) $(TB_TOP) -timescale $(DEFAULT_TIME_SCALE) $(XELAB_FLAGS) -snapshot debug -debug all
 
 $(SIM_DIR)/dump_all.tcl:
@@ -119,11 +115,11 @@ $(SIM_DIR)/dump_all.tcl:
 
 $(SIM_DIR)/all.wdb: $(SIM_DIR)/xsim.dir/debug/xsimk $(SIM_DIR)/dump_all.tcl
 	cd $(SIM_DIR) && \
-	$(XSIM) debug -stats -tclbatch ./dump_all.tcl -wdb all.wdb
+	$(XSIM) $(XSIM_FLAGS) debug -tclbatch ./dump_all.tcl -wdb all.wdb | tee $(SIM_CONSOLE_LOG_FILE_PATH)
 
 $(SIM_DIR)/xsim.dir/alone/axsim: $(SIM_DIR) $(SV_SRC_FILES)
 	cd $(SIM_DIR) && \
-	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) $(shell [ ! -z "$(INCLUDE_DIR)" ] && echo "--include $(INCLUDE_DIR)") && \
+	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) $(INCLUDE_DIR_DIRECTIVE) && \
 	$(XELAB) $(TB_TOP) -timescale $(DEFAULT_TIME_SCALE) $(XELAB_FLAGS) -snapshot alone -standalone
 
 $(SIM_DIR)/help.txt:
