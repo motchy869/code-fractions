@@ -3,7 +3,10 @@
 # Based on [Vivado Simulator(xsim)でのロジックシミュレーションおよびデバッグ](https://qiita.com/vega77/items/be284e1fc955381d0dae), but modified.
 #
 # Example
-#  $ make -f <path/to/this/Makefile> dump view
+#  $ make -f <path/to/this/Makefile> elab
+#  $ make -f <path/to/this/Makefile> dump
+#  $ make -f <path/to/this/Makefile> view
+#  $ make -f <path/to/this/Makefile> covRpt
 #
 # Note:
 #  1. All simulation output files & directories are created in `<path to Makefile>/sim_result` directory.
@@ -28,6 +31,7 @@ VIVADO_DIR := /tools/Xilinx/Vivado/2023.2
 XVLOG := $(VIVADO_DIR)/bin/xvlog
 XELAB := $(VIVADO_DIR)/bin/xelab
 XSIM := $(VIVADO_DIR)/bin/xsim
+XCRG := $(VIVADO_DIR)/bin/xcrg
 
 SIM_DIR := $(MAKEFILE_DIR)/sim_result
 SRC_DIR := $(MAKEFILE_DIR)/../src
@@ -55,10 +59,18 @@ ifeq ($(USE_UVM), 1)
 	XSIM_FLAGS += --testplusarg "UVM_TESTNAME=$(UVM_TESTNAME)"
 	XSIM_FLAGS += --testplusarg "UVM_VERBOSITY=UVM_MEDIUM"
 endif
+
+# Code coverage options
+# s: statement, b: branch, c: condition, t: toggle
+CODE_COV_TYPE := sbct
 #---------------------------------------------
 
 #-------------- Auto-generated configs ------------------------
 INCLUDE_DIR_DIRECTIVE = $(shell [ ! -z "$(INCLUDE_DIR)" ] && echo "--include $(INCLUDE_DIR)")
+CODE_COV_TYPE_DIRECTIVE = $(shell [ ! -z "$(CODE_COV_TYPE)" ] && echo "--cc_type $(CODE_COV_TYPE)")
+
+XVLOG_FLAGS += $(INCLUDE_DIR_DIRECTIVE)
+XELAB_FLAGS += $(CODE_COV_TYPE_DIRECTIVE)
 #---------------------------------------------
 
 #------------ Commands -----------------------
@@ -91,11 +103,15 @@ alone: $(SIM_DIR)/xsim.dir/alone/axsim
 	cd $(SIM_DIR) && \
 	./axsim.sh
 
-help: $(SIM_DIR)/help.txt
-	cat $<
+covRpt: $(SIM_DIR)/xsim.codeCov/debug
+	cd $(SIM_DIR) && \
+	$(XCRG) -db_name debug -cc_db debug -report_dir $(SIM_DIR) -report_format html
 
 clean:
 	rm -rf $(SIM_DIR)
+
+help: $(SIM_DIR)/help.txt
+	cat $<
 #---------------------------------------------
 
 #------------ Files --------------------------
@@ -122,9 +138,12 @@ $(SIM_DIR)/xsim.dir/alone/axsim: $(SIM_DIR) $(SV_SRC_FILES)
 	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) $(INCLUDE_DIR_DIRECTIVE) && \
 	$(XELAB) $(TB_TOP) -timescale $(DEFAULT_TIME_SCALE) $(XELAB_FLAGS) -snapshot alone -standalone
 
+$(SIM_DIR)/xsim.codeCov/debug: $(SIM_DIR)/all.wdb
+
 $(SIM_DIR)/help.txt:
 	cd $(SIM_DIR) && \
-	$(XVLOG) --help > $@
-	$(XELAB) --help >> $@
-	$(XSIM) --help >> $@
+	$(XVLOG) -help > $@
+	$(XELAB) -help >> $@
+	$(XSIM) -help >> $@
+	$(XCRG) -help >> $@
 #---------------------------------------------
