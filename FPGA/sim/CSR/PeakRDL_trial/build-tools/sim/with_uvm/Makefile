@@ -66,7 +66,7 @@ run: alone
 elab: $(SIM_DIR)/xsim.dir/debug/xsimk
 
 # Run simulation and dump all waveforms.
-dump: $(SIM_DIR)/xsim.dir/debug/xsimk $(SIM_DIR)/dump_all.tcl $(SIM_DIR)/all.wdb
+dump: $(SIM_DIR)/all.wdb
 
 # Open waveform viewer.
 view: $(SIM_DIR)/all.wdb
