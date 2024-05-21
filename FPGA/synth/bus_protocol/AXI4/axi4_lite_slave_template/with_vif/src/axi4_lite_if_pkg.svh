@@ -34,10 +34,7 @@ package axi4_lite_if_pkg;
 
             //! Reset the master output signals.
             static task automatic reset_mst_out_sigs(
-                virtual interface axi4_lite_if #(
-                    .ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
-                    .DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-                ) vif, //! virtual interface to DUT
+                vif_t vif, //! virtual interface to DUT
                 input bit wait_for_next_clk_pos_edge = 1'b0 //! 1'b1/1'b0: wait/do not wait for the next positive edge of the clock before driving signals
             );
                 if (wait_for_next_clk_pos_edge) begin
