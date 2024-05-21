@@ -55,9 +55,7 @@ run: alone
 elab: $(SIM_DIR)/xsim.dir/debug/xsimk
 
 # Run simulation and dump all waveforms.
-dump: $(SIM_DIR)/xsim.dir/debug/xsimk $(SIM_DIR)/dump_all.tcl
-	cd $(SIM_DIR) && \
-	$(XSIM) debug -tclbatch ./dump_all.tcl -wdb all.wdb
+dump: $(SIM_DIR)/xsim.dir/debug/xsimk $(SIM_DIR)/dump_all.tcl $(SIM_DIR)/all.wdb
 
 # Open waveform viewer.
 view: $(SIM_DIR)/all.wdb
@@ -101,6 +99,10 @@ $(SIM_DIR)/dump_all.tcl:
 	echo 'log_wave -r * -verbose' > $@
 	echo 'run all' >> $@
 	echo 'quit' >> $@
+
+$(SIM_DIR)/all.wdb: $(SIM_DIR)/xsim.dir/debug/xsimk $(SIM_DIR)/dump_all.tcl
+	cd $(SIM_DIR) && \
+	$(XSIM) debug -stats -tclbatch ./dump_all.tcl -wdb all.wdb
 
 $(SIM_DIR)/xsim.dir/alone/axsim: $(SIM_DIR) $(SV_SRC_FILES)
 	cd $(SIM_DIR) && \
