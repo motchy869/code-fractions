@@ -52,17 +52,17 @@ package axi4_lite_if_pkg;
                         vif.rready <= 1'b0;
                     end
                 end else begin
-                    vif.awaddr = '0;
-                    vif.awprot = '0;
-                    vif.awvalid = 1'b0;
-                    vif.wdata = '0;
-                    vif.wstrb = '0;
-                    vif.wvalid = 1'b0;
-                    vif.bready = 1'b0;
-                    vif.araddr = '0;
-                    vif.arprot = '0;
-                    vif.arvalid = 1'b0;
-                    vif.rready = 1'b0;
+                    vif.awaddr <= '0;
+                    vif.awprot <= '0;
+                    vif.awvalid <= 1'b0;
+                    vif.wdata <= '0;
+                    vif.wstrb <= '0;
+                    vif.wvalid <= 1'b0;
+                    vif.bready <= 1'b0;
+                    vif.araddr <= '0;
+                    vif.arprot <= '0;
+                    vif.arvalid <= 1'b0;
+                    vif.rready <= 1'b0;
                 end
             endtask
 
