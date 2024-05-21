@@ -1,7 +1,7 @@
 # Based on [Vivado Simulator(xsim)でのロジックシミュレーションおよびデバッグ](https://qiita.com/vega77/items/be284e1fc955381d0dae), but modified.
 #
 # Example
-#  $ make -f <path/to/this/Makefile> dump wave
+#  $ make -f <path/to/this/Makefile> dump view
 #
 # Note:
 #  1. All simulation output files & directories are created in `<path to Makefile>/sim_result` directory.
@@ -51,7 +51,7 @@ dump: $(SIM_DIR)/xsim.dir/debug/xsimk $(SIM_DIR)/dump_all.tcl
 	$(XSIM) debug -t ./dump_all.tcl -wdb all.wdb
 
 # Open waveform viewer.
-wave: $(SIM_DIR)/all.wdb
+view: $(SIM_DIR)/all.wdb
 	cd $(SIM_DIR) && \
 	$(XSIM) all.wdb -gui &
 
