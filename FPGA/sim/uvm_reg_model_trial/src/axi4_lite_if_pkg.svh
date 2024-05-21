@@ -21,6 +21,11 @@ package axi4_lite_if_pkg;
             parameter int AXI4_LITE_ADDR_BIT_WIDTH = 32,
             parameter int AXI4_LITE_DATA_BIT_WIDTH = 32
         );
+            typedef virtual interface axi4_lite_if #(
+                .ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
+                .DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
+            ) vif_t;
+
             `ifdef XILINX_SIMULATOR // Vivado 2023.2 crashes with SIGSEGV when clocking block is used.
                 `define WAIT_CLK_POSEDGE @(posedge vif.i_clk)
             `else
@@ -47,17 +52,17 @@ package axi4_lite_if_pkg;
                         vif.rready <= 1'b0;
                     end
                 end else begin
-                    vif.awaddr = '0;
-                    vif.awprot = '0;
-                    vif.awvalid = 1'b0;
-                    vif.wdata = '0;
-                    vif.wstrb = '0;
-                    vif.wvalid = 1'b0;
-                    vif.bready = 1'b0;
-                    vif.araddr = '0;
-                    vif.arprot = '0;
-                    vif.arvalid = 1'b0;
-                    vif.rready = 1'b0;
+                    vif.awaddr <= '0;
+                    vif.awprot <= '0;
+                    vif.awvalid <= 1'b0;
+                    vif.wdata <= '0;
+                    vif.wstrb <= '0;
+                    vif.wvalid <= 1'b0;
+                    vif.bready <= 1'b0;
+                    vif.araddr <= '0;
+                    vif.arprot <= '0;
+                    vif.arvalid <= 1'b0;
+                    vif.rready <= 1'b0;
                 end
             endtask
 
@@ -114,7 +119,9 @@ package axi4_lite_if_pkg;
                     vif.rready <= 1'b1;
                 end
 
-                wait(vif.arready);
+                `WAIT_CLK_POSEDGE begin
+                    wait(vif.arready);
+                end
 
                 if (vif.rvalid) begin
                     data = vif.rdata;
@@ -166,7 +173,9 @@ package axi4_lite_if_pkg;
                     vif.bready <= 1'b1;
                 end
 
-                wait(vif.awready && vif.wready);
+                `WAIT_CLK_POSEDGE begin
+                    wait(vif.awready && vif.wready);
+                end
 
                 `WAIT_CLK_POSEDGE begin
                     vif.awvalid <= 1'b0;
