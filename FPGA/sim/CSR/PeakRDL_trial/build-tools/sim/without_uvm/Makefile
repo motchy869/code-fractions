@@ -41,7 +41,7 @@ TB_TOP := test_bench
 
 DEFAULT_TIME_SCALE := 1ns/1ps
 
-XVLOG_FLAGS := --incr
+XVLOG_FLAGS := --incr --define ALLOW_NON_SYNTHESIZABLE
 XELAB_FLAGS := --incr
 #---------------------------------------------
 

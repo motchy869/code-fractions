@@ -24,6 +24,13 @@ localparam int AXI4_LITE_ADDR_BIT_WIDTH = 32; //! bit width of AXI4-Lite address
 localparam int AXI4_LITE_DATA_BIT_WIDTH = 32; //! bit width of AXI4-Lite data bus
 // --------------------
 
+// ---------- types ----------
+typedef axi4_lite_if_pkg::axi4_lite_access#(
+    .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
+    .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
+) axi4_lite_access_t;
+// --------------------
+
 // ---------- internal signal and storage ----------
 var bit r_clk; //! clock signal
 var bit r_sync_rst; //! clock synchronous reset signal
@@ -99,22 +106,16 @@ endtask
 
 task automatic reg_check();
     const bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] write_data[4] = {'h12345678, 'h87654321, 'hABCDEF01, 'h10FEDCBA};
-    bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] read_back_data;
-    axi4_lite_if_pkg::axi4_resp_t resp;
+    var bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] read_back_data;
+    var axi4_lite_if_pkg::axi4_resp_t resp;
 
     for (int i=0; i<4; ++i) begin
-        axi4_lite_if_pkg::axi4_lite_access#(
-            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
-            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-        )::axi4_lite_write(vif__tb_vip, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), write_data[i], '1, resp);
+        axi4_lite_access_t::axi4_lite_write(vif__tb_vip, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), write_data[i], '1, resp);
         @(posedge r_clk);
     end
 
     for (int i=0; i<4; ++i) begin
-        axi4_lite_if_pkg::axi4_lite_access#(
-            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
-            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-        )::axi4_lite_read(vif__tb_vip, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), read_back_data, resp);
+        axi4_lite_access_t::axi4_lite_read(vif__tb_vip, AXI4_LITE_ADDR_BIT_WIDTH'(i*4), read_back_data, resp);
         $info("Read back data from address %0H: %0H", i*4, read_back_data);
         @(posedge r_clk);
     end
@@ -131,10 +132,7 @@ endtask
 //! Launch scenario and manage time limit.
 initial begin
     vif__tb_vip = if__tb_vip;
-    axi4_lite_if_pkg::axi4_lite_access#(
-        .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
-        .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-    )::reset_mst_out_sigs(vif__tb_vip, 1'b0);
+    axi4_lite_access_t::reset_mst_out_sigs(vif__tb_vip, 1'b0);
     fork
         scenario();
     join_none

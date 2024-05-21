@@ -21,6 +21,11 @@ package axi4_lite_if_pkg;
             parameter int AXI4_LITE_ADDR_BIT_WIDTH = 32,
             parameter int AXI4_LITE_DATA_BIT_WIDTH = 32
         );
+            typedef virtual interface axi4_lite_if #(
+                .ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
+                .DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
+            ) vif_t;
+
             `ifdef XILINX_SIMULATOR // Vivado 2023.2 crashes with SIGSEGV when clocking block is used.
                 `define WAIT_CLK_POSEDGE @(posedge vif.i_clk)
             `else
@@ -50,26 +55,23 @@ package axi4_lite_if_pkg;
                         vif.rready <= 1'b0;
                     end
                 end else begin
-                    vif.awaddr = '0;
-                    vif.awprot = '0;
-                    vif.awvalid = 1'b0;
-                    vif.wdata = '0;
-                    vif.wstrb = '0;
-                    vif.wvalid = 1'b0;
-                    vif.bready = 1'b0;
-                    vif.araddr = '0;
-                    vif.arprot = '0;
-                    vif.arvalid = 1'b0;
-                    vif.rready = 1'b0;
+                    vif.awaddr <= '0;
+                    vif.awprot <= '0;
+                    vif.awvalid <= 1'b0;
+                    vif.wdata <= '0;
+                    vif.wstrb <= '0;
+                    vif.wvalid <= 1'b0;
+                    vif.bready <= 1'b0;
+                    vif.araddr <= '0;
+                    vif.arprot <= '0;
+                    vif.arvalid <= 1'b0;
+                    vif.rready <= 1'b0;
                 end
             endtask
 
             //! Reset the slave output signals.
             static task automatic reset_slv_out_sigs(
-                virtual interface axi4_lite_if #(
-                    .ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
-                    .DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-                ) vif, //! virtual interface to DUT
+                vif_t vif, //! virtual interface to DUT
                 input bit wait_for_clk_pos_edge = 1'b0 //! 1'b1/1'b0: wait/do not wait for the next positive edge of the clock before driving signals
             );
                 if (wait_for_clk_pos_edge) begin
@@ -99,10 +101,7 @@ package axi4_lite_if_pkg;
             //! This task is based on the following blog post.
             //! [Testing Verilog AXI4-Lite Peripherals](https://klickverbot.at/blog/2016/01/testing-verilog-axi4-lite-peripherals/)
             static task automatic axi4_lite_read(
-                virtual interface axi4_lite_if #(
-                    .ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
-                    .DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-                ) vif, //! virtual interface to DUT
+                vif_t vif, //! virtual interface to DUT
                 input bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr, //! address
                 output bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] data, //! storage for read data
                 output axi4_resp_t resp //! storage for response
@@ -114,7 +113,12 @@ package axi4_lite_if_pkg;
                     `else
                         $info(msg);
                     `endif
-                    wait(!vif.arvalid);
+                    forever begin
+                        `WAIT_CLK_POSEDGE;
+                        if (!vif.arvalid) begin
+                            break;
+                        end
+                    end
                 end
 
                 `WAIT_CLK_POSEDGE begin
@@ -123,25 +127,23 @@ package axi4_lite_if_pkg;
                     vif.rready <= 1'b1;
                 end
 
-                wait(vif.arready);
-
-                if (vif.rvalid) begin
-                    data = vif.rdata;
-                    resp = axi4_resp_t'(vif.rresp);
-                    `WAIT_CLK_POSEDGE begin
-                        vif.arvalid <= 1'b0;
-                        vif.rready <= 1'b0;
-                    end
-                end else begin
-                    `WAIT_CLK_POSEDGE begin
+                // Note that RVALID may come AFTER the ARREADY's falling edge.
+                forever begin
+                    `WAIT_CLK_POSEDGE;
+                    if (vif.arready) begin
                         vif.arvalid <= 1'b0; // Should be de-asserted here, otherwise possible protocol violation (AXI4_ERRM_ARVALID_STABLE: Once ARVALID is asserted, it must remain asserted until ARREADY is high. Spec: section A3.2.1.)
-                    end
-
-                    wait(vif.rvalid); // Note that RVALID may come AFTER the ARREADY's falling edge.
-                    data = vif.rdata;
-                    resp = axi4_resp_t'(vif.rresp);
-                    `WAIT_CLK_POSEDGE begin
+                        if (!vif.rvalid) begin
+                            forever begin
+                                `WAIT_CLK_POSEDGE;
+                                if (vif.rvalid) begin
+                                    break;
+                                end
+                            end
+                        end
+                        data = vif.rdata;
+                        resp = axi4_resp_t'(vif.rresp);
                         vif.rready <= 1'b0;
+                        break;
                     end
                 end
             endtask
@@ -150,10 +152,7 @@ package axi4_lite_if_pkg;
             //! This task is based on the following blog post.
             //! [Testing Verilog AXI4-Lite Peripherals](https://klickverbot.at/blog/2016/01/testing-verilog-axi4-lite-peripherals/)
             static task automatic axi4_lite_write(
-                virtual interface axi4_lite_if #(
-                    .ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
-                    .DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-                ) vif, //! virtual interface to DUT
+                vif_t vif, //! virtual interface to DUT
                 input bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr, //! address
                 input bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] data, //! data
                 input bit [(AXI4_LITE_DATA_BIT_WIDTH/8)-1:0] wstrb = '1, //! write strobe
@@ -166,7 +165,12 @@ package axi4_lite_if_pkg;
                     `else
                         $info(msg);
                     `endif
-                    wait(!vif.awvalid && !vif.wvalid);
+                    forever begin
+                        `WAIT_CLK_POSEDGE;
+                        if (!vif.awvalid && !vif.wvalid) begin
+                            break;
+                        end
+                    end
                 end
 
                 `WAIT_CLK_POSEDGE begin
@@ -178,17 +182,23 @@ package axi4_lite_if_pkg;
                     vif.bready <= 1'b1;
                 end
 
-                wait(vif.awready && vif.wready);
-
-                `WAIT_CLK_POSEDGE begin
-                    vif.awvalid <= 1'b0;
-                    vif.wvalid <= 1'b0;
+                forever begin
+                    `WAIT_CLK_POSEDGE;
+                    if (vif.awready && vif.wready) begin
+                        vif.awvalid <= 1'b0;
+                        vif.wvalid <= 1'b0;
+                        break;
+                    end
                 end
 
                 // Note that BRESP can comes after WREADY.
                 if (!(vif.bready && vif.bvalid)) begin
-                    wait(vif.bready && vif.bvalid);
-                    `WAIT_CLK_POSEDGE;
+                    forever begin
+                        `WAIT_CLK_POSEDGE;
+                        if (vif.bready && vif.bvalid) begin
+                            break;
+                        end
+                    end
                 end
 
                 resp = axi4_resp_t'(vif.bresp);

@@ -23,6 +23,13 @@ localparam int AXI4_LITE_ADDR_BIT_WIDTH = $clog2(CSR_ADDR_SPACE_SIZE_BYTE); //! 
 localparam int AXI4_LITE_DATA_BIT_WIDTH = 32; //! bit width of AXI4-Lite data bus
 // --------------------
 
+// ---------- types ----------
+typedef axi4_lite_if_pkg::axi4_lite_access#(
+    .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
+    .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
+) axi4_lite_access_t;
+// --------------------
+
 // ---------- internal signal and storage ----------
 var bit r_clk; //! clock signal
 var bit r_sync_rst; //! clock synchronous reset signal
@@ -72,15 +79,12 @@ task automatic csr_check();
     const bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] SIMPLE_MEM_ADDR = AXI4_LITE_ADDR_BIT_WIDTH'('h20);
 
     var bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] read_back_data;
-    axi4_lite_if_pkg::axi4_resp_t resp;
+    var axi4_lite_if_pkg::axi4_resp_t resp;
 
     begin // MY_MOD_VERSION
         const bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] expected_rd_data = AXI4_LITE_DATA_BIT_WIDTH'('h01234567);
 
-        axi4_lite_if_pkg::axi4_lite_access#(
-            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
-            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-        )::axi4_lite_read(axi4_lite_vif_0, MY_MOD_VERSION_ADDR, read_back_data, resp);
+        axi4_lite_access_t::axi4_lite_read(axi4_lite_vif_0, MY_MOD_VERSION_ADDR, read_back_data, resp);
 
         assert(read_back_data == expected_rd_data) else begin
             $fatal(2, "MY_MOD_VERSION: read data mismatch.");
@@ -93,36 +97,19 @@ task automatic csr_check();
         const bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] expected_rd_data_1 = AXI4_LITE_DATA_BIT_WIDTH'('hC001C0DE); // expected read data after unlock
 
         // before unlock
-        axi4_lite_if_pkg::axi4_lite_access#(
-            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
-            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-        )::axi4_lite_write(axi4_lite_vif_0, PROTECTED_REG_ADDR, AXI4_LITE_DATA_BIT_WIDTH'('hBADCACA0), '1, resp);
-
-        axi4_lite_if_pkg::axi4_lite_access#(
-            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
-            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-        )::axi4_lite_read(axi4_lite_vif_0, PROTECTED_REG_ADDR, read_back_data, resp);
+        axi4_lite_access_t::axi4_lite_write(axi4_lite_vif_0, PROTECTED_REG_ADDR, AXI4_LITE_DATA_BIT_WIDTH'('hBADCACA0), '1, resp);
+        axi4_lite_access_t::axi4_lite_read(axi4_lite_vif_0, PROTECTED_REG_ADDR, read_back_data, resp);
 
         assert(read_back_data == expected_rd_data_0) else begin
             $fatal(2, "PROTECTED_REG: read data mismatch.");
         end
 
         // unlock
-        axi4_lite_if_pkg::axi4_lite_access#(
-            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
-            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-        )::axi4_lite_write(axi4_lite_vif_0, UNLOCK_PROTECTED_REG_ADDR, unlock_key, '1, resp);
+        axi4_lite_access_t::axi4_lite_write(axi4_lite_vif_0, UNLOCK_PROTECTED_REG_ADDR, unlock_key, '1, resp);
 
         // after unlock
-        axi4_lite_if_pkg::axi4_lite_access#(
-            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
-            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-        )::axi4_lite_write(axi4_lite_vif_0, PROTECTED_REG_ADDR, expected_rd_data_1, '1, resp);
-
-        axi4_lite_if_pkg::axi4_lite_access#(
-            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
-            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-        )::axi4_lite_read(axi4_lite_vif_0, PROTECTED_REG_ADDR, read_back_data, resp);
+        axi4_lite_access_t::axi4_lite_write(axi4_lite_vif_0, PROTECTED_REG_ADDR, expected_rd_data_1, '1, resp);
+        axi4_lite_access_t::axi4_lite_read(axi4_lite_vif_0, PROTECTED_REG_ADDR, read_back_data, resp);
 
         assert(read_back_data == expected_rd_data_1) else begin
             $fatal(2, "PROTECTED_REG: read data mismatch.");
@@ -132,15 +119,8 @@ task automatic csr_check();
     begin // SINGLE_PULSE
         const bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] expected_rd_data = AXI4_LITE_DATA_BIT_WIDTH'('h0);
 
-        axi4_lite_if_pkg::axi4_lite_access#(
-            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
-            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-        )::axi4_lite_write(axi4_lite_vif_0, SINGLE_PULSE_ADDR, AXI4_LITE_DATA_BIT_WIDTH'('h1), '1, resp);
-
-        axi4_lite_if_pkg::axi4_lite_access#(
-            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
-            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-        )::axi4_lite_read(axi4_lite_vif_0, SINGLE_PULSE_ADDR, read_back_data, resp);
+        axi4_lite_access_t::axi4_lite_write(axi4_lite_vif_0, SINGLE_PULSE_ADDR, AXI4_LITE_DATA_BIT_WIDTH'('h1), '1, resp);
+        axi4_lite_access_t::axi4_lite_read(axi4_lite_vif_0, SINGLE_PULSE_ADDR, read_back_data, resp);
 
         assert(read_back_data == expected_rd_data) else begin
             $fatal(2, "SINGLE_PULSE: read data mismatch.");
@@ -152,30 +132,16 @@ task automatic csr_check();
         const bit [AXI4_LITE_DATA_BIT_WIDTH-1:0] wr_data_2nd = AXI4_LITE_DATA_BIT_WIDTH'('hCAFEBABE);
 
         // 1 st write
-        axi4_lite_if_pkg::axi4_lite_access#(
-            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
-            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-        )::axi4_lite_write(axi4_lite_vif_0, WRITE_ONCE_ADDR, expected_rd_data, '1, resp);
-
-        axi4_lite_if_pkg::axi4_lite_access#(
-            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
-            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-        )::axi4_lite_read(axi4_lite_vif_0, WRITE_ONCE_ADDR, read_back_data, resp);
+        axi4_lite_access_t::axi4_lite_write(axi4_lite_vif_0, WRITE_ONCE_ADDR, expected_rd_data, '1, resp);
+        axi4_lite_access_t::axi4_lite_read(axi4_lite_vif_0, WRITE_ONCE_ADDR, read_back_data, resp);
 
         assert(read_back_data == expected_rd_data) else begin
             $fatal(2, "WRITE_ONCE: read data mismatch.");
         end
 
         // 2nd write
-        axi4_lite_if_pkg::axi4_lite_access#(
-            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
-            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-        )::axi4_lite_write(axi4_lite_vif_0, WRITE_ONCE_ADDR, wr_data_2nd, '1, resp);
-
-        axi4_lite_if_pkg::axi4_lite_access#(
-            .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
-            .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-        )::axi4_lite_read(axi4_lite_vif_0, WRITE_ONCE_ADDR, read_back_data, resp);
+        axi4_lite_access_t::axi4_lite_write(axi4_lite_vif_0, WRITE_ONCE_ADDR, wr_data_2nd, '1, resp);
+        axi4_lite_access_t::axi4_lite_read(axi4_lite_vif_0, WRITE_ONCE_ADDR, read_back_data, resp);
 
         assert(read_back_data == expected_rd_data) else begin
             //$fatal(2, "WRITE_ONCE: read data mismatch."); // `w1` and `rw1` has not been supported yet.
@@ -186,19 +152,13 @@ task automatic csr_check();
         // write
         for (int i=0; i<my_mod.RAM_DEPTH; ++i) begin
             const bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] byte_addr = SIMPLE_MEM_ADDR + AXI4_LITE_ADDR_BIT_WIDTH'(i*my_mod.BYTES_PER_WORD);
-            axi4_lite_if_pkg::axi4_lite_access#(
-                .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
-                .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-            )::axi4_lite_write(axi4_lite_vif_0, byte_addr, AXI4_LITE_DATA_BIT_WIDTH'(i), '1, resp);
+            axi4_lite_access_t::axi4_lite_write(axi4_lite_vif_0, byte_addr, AXI4_LITE_DATA_BIT_WIDTH'(i), '1, resp);
         end
 
         // read
         for (int i=0; i<my_mod.RAM_DEPTH; ++i) begin
             const bit [AXI4_LITE_ADDR_BIT_WIDTH-1:0] byte_addr = SIMPLE_MEM_ADDR + AXI4_LITE_ADDR_BIT_WIDTH'(i*my_mod.BYTES_PER_WORD);
-            axi4_lite_if_pkg::axi4_lite_access#(
-                .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
-                .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-            )::axi4_lite_read(axi4_lite_vif_0, byte_addr, read_back_data, resp);
+            axi4_lite_access_t::axi4_lite_read(axi4_lite_vif_0, byte_addr, read_back_data, resp);
 
             assert(read_back_data == AXI4_LITE_DATA_BIT_WIDTH'(i)) else begin
                 $fatal(2, "SIMPLE_MEM: read data mismatch.");
@@ -218,10 +178,7 @@ endtask
 //! Launch scenario and manage time limit.
 initial begin
     axi4_lite_vif_0 = axi4_lite_if_0;
-    axi4_lite_if_pkg::axi4_lite_access#(
-        .AXI4_LITE_ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
-        .AXI4_LITE_DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
-    )::reset_mst_out_sigs(axi4_lite_vif_0, 1'b0);
+    axi4_lite_access_t::reset_mst_out_sigs(axi4_lite_vif_0, 1'b0);
     fork
         scenario();
     join_none
