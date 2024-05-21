@@ -45,7 +45,7 @@ DEFAULT_TIME_SCALE := 1ns/1ps
 
 XVLOG_FLAGS := --incr --define ALLOW_NON_SYNTHESIZABLE
 XELAB_FLAGS := --incr
-XSIM_FLAGS :=
+XSIM_FLAGS := -stats
 
 # 0/1: not/use
 USE_UVM := 1
@@ -81,7 +81,7 @@ gui: $(SIM_DIR)/xsim.dir/debug/xsimk
 # Run parsing, elaboration and simulation.
 once:
 	cd $(SIM_DIR) && \
-	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) $(shell [ ! -z "$(INCLUDE_DIR)" ] && echo "--include $(INCLUDE_DIR)") && \
+	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) $(INCLUDE_DIR_DIRECTIVE) && \
 	$(XELAB) $(TB_TOP) -timescale $(DEFAULT_TIME_SCALE) $(XELAB_FLAGS) -runall
 
 # Run parsing, elaboration, then run stand-alone simulation executable.
@@ -102,7 +102,7 @@ $(SIM_DIR):
 
 $(SIM_DIR)/xsim.dir/debug/xsimk: $(SIM_DIR) $(SV_SRC_FILES)
 	cd $(SIM_DIR) && \
-	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) $(shell [ ! -z "$INCLUDE_DIR" ] && echo "--include $INCLUDE_DIR") && \
+	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) $(INCLUDE_DIR_DIRECTIVE) && \
 	$(XELAB) $(TB_TOP) -timescale $(DEFAULT_TIME_SCALE) $(XELAB_FLAGS) -snapshot debug -debug all
 
 $(SIM_DIR)/dump_all.tcl:
@@ -113,11 +113,11 @@ $(SIM_DIR)/dump_all.tcl:
 
 $(SIM_DIR)/all.wdb: $(SIM_DIR)/xsim.dir/debug/xsimk $(SIM_DIR)/dump_all.tcl
 	cd $(SIM_DIR) && \
-	$(XSIM) debug -stats -tclbatch ./dump_all.tcl -wdb all.wdb
+	$(XSIM) $(XSIM_FLAGS) debug -tclbatch ./dump_all.tcl -wdb all.wdb | tee $(SIM_CONSOLE_LOG_FILE_PATH)
 
 $(SIM_DIR)/xsim.dir/alone/axsim: $(SIM_DIR) $(SV_SRC_FILES)
 	cd $(SIM_DIR) && \
-	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) $(shell [ ! -z "$INCLUDE_DIR" ] && echo "--include $INCLUDE_DIR") && \
+	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) $(INCLUDE_DIR_DIRECTIVE) && \
 	$(XELAB) $(TB_TOP) -timescale $(DEFAULT_TIME_SCALE) $(XELAB_FLAGS) -snapshot alone -standalone
 
 $(SIM_DIR)/help.txt:
