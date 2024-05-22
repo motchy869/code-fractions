@@ -95,7 +95,7 @@ gui: $(SIM_DIR)/xsim.dir/debug/xsimk
 # Run parsing, elaboration and simulation.
 once:
 	cd $(SIM_DIR) && \
-	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) $(INCLUDE_DIR_DIRECTIVE) && \
+	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) && \
 	$(XELAB) $(TB_TOP) -timescale $(DEFAULT_TIME_SCALE) $(XELAB_FLAGS) -runall
 
 # Run parsing, elaboration, then run stand-alone simulation executable.
@@ -103,6 +103,7 @@ alone: $(SIM_DIR)/xsim.dir/alone/axsim
 	cd $(SIM_DIR) && \
 	./axsim.sh
 
+# Generate code coverage report.
 covRpt: $(SIM_DIR)/xsim.codeCov/debug
 	cd $(SIM_DIR) && \
 	$(XCRG) -db_name debug -cc_db debug -report_dir $(SIM_DIR) -report_format html
@@ -120,7 +121,7 @@ $(SIM_DIR):
 
 $(SIM_DIR)/xsim.dir/debug/xsimk: $(SIM_DIR) $(SV_SRC_FILES)
 	cd $(SIM_DIR) && \
-	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) $(INCLUDE_DIR_DIRECTIVE) && \
+	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) && \
 	$(XELAB) $(TB_TOP) -timescale $(DEFAULT_TIME_SCALE) $(XELAB_FLAGS) -snapshot debug -debug all
 
 $(SIM_DIR)/dump_all.tcl:
@@ -135,7 +136,7 @@ $(SIM_DIR)/all.wdb: $(SIM_DIR)/xsim.dir/debug/xsimk $(SIM_DIR)/dump_all.tcl
 
 $(SIM_DIR)/xsim.dir/alone/axsim: $(SIM_DIR) $(SV_SRC_FILES)
 	cd $(SIM_DIR) && \
-	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) $(INCLUDE_DIR_DIRECTIVE) && \
+	$(XVLOG) $(XVLOG_FLAGS) -sv $(SV_SRC_FILES) && \
 	$(XELAB) $(TB_TOP) -timescale $(DEFAULT_TIME_SCALE) $(XELAB_FLAGS) -snapshot alone -standalone
 
 $(SIM_DIR)/xsim.codeCov/debug: $(SIM_DIR)/all.wdb
