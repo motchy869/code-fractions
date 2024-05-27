@@ -31,13 +31,6 @@ module simple_dut #(
     // --------------------
 
     // ---------- functions ----------
-    function automatic logic [$clog2(AXI4_LITE_DATA_BIT_WIDTH):0] count_reg_bits(input logic [AXI4_LITE_DATA_BIT_WIDTH-1:0] data);
-        var logic [$clog2(AXI4_LITE_DATA_BIT_WIDTH):0] bit_cnt;
-        for (int i = 0; i < AXI4_LITE_DATA_BIT_WIDTH; i += 1) begin
-            bit_cnt += data[i];
-        end
-        return bit_cnt;
-    endfunction
     // ----------
 
     // ---------- internal signal and storage ----------
