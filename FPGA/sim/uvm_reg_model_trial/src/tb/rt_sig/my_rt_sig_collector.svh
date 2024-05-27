@@ -40,12 +40,12 @@ task my_rt_sig_collector::get_response();
     forever begin
         // (1)
         // `ifdef XILINX_SIMULATOR // Vivado 2023.2 crashes with SIGSEGV when clocking block is used.
-        //     `define WAIT_CLK_POSEDGE @(posedge vif.i_clk)
+        //     `define WAIT_CLK_POSEDGE @(posedge m_vif.i_clk)
         // `else
         //     `define WAIT_CLK_POSEDGE @vif.mst_cb
         // `endif
-        // (2) Clocking block is buggy in Xcelium, so we decided to simply use `@(posedge vif.i_clk)`
-        `define WAIT_CLK_POSEDGE @(posedge vif.i_clk)
+        // (2) Clocking block is buggy in Xcelium, so we decided to simply use `@(posedge m_vif.i_clk)`
+        `define WAIT_CLK_POSEDGE @(posedge m_vif.i_clk)
 
         `WAIT_CLK_POSEDGE begin
             if (m_vif.inner_prod_valid) begin
