@@ -8,7 +8,7 @@
 `define INCLUDED_FROM_MY_VERIF_PKG
 
 `include "rt_sig/my_rt_sig_if.svh"
-`include "../../axi4_lite_if.svh"
+`include "../../axi4_lite_if_pkg.svh"
 `include "../../csr/my_mod_csr_uvm_reg_model_pkg.svh"
 `include "uvm_macros.svh"
 
