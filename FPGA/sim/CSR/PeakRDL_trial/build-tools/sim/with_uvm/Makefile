@@ -41,7 +41,7 @@ INCLUDE_DIR :=
 
 SIM_CONSOLE_LOG_FILE_PATH := $(SIM_DIR)/sim_console.log
 
-SV_SRC_FILES = $(shell find $(SRC_DIR) -not -path '$(SRC_DIR)/tb/without_uvm/*' -type f -name "*.sv" | tr '\n' ' ')
+SV_SRC_FILES := $(shell find $(SRC_DIR) -not -path '$(SRC_DIR)/tb/without_uvm/*' -type f -name "*.sv" | tr '\n' ' ')
 
 TB_TOP := test_bench
 
