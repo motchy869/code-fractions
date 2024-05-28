@@ -9,8 +9,6 @@
     nonexistent_module_to_throw_a_custom_error_message_for invalid_inclusion();
 `endif
 
-`include "../../axi4_lite_if_pkg.svh"
-
 class my_bus_driver extends uvm_driver#(my_bus_seq_item);
     `uvm_component_utils(my_bus_driver)
 
