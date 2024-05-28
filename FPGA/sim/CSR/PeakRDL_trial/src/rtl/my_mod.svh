@@ -2,7 +2,6 @@
 `define MY_MOD_SVH_INCLUDED
 
 `include "axi4_lite_if_pkg.svh"
-`include "axi4_lite_if.svh"
 
 `default_nettype none
 

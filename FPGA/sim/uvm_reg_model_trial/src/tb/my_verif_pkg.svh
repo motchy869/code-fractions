@@ -6,7 +6,6 @@
 
 `include "my_verif_params_pkg.svh"
 `include "rt_sig/my_rt_sig_if.svh"
-`include "../axi4_lite_if.svh"
 `include "../axi4_lite_if_pkg.svh"
 `include "uvm_macros.svh"
 

@@ -3,7 +3,6 @@
 // verilog_lint: waive-start line-length
 
 `include "axi4_lite_if_pkg.svh"
-`include "axi4_lite_if.svh"
 `include "ram_sp_wf.svh"
 `include "csr/my_mod_csr_pkg.svh"
 `include "csr/my_mod_csr.svh"
