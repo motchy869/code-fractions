@@ -30,8 +30,8 @@ class my_reg_adapter extends uvm_reg_adapter;
         return pkt;
     endfunction
 
-    //! Convert `uvm_sequence_item` instance (typically comes from bus-monitor) to `uvm_reg_bus_op` instance.
-    virtual function void bus2reg(const ref uvm_sequence_item bus_item, ref uvm_reg_bus_op rw);
+    //! called from `bus2reg`.
+    virtual function void bus2reg_intnl(const ref uvm_sequence_item bus_item, ref uvm_reg_bus_op rw);
         my_bus_seq_item pkt;
 
         if (!$cast(pkt, bus_item)) begin
@@ -44,5 +44,10 @@ class my_reg_adapter extends uvm_reg_adapter;
         rw.byte_en = pkt.wstrb;
         rw.status = pkt.status;
         `uvm_info(get_name(), $sformatf("bus2reg: kind=%s, addr=0x%0h, data=0x%0h, byte_en=0x%0h, status=%s", rw.kind.name(), rw.addr, rw.data, rw.byte_en, rw.status.name()), UVM_DEBUG)
+    endfunction
+
+    //! Convert `uvm_sequence_item` instance (typically comes from bus-monitor) to `uvm_reg_bus_op` instance.
+    virtual function void bus2reg(uvm_sequence_item bus_item, ref uvm_reg_bus_op rw);
+        bus2reg_intnl(bus_item, rw);
     endfunction
 endclass

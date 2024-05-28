@@ -10,6 +10,7 @@
         "elab",
         "hwif",
         "intf",
+        "intnl",
         "regblock",
         "rptr",
         "strb",
