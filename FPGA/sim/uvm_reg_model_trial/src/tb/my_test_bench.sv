@@ -3,6 +3,7 @@
 // verilog_lint: waive-start parameter-name-style
 
 `include "my_verif_pkg.svh"
+`include "../simple_dut.svh"
 
 `default_nettype none
 
