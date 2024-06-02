@@ -27,6 +27,14 @@ You should select 'Automatically pick ...' then press 'OK'.
 
 ![a dialogue box about invalid top module](doc/README_img/invalid_top_module.png)
 
+---
+
+**NOTE:**
+
+If some errors saying that the IPs are out-of date, you have to upgrade them by following the Vivado's instructions.
+
+---
+
 A dialog box about PS DDR timing issues shows up, but they are **spurious** errors and can be safely ignored.
 
 ![critical warnings about PS DDR timing](doc/README_img/critical_warnings_abount_PS_DDR_timing.png)
