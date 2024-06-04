@@ -1,5 +1,3 @@
-// Some techniques used in this file are based on on 'ug901-vivado-synthesis-examples'
-
 // Verible directive
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
@@ -8,6 +6,7 @@
 
 //! Single-port wite-first RAM with optional output register.
 //! This module is intended to be inferred as a block RAM by synthesis tools.
+// Some techniques used in this file are based on on 'ug901-vivado-synthesis-examples'
 //!
 //! read latency:
 //! - 1 cycle if `USE_OUTPUT_REG` is 0
