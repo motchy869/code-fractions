@@ -40,7 +40,7 @@ generate
 endgenerate
 
 // local parameters
-localparam int FRAG_BUF_CAP = 2*S_MAX_IN; //! capacity of the fragment buffer
+localparam int FRAG_BUF_CAP = 2*S_OUT; //! capacity of the fragment buffer
 localparam int CLOG2_FRAG_BUF_CAP = $clog2(FRAG_BUF_CAP); //! $clog2 of the fragment buffer capacity
 
 // ---------- functions ----------
