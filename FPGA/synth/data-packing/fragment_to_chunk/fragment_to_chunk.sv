@@ -120,7 +120,6 @@ end
 always_ff @(posedge i_clk) begin: update_fragment_buffer
     if (i_sync_rst) begin
         r_frag_buf <= '{default:0};
-        r_buf_cnt <= '0;
     end else if (g_push_en) begin
         for (logic [CLOG2_FRAG_BUF_CAP-1:0] i=0; i<CLOG2_FRAG_BUF_CAP'(S_MAX_IN); ++i) begin
             if (i < i_frag_size + g_pad_frag_size) begin
