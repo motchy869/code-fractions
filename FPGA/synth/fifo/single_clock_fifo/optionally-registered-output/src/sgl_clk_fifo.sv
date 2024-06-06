@@ -4,11 +4,14 @@
 
 `default_nettype none
 
-//! Single-clock symmetric FIFO with fully-buffered output.
+//! Single-clock symmetric FIFO.
+//! The output can be optionally registered.
 //! Some techniques used in this design are base on '[Simulation and Synthesis Techniques for Asynchronous FIFO Design](http://www.sunburst-design.com/papers/CummingsSNUG2002SJ_FIFO1.pdf)'
-module fb_sgl_clk_fifo #(
+module sgl_clk_fifo #(
     parameter int DATA_BIT_WIDTH = 8, //! data bit width
-    parameter int DEPTH = 16 //! FIFO depth
+    parameter int DEPTH = 16, //! FIFO depth
+    parameter bit EN_US_OUT_REG = 1'b0, //! enable output register on upstream side
+    parameter bit EN_DS_OUT_REG = 1'b0 //! enable output register on downstream side
 )(
     input wire logic i_clk, //! clock signal
     input wire logic i_sync_rst, //! synchronous reset signal
@@ -16,14 +19,14 @@ module fb_sgl_clk_fifo #(
     //! @virtualbus us_side_if @dir in upstream side interface
     input wire logic i_we, //! write enable
     input wire logic [DATA_BIT_WIDTH-1:0] i_data, //! input data
-    output var logic or_full, //! full flag
+    output wire logic o_full, //! full flag
     //! @end
 
     //! @virtualbus ds_side_if @dir out downstream side interface
     //! read enable
     input wire logic i_re,
-    output var logic [DATA_BIT_WIDTH-1:0] or_data, //! output data
-    output var logic or_empty //! empty flag
+    output wire logic [DATA_BIT_WIDTH-1:0] o_data, //! output data
+    output wire logic o_empty //! empty flag
     //! @end
 );
 
@@ -42,9 +45,9 @@ typedef struct packed {
 } buf_ptr_t;
 
 wire g_pop_en; //! pop enable signal
-assign g_pop_en = i_re && !or_empty;
+assign g_pop_en = i_re && !o_empty;
 wire g_push_en; //! push enable signal
-assign g_push_en = i_we && !or_full;
+assign g_push_en = i_we && !o_full;
 
 var logic [DEPTH-1:0][DATA_BIT_WIDTH-1:0] r_fifo_buf; //! FIFO buffer
 var buf_ptr_t r_rd_ptr; //! FIFO read pointer
@@ -53,9 +56,16 @@ var buf_ptr_t r_wr_ptr; //! FIFO write pointer
 var logic [DEPTH-1:0][DATA_BIT_WIDTH-1:0] g_nxt_fifo_buf; //! the value of `r_fifo_buf` right after the next clock rising edge
 var buf_ptr_t g_nxt_rd_ptr; //! the value of `r_rd_ptr` right after the next clock rising edge
 var buf_ptr_t g_nxt_wr_ptr; //! the value of `r_wr_ptr` right after the next clock rising edge
+
+var logic r_out_full; //! output register for `o_full`, will be optimized away if `EN_US_OUT_REG` is 0
+var logic r_out_empty; //! output register for `o_empty`, will be optimized away if `EN_DS_OUT_REG` is 0
+var logic [DATA_BIT_WIDTH-1:0] r_out_data; //! output register for `o_data`, will be optimized away if `EN_DS_OUT_REG` is 0
 // --------------------
 
 // ---------- Drive output signals. ----------
+assign o_full = EN_US_OUT_REG ? r_out_full : r_wr_ptr.idx == r_rd_ptr.idx && r_wr_ptr.phase != r_rd_ptr.phase;
+assign o_empty = EN_DS_OUT_REG ? r_out_empty : r_wr_ptr.idx == r_rd_ptr.idx && r_wr_ptr.phase == r_rd_ptr.phase;
+assign o_data = EN_DS_OUT_REG ? r_out_data : r_fifo_buf[r_rd_ptr.idx];
 // --------------------
 
 // ---------- blocks ----------
@@ -119,19 +129,16 @@ always_ff @(posedge i_clk) begin: blk_update_fifo_buf
     r_fifo_buf <= g_nxt_fifo_buf;
 end
 
-//! Update full flag output register.
-always_ff @(posedge i_clk) begin: blk_update_full_flag
-    or_full <= g_nxt_wr_ptr.idx == g_nxt_rd_ptr.idx && g_nxt_wr_ptr.phase != g_nxt_rd_ptr.phase;
-end
+//! Update output registers.
+always_ff @(posedge i_clk) begin: blk_update_out_regs
+    if (EN_US_OUT_REG) begin
+        r_out_full <= g_nxt_wr_ptr.idx == g_nxt_rd_ptr.idx && g_nxt_wr_ptr.phase != g_nxt_rd_ptr.phase;
+    end
 
-//! Update empty flag output register.
-always_ff @(posedge i_clk) begin: blk_update_empty_flag
-    or_empty <= g_nxt_wr_ptr.idx == g_nxt_rd_ptr.idx && g_nxt_wr_ptr.phase == g_nxt_rd_ptr.phase;
-end
-
-//! Update data output register.
-always_ff @(posedge i_clk) begin: blk_update_data_out
-    or_data <= g_nxt_fifo_buf[g_nxt_rd_ptr.idx];
+    if (EN_DS_OUT_REG) begin
+        r_out_empty <= g_nxt_wr_ptr.idx == g_nxt_rd_ptr.idx && g_nxt_wr_ptr.phase == g_nxt_rd_ptr.phase;
+        r_out_data <= g_nxt_fifo_buf[g_nxt_rd_ptr.idx];
+    end
 end
 // --------------------
 endmodule

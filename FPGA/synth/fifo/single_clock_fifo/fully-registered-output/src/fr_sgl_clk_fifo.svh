@@ -3,9 +3,9 @@
 
 `default_nettype none
 
-//! Single-clock symmetric FIFO with fully-buffered output.
+//! Single-clock symmetric FIFO with fully-registered output.
 //! Some techniques used in this design are base on [Simulation and Synthesis Techniques for Asynchronous FIFO Design](http://www.sunburst-design.com/papers/CummingsSNUG2002SJ_FIFO1.pdf)
-extern module fb_sgl_clk_fifo #(
+extern module fr_sgl_clk_fifo #(
     parameter int DATA_BIT_WIDTH = 8, //! data bit width
     parameter int DEPTH = 16 //! FIFO depth
 )(

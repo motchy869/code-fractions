@@ -2,7 +2,7 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`include "../fb_sgl_clk_fifo.svh"
+`include "../sgl_clk_fifo.svh"
 
 `default_nettype none
 
@@ -17,17 +17,19 @@ localparam int RELEASE_RST_AFTER_CLK = 2; //! Reset signal deasserts right after
 
 parameter int DATA_BIT_WIDTH = 8; //! data bit width
 parameter int DEPTH = 4; //! FIFO depth
+parameter bit EN_US_OUT_REG = 1'b1; //! enable output register on upstream side
+parameter bit EN_DS_OUT_REG = 1'b1; //! enable output register on downstream side
 // --------------------
 
 // ---------- types ----------
-typedef virtual interface fb_sgl_clk_fifo_if #(
+typedef virtual interface sgl_clk_fifo_if #(
     .DATA_BIT_WIDTH(DATA_BIT_WIDTH),
     .DEPTH(DEPTH)
 ) dut_vif_t;
 // --------------------
 
 // ---------- internal signal and storage ----------
-interface fb_sgl_clk_fifo_if #(
+interface sgl_clk_fifo_if #(
     parameter int DATA_BIT_WIDTH = 8, //! data bit width
     parameter int DEPTH = 16 //! FIFO depth
 )(
@@ -50,24 +52,26 @@ dut_vif_t dut_vif;
 
 // ---------- instances ----------
 //! interface to the DUT
-fb_sgl_clk_fifo_if #(
+sgl_clk_fifo_if #(
     .DATA_BIT_WIDTH(DATA_BIT_WIDTH),
     .DEPTH(DEPTH)
 ) dut_if (.i_clk(r_clk));
 
 //! DUT instance
-fb_sgl_clk_fifo #(
+sgl_clk_fifo #(
     .DATA_BIT_WIDTH(DATA_BIT_WIDTH),
-    .DEPTH(DEPTH)
+    .DEPTH(DEPTH),
+    .EN_US_OUT_REG(EN_US_OUT_REG),
+    .EN_DS_OUT_REG(EN_DS_OUT_REG)
 ) dut (
     .i_clk(r_clk),
     .i_sync_rst(r_sync_rst),
     .i_we(dut_if.we),
     .i_data(dut_if.data_in),
-    .or_full(dut_if.full),
+    .o_full(dut_if.full),
     .i_re(dut_if.re),
-    .or_data(dut_if.data_out),
-    .or_empty(dut_if.empty)
+    .o_data(dut_if.data_out),
+    .o_empty(dut_if.empty)
 );
 // --------------------
 
