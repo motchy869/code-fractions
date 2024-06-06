@@ -78,7 +78,7 @@ initial forever #(CLK_PERIOD_NS/2) r_clk = ~r_clk;
 //! Reset all the bench-driven signals.
 task automatic rst_bench_driven_sigs();
     dut_vif.we <= 1'b0;
-    dut_vif.data_in <= 8'h00;
+    dut_vif.data_in <= '0;
     dut_vif.re <= 1'b0;
 endtask
 
