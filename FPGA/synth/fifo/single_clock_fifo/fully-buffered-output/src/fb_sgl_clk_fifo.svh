@@ -1,5 +1,5 @@
-`ifndef SGL_CLK_FIFO_SVH_INCLUDED
-`define SGL_CLK_FIFO_SVH_INCLUDED
+`ifndef FB_SGL_CLK_FIFO_SVH_INCLUDED
+`define FB_SGL_CLK_FIFO_SVH_INCLUDED
 
 `default_nettype none
 
@@ -28,4 +28,4 @@ extern module fb_sgl_clk_fifo #(
 
 `default_nettype wire
 
-`endif // SGL_CLK_FIFO_SVH_INCLUDED
+`endif // FB_SGL_CLK_FIFO_SVH_INCLUDED
