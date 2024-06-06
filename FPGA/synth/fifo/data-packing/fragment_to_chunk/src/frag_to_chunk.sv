@@ -12,7 +12,6 @@ module frag_to_chunk#(
     parameter int S_MAX_IN = 16, //! max size of the input fragment
     parameter int S_OUT = 8, //! The size of the output chunk. **Recommended to be power of 2**. Other large numbers may lead to timing closure failure due to costly modulus operation.
     parameter type T = logic, //! data type of the elements
-    parameter bit EN_DS_OUT_REG = 1'b0, //! enable output register on downstream side
     localparam int BIT_WIDTH__S_MAX_IN = $clog2(S_MAX_IN+1) //! bit width required to represent `S_MAX_IN`
 )(
     //! common ports
