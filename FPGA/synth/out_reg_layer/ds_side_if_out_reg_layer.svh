@@ -8,7 +8,7 @@
 `default_nettype none
 
 //! Output register layer for downstream side interface.
-//! This module can be used to attach registered outputs to the existing module's downstream side interface.
+//! This module can be used to attach registered outputs to the existing module ('core')'s downstream side interface.
 extern module ds_side_if_out_reg_layer #(
     parameter type T = logic //! data type
 )(
@@ -16,32 +16,31 @@ extern module ds_side_if_out_reg_layer #(
     input wire logic i_sync_rst, //! synchronous reset signal
 
     //! @virtualbus core_side_if @dir in core side interface
-    input wire logic i_core_valid, //! valid signal from core
-    input wire T i_core_data, //! data from core
-    output wire logic o_core_ready, //! ready signal to core
+    input wire logic i_valid_from_core, //! valid signal from core
+    input wire T i_data_from_core, //! data from core
+    output wire logic o_ready_to_core, //! ready signal to core
     //! @end
 
     //! @virtualbus partner_side_if @dir in partner side interface
-    input wire logic i_partner_ready, //! ready signal from partner
-    output wire logic o_partner_valid, //! valid signal to partner
-    output wire T o_partner_data //! data to partner
+    input wire logic i_ready_from_partner, //! ready signal from partner
+    output wire logic o_valid_to_partner, //! valid signal to partner
+    output wire T o_data_to_partner //! data to partner
     //! @end
 );
 
+//! struct to bundle signals between core and register layer
+typedef struct {
+    logic valid_core_to_reg_layer; //! valid signal from core to register layer
+    T data_core_to_reg_layer; //! data from core to register layer
+    logic ready_reg_layer_to_core; //! ready signal from register layer to core
+} ds_side_if_out_reg_layer_core_side_sigs_t;
 
-interface ds_side_if_out_reg_layer_if #(
-    parameter type T = logic //! data type
-)(
-    input wire logic i_clk //! clock signal
-);
-    logic core_valid; //! valid signal from core
-    T core_data; //! data from core
-    logic core_ready; //! ready signal to core
-
-    logic partner_ready; //! ready signal from partner
-    logic partner_valid; //! valid signal to partner
-    T partner_data; //! data to partner
-endinterface
+//! struct to bundle signals between register layer and partner
+typedef struct {
+    logic ready_partner_to_reg_layer; //! ready signal from partner to register layer
+    logic valid_reg_layer_to_partner; //! valid signal from register layer to partner
+    T data_reg_layer_to_partner; //! data from register layer to partner
+} ds_side_if_out_reg_layer_partner_side_sigs_t;
 
 `default_nettype wire
 

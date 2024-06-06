@@ -13,15 +13,15 @@ module ds_side_if_out_reg_layer #(
     input wire logic i_sync_rst, //! synchronous reset signal
 
     //! @virtualbus core_side_if @dir in core side interface
-    input wire logic i_core_valid, //! valid signal from core
-    input wire T i_core_data, //! data from core
-    output wire logic o_core_ready, //! ready signal to core
+    input wire logic i_valid_from_core, //! valid signal from core
+    input wire T i_data_from_core, //! data from core
+    output wire logic o_ready_to_core, //! ready signal to core
     //! @end
 
     //! @virtualbus partner_side_if @dir in partner side interface
-    input wire logic i_partner_ready, //! ready signal from partner
-    output wire logic o_partner_valid, //! valid signal to partner
-    output wire T o_partner_data //! data to partner
+    input wire logic i_ready_from_partner, //! ready signal from partner
+    output wire logic o_valid_to_partner, //! valid signal to partner
+    output wire T o_data_to_partner //! data to partner
     //! @end
 );
 // ---------- parameters ----------
@@ -39,9 +39,9 @@ var data_buf_t r_data_buf; //! data buffer to store core data
 // --------------------
 
 // ---------- Drive output signals. ----------
-assign o_core_ready = !r_data_buf.valid || i_partner_ready;
-assign o_partner_valid = r_data_buf.valid;
-assign o_partner_data = r_data_buf.data;
+assign o_ready_to_core = !r_data_buf.valid || i_ready_from_partner;
+assign o_valid_to_partner = r_data_buf.valid;
+assign o_data_to_partner = r_data_buf.data;
 // --------------------
 
 // ---------- blocks ----------
@@ -50,7 +50,7 @@ always_ff @(posedge i_clk) begin: blk_update_core_data_buf
     if (i_sync_rst) begin
         r_data_buf <= '{default:'0};
     end else begin
-        r_data_buf <= o_core_ready ? '{valid: i_core_valid, data: i_core_data} : r_data_buf;
+        r_data_buf <= o_ready_to_core ? '{valid: i_valid_from_core, data: i_data_from_core} : r_data_buf;
     end
 end
 // --------------------
