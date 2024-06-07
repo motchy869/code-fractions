@@ -20,7 +20,7 @@ package my_verif_pkg;
     localparam int AXI4_LITE_ADDR_BIT_WIDTH = $clog2(CSR_ADDR_SPACE_SIZE_BYTE); //! bit width of AXI4-Lite address bus
     localparam int AXI4_LITE_DATA_BIT_WIDTH = 32; //! bit width of AXI4-Lite data bus
 
-    typedef virtual axi4_lite_if #(
+    typedef virtual axi4_lite_if#(
         .ADDR_BIT_WIDTH(my_verif_pkg::AXI4_LITE_ADDR_BIT_WIDTH),
         .DATA_BIT_WIDTH(my_verif_pkg::AXI4_LITE_DATA_BIT_WIDTH)
     ) bus_vif_t;

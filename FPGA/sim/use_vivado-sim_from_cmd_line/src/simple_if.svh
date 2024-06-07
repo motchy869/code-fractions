@@ -3,7 +3,7 @@
 
 `default_nettype none
 
-interface simple_if #(
+interface simple_if#(
     parameter int ADDR_BIT_WIDTH = 2, //! address bit width
     parameter int DATA_BIT_WIDTH = 8 //! data bit width
 );

@@ -84,7 +84,7 @@ var bit r_sync_rst; //! clock synchronous reset signal
 // --------------------
 
 //! DUT instance
-ramp_p4_v0_1_0 #(
+ramp_p4_v0_1_0#(
     .BW_VAL(RAMP_WAV_BW_VAL),
     .BW_SEQ_CONT(RAMP_WAV_BW_SEQ_CONT)
 ) ramp_p4 (

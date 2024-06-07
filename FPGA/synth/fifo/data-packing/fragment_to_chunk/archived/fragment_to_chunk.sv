@@ -8,7 +8,7 @@
 //! When the downstream is ready and there is a chunk in the buffer, it sends the chunk to the downstream.
 //!
 //! NOTE: **This module is not tested yet at all.**
-module fragment_to_chunk #(
+module fragment_to_chunk#(
     parameter int S_MAX_IN = 4, //! max size of the input fragment
     parameter int S_OUT = 8, //! size of the output chunk
     parameter type T = logic //! data type of the elements

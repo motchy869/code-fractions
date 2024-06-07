@@ -35,7 +35,7 @@ var bit r_clk; //! clock signal
 var bit r_sync_rst; //! clock synchronous reset signal
 
 //! AXI4-Lite virtual interface between test bench and DUT
-virtual interface axi4_lite_if #(
+virtual interface axi4_lite_if#(
     .ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
     .DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
 ) axi4_lite_vif_0;
@@ -43,7 +43,7 @@ virtual interface axi4_lite_if #(
 
 // ---------- instances ----------
 //! AXI4-Lite interface for DUT
-axi4_lite_if #(
+axi4_lite_if#(
     .ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
     .DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
 ) axi4_lite_if_0 (

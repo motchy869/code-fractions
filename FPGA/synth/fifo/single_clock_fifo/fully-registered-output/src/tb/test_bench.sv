@@ -20,14 +20,14 @@ parameter int DEPTH = 4; //! FIFO depth
 // --------------------
 
 // ---------- types ----------
-typedef virtual interface fr_sgl_clk_fifo_if #(
+typedef virtual interface fr_sgl_clk_fifo_if#(
     .DATA_BIT_WIDTH(DATA_BIT_WIDTH),
     .DEPTH(DEPTH)
 ) dut_vif_t;
 // --------------------
 
 // ---------- internal signal and storage ----------
-interface fr_sgl_clk_fifo_if #(
+interface fr_sgl_clk_fifo_if#(
     parameter int DATA_BIT_WIDTH = 8, //! data bit width
     parameter int DEPTH = 16 //! FIFO depth
 )(
@@ -50,13 +50,13 @@ dut_vif_t dut_vif;
 
 // ---------- instances ----------
 //! interface to the DUT
-fr_sgl_clk_fifo_if #(
+fr_sgl_clk_fifo_if#(
     .DATA_BIT_WIDTH(DATA_BIT_WIDTH),
     .DEPTH(DEPTH)
 ) dut_if (.i_clk(r_clk));
 
 //! DUT instance
-fr_sgl_clk_fifo #(
+fr_sgl_clk_fifo#(
     .DATA_BIT_WIDTH(DATA_BIT_WIDTH),
     .DEPTH(DEPTH)
 ) dut (

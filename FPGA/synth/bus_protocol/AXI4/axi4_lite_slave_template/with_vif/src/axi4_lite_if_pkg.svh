@@ -17,11 +17,11 @@ package axi4_lite_if_pkg;
 
     // for simulation only
     `ifdef ALLOW_NON_SYNTHESIZABLE
-        class axi4_lite_access #(
+        class axi4_lite_access#(
             parameter int AXI4_LITE_ADDR_BIT_WIDTH = 32,
             parameter int AXI4_LITE_DATA_BIT_WIDTH = 32
         );
-            typedef virtual interface axi4_lite_if #(
+            typedef virtual interface axi4_lite_if#(
                 .ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
                 .DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
             ) vif_t;

@@ -25,7 +25,7 @@ endinterface
 
 // No demand. Simply connect the partner side ports with appropriate ports of the wrapper module.
 // //! interface to bundle signals between register layer and partner
-// interface ds_side_reg_layer_partner_side_if #(
+// interface ds_side_reg_layer_partner_side_if#(
 //     parameter type T = logic //! data type
 // );
 //     logic valid_reg_layer_to_partner; //! valid signal from register layer to partner

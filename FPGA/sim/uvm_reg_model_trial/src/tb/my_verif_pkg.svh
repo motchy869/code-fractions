@@ -12,7 +12,7 @@
 package my_verif_pkg;
     import uvm_pkg::*;
 
-    typedef virtual axi4_lite_if #(
+    typedef virtual axi4_lite_if#(
         .ADDR_BIT_WIDTH(my_verif_params_pkg::AXI4_LITE_ADDR_BIT_WIDTH),
         .DATA_BIT_WIDTH(my_verif_params_pkg::AXI4_LITE_DATA_BIT_WIDTH)
     ) bus_vif_t;

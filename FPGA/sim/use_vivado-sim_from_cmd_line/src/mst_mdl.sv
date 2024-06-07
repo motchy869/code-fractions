@@ -10,7 +10,7 @@
 //! A master module simply accesses the slave memory.
 //! This module writes all address with incremental data (0,1,2, ...), then reads back.
 //! This cycle is repeated endlessly.
-module mst_mdl #(
+module mst_mdl#(
     parameter int ADDR_BIT_WIDTH = 2, //! address bit width
     parameter int DATA_BIT_WIDTH = 8 //! data bit width
 ) (

@@ -3,7 +3,7 @@
 `default_nettype none
 
 //! slave module simply implements a memory
-module slv_mdl #(
+module slv_mdl#(
     parameter int ADDR_BIT_WIDTH = 2, //! address bit width
     parameter int DATA_BIT_WIDTH = 8 //! data bit width
 ) (

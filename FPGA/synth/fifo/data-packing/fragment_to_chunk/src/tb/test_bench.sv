@@ -27,7 +27,7 @@ parameter type T = logic [FRAG_ELEM_BIT_WIDTH-1:0];//! data type of the elements
 // --------------------
 
 // ---------- types ----------
-typedef virtual interface frag_to_chunk_if #(
+typedef virtual interface frag_to_chunk_if#(
     .S_MAX_IN(S_MAX_IN),
     .S_OUT(S_OUT),
     .T(T)
@@ -35,7 +35,7 @@ typedef virtual interface frag_to_chunk_if #(
 // --------------------
 
 // ---------- internal signal and storage ----------
-interface frag_to_chunk_if #(
+interface frag_to_chunk_if#(
     parameter int S_MAX_IN = 16,
     parameter int S_OUT = 8,
     parameter type T = logic,
@@ -64,7 +64,7 @@ dut_vif_t dut_vif;
 
 // ---------- instances ----------
 //! interface to the DUT
-frag_to_chunk_if #(
+frag_to_chunk_if#(
     .S_MAX_IN(S_MAX_IN),
     .S_OUT(S_OUT),
     .T(T)

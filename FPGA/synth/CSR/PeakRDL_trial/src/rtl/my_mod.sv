@@ -49,7 +49,7 @@ wire my_mod_csr_pkg::my_mod_csr__out_t w_csr_hw_if_out; //! output from CSR modu
 
 // ---------- instances ----------
 //! CSR to RAM bridge CSR-side interface
-csr_to_ram_bridge_csr_side_if #(
+csr_to_ram_bridge_csr_side_if#(
     .WORD_BIT_WIDTH(WORD_BIT_WIDTH),
     .BYTE_ADDR_BIT_WIDTH(RAM_BYTE_ADDR_BIT_WIDTH)
 ) csr_to_ram_bridge_csr_side_if_0 (
@@ -57,7 +57,7 @@ csr_to_ram_bridge_csr_side_if #(
 );
 
 //! CSR to RAM bridge RAM-side interface
-csr_to_ram_bridge_ram_side_if #(
+csr_to_ram_bridge_ram_side_if#(
     .WORD_BIT_WIDTH(WORD_BIT_WIDTH),
     .WORD_ADDR_BIT_WIDTH(RAM_WORD_ADDR_BIT_WIDTH)
 ) csr_to_ram_bridge_ram_side_if_0 (
@@ -94,7 +94,7 @@ my_mod_csr my_mod_csr_0 (
 );
 
 //! RAM
-ram_sp_wf #(
+ram_sp_wf#(
     .WORD_BIT_WIDTH(WORD_BIT_WIDTH),
     .DEPTH(RAM_DEPTH),
     .USE_OUTPUT_REG(USE_RAM_OUTPUT_REG)
@@ -110,7 +110,7 @@ ram_sp_wf #(
 );
 
 //! CSR to RAM bridge
-csr_to_ram_bridge #(
+csr_to_ram_bridge#(
     .WORD_BIT_WIDTH(WORD_BIT_WIDTH),
     .BYTE_ADDR_BIT_WIDTH(RAM_BYTE_ADDR_BIT_WIDTH),
     .WORD_ADDR_BIT_WIDTH(RAM_WORD_ADDR_BIT_WIDTH),

@@ -8,7 +8,7 @@
 `default_nettype none
 
 //! simple skid buffer which can be used to cut timing arc
-extern module skid_buf #(
+extern module skid_buf#(
     parameter type T = logic //! data type
 )(
     input wire logic i_clk, //! clock signal

@@ -12,7 +12,7 @@ localparam int BW_CHUNK_ELEM_COUNT = $clog2(P+1); // bit-width of the number of 
 //! This module generates a ramp waveform in parallelism 4 (4 elements/clock-cycle).
 //! This module outputs a 'chunk' at each clock-cycle (with back-pressure from the downstream side).
 //! Each chunk contains 4 elements except for the last one (may contain less than 4 elements).
-module ramp_p4_v0_1_0 #(
+module ramp_p4_v0_1_0#(
     parameter int BW_VAL = 16, //! bit-width of output numeric value
     parameter int BW_SEQ_CONT = 16 //! bit-width of sequence control data: tread length and the number of steps
 )(

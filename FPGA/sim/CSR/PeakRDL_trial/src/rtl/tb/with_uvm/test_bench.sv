@@ -16,7 +16,7 @@ module test_bench;
     // ---------- internal signal and storage ----------
     var bit r_clk; //! clock signal
 
-    typedef virtual interface axi4_lite_if #(
+    typedef virtual interface axi4_lite_if#(
         .ADDR_BIT_WIDTH(my_verif_pkg::AXI4_LITE_ADDR_BIT_WIDTH),
         .DATA_BIT_WIDTH(my_verif_pkg::AXI4_LITE_DATA_BIT_WIDTH)
     ) bus_vif_t;
@@ -28,7 +28,7 @@ module test_bench;
 
     // ---------- instances ----------
     //! AXI4-Lite interface between test bench and DUT
-    axi4_lite_if #(
+    axi4_lite_if#(
         .ADDR_BIT_WIDTH(my_verif_pkg::AXI4_LITE_ADDR_BIT_WIDTH),
         .DATA_BIT_WIDTH(my_verif_pkg::AXI4_LITE_DATA_BIT_WIDTH)
     ) bus_if (.i_clk(r_clk));

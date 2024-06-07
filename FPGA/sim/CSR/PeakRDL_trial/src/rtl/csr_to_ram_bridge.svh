@@ -2,7 +2,7 @@
 `define CSR_TO_RAM_BRIDGE_IF_SVH_INCLUDED
 
 //! Translate access from CSR to RAM operation.
-extern module csr_to_ram_bridge #(
+extern module csr_to_ram_bridge#(
     parameter int WORD_BIT_WIDTH = 32, //! word bit width, **must be power of 2**
     parameter int BYTE_ADDR_BIT_WIDTH = 8, //! byte address bit width
     parameter int WORD_ADDR_BIT_WIDTH = BYTE_ADDR_BIT_WIDTH - $clog2(WORD_BIT_WIDTH/8), //! word address bit width

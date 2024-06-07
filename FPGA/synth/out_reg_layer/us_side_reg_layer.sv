@@ -9,7 +9,7 @@
 //! Output register layer for upstream side interface.
 //! This module can be used to attach registered outputs to the existing module's upstream side interface.
 //! The essence of this module is equal to skid buffer.
-module us_side_reg_layer #(
+module us_side_reg_layer#(
     parameter type T = logic //! data type
 )(
     input wire logic i_clk, //! clock signal

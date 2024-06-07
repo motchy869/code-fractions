@@ -8,7 +8,7 @@
 
 //! Output register layer for downstream side interface.
 //! This module can be used to attach registered outputs to the existing module's downstream side interface.
-module ds_side_reg_layer #(
+module ds_side_reg_layer#(
     parameter type T = logic //! data type
 )(
     input wire logic i_clk, //! clock signal

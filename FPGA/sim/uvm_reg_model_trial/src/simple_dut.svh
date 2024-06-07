@@ -9,7 +9,7 @@
 
 //! A simple AXI4-Lite slave with 4 writable registers.
 //! This is based on the AXI4-Lite slave template generated from Vivado 2023.2.
-extern module simple_dut #(
+extern module simple_dut#(
     parameter int AXI4_LITE_ADDR_BIT_WIDTH = 32, //! bit width of AXI4-Lite address bus
     parameter int AXI4_LITE_DATA_BIT_WIDTH = 32 //! bit width of AXI4-Lite data bus
 )(

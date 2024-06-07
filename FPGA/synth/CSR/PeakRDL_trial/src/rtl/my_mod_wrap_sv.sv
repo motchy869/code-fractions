@@ -8,7 +8,7 @@
 
 //! wrapper module for `my_mod`
 //! - Convert from SystemVerilog interface ports to Verilog ports.
-module my_mod_wrap_sv #(
+module my_mod_wrap_sv#(
     localparam int MY_MOD_ADDR_SPACE_SIZE_BYTE = 'h40, //! size of `my_mod` address space in byte
     localparam int AXI4_LITE_ADDR_BIT_WIDTH = $clog2(MY_MOD_ADDR_SPACE_SIZE_BYTE), //! bit width of AXI4-Lite address bus of `my_mod`
     localparam int AXI4_LITE_DATA_BIT_WIDTH = 32 // bit width of AXI4-Lite data bus
@@ -70,7 +70,7 @@ module my_mod_wrap_sv #(
 
 // ---------- instances ----------
 //! AXI4-Lite interface for DUT
-axi4_lite_if #(
+axi4_lite_if#(
     .ADDR_BIT_WIDTH(AXI4_LITE_ADDR_BIT_WIDTH),
     .DATA_BIT_WIDTH(AXI4_LITE_DATA_BIT_WIDTH)
 ) axi4_lite_if_0 (

@@ -10,7 +10,7 @@
 //! Single-clock symmetric FIFO.
 //! The output can be optionally registered.
 //! Some techniques used in this design are base on '[Simulation and Synthesis Techniques for Asynchronous FIFO Design](http://www.sunburst-design.com/papers/CummingsSNUG2002SJ_FIFO1.pdf)'
-extern module sgl_clk_fifo #(
+extern module sgl_clk_fifo#(
     parameter int DATA_BIT_WIDTH = 8, //! data bit width
     parameter int DEPTH = 16, //! FIFO depth
     parameter bit EN_US_OUT_REG = 1'b0, //! enable output register on upstream side

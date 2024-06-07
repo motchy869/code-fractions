@@ -8,7 +8,7 @@
 `default_nettype none
 
 //! interface to bundle signals between core and register layer
-interface us_side_reg_layer_core_side_if #(
+interface us_side_reg_layer_core_side_if#(
     parameter type T = logic //! data type
 );
     logic valid_reg_layer_to_core; //! valid signal from register layer to core
@@ -25,7 +25,7 @@ endinterface
 
 // No demand. Simply connect the partner side ports with appropriate ports of the wrapper module.
 // //! interface to bundle signals between register layer and partner
-// interface us_side_reg_layer_partner_side_if #(
+// interface us_side_reg_layer_partner_side_if#(
 //     parameter type T = logic //! data type
 // );
 //     logic valid_partner_to_reg_layer; //! valid signal from partner to register layer
@@ -36,7 +36,7 @@ endinterface
 //! Output register layer for upstream side interface.
 //! This module can be used to attach registered outputs to the existing module's upstream side interface.
 //! The essence of this module is equal to skid buffer.
-extern module us_side_reg_layer #(
+extern module us_side_reg_layer#(
     parameter type T = logic //! data type
 )(
     input wire logic i_clk, //! clock signal

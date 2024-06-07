@@ -17,7 +17,7 @@ localparam int DATA_BIT_WIDTH = 8; //! data bit width
 
 // ---------- internal signal and storage ----------
 //! interface instance
-simple_if #(
+simple_if#(
     .ADDR_BIT_WIDTH(ADDR_BIT_WIDTH),
     .DATA_BIT_WIDTH(DATA_BIT_WIDTH)
 ) test_if_0 ();
@@ -29,7 +29,7 @@ assign w_monit_rd_data = test_if_0.rd_data;
 // --------------------
 
 //! master module
-mst_mdl #(
+mst_mdl#(
     .ADDR_BIT_WIDTH(ADDR_BIT_WIDTH),
     .DATA_BIT_WIDTH(DATA_BIT_WIDTH)
 ) mst_mdl_0 (
@@ -39,7 +39,7 @@ mst_mdl #(
 );
 
 //! slave module
-slv_mdl #(
+slv_mdl#(
     .ADDR_BIT_WIDTH(ADDR_BIT_WIDTH),
     .DATA_BIT_WIDTH(DATA_BIT_WIDTH)
 ) slv_mdl_0 (
