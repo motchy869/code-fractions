@@ -14,7 +14,7 @@ interface simple_if#(
     wire logic [DATA_BIT_WIDTH-1:0] rd_data; //! read back data
     wire logic [DATA_BIT_WIDTH-1:0] wr_data; //! write data
 
-    modport mst_port(
+    modport mst_port (
         output addr, //! address
         output rd_req, //! read request
         output wr_req, //! write request
@@ -22,7 +22,7 @@ interface simple_if#(
         input rd_data, //! read back data
         output wr_data //! write data
     );
-    modport slv_port(
+    modport slv_port (
         input addr, //! address
         input rd_req, //! read request
         input wr_req, //! write request

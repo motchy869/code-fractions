@@ -25,7 +25,7 @@ interface csr_to_ram_bridge_csr_side_if#(
     logic wr_ack; //! write acknowledge signal
 
     //! CSR is master.
-    modport mst_port(
+    modport mst_port (
         output acc_req, //! access request signal
         output byte_addr, //! byte address
         output acc_req_is_wr, //! Indicates that the access request is write.
@@ -38,7 +38,7 @@ interface csr_to_ram_bridge_csr_side_if#(
     );
 
     //! Bridge is slave.
-    modport slv_port(
+    modport slv_port (
         input acc_req, //! access request signal
         input byte_addr, //! byte address
         input acc_req_is_wr, //! Indicates that the access request is write.

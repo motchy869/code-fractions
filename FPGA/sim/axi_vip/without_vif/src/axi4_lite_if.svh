@@ -32,7 +32,7 @@ interface axi4_lite_if#(
     wire rvalid;
     wire rready;
 
-    modport mst_port(
+    modport mst_port (
         //! write address (issued by master, accepted by slave)
         output awaddr,
         //! Write channel Protection type. This signal indicates the privilege and security level of the transaction, and whether the transaction is a data access or an instruction access.
@@ -73,7 +73,7 @@ interface axi4_lite_if#(
         output rready
     );
 
-    modport slv_port(
+    modport slv_port (
         //! write address (issued by master, accepted by slave)
         input awaddr,
         //! Write channel Protection type. This signal indicates the privilege and security level of the transaction, and whether the transaction is a data access or an instruction access.
