@@ -2,22 +2,20 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
+`include "us_side_reg_layer.svh"
+
 `default_nettype none
 
 //! Output register layer for upstream side interface.
 //! This module can be used to attach registered outputs to the existing module's upstream side interface.
 //! The essence of this module is equal to skid buffer.
-module ds_side_if_out_reg_layer #(
+module us_side_reg_layer #(
     parameter type T = logic //! data type
 )(
     input wire logic i_clk, //! clock signal
     input wire logic i_sync_rst, //! synchronous reset signal
 
-    //! @virtualbus core_side_if @dir in core side interface
-    input wire logic i_ready_from_core, //! ready signal from core
-    output wire logic o_valid_to_core, //! valid signal to core
-    output wire T o_data_to_core, //! data to core
-    //! @end
+    us_side_reg_layer_core_side_if.mst_port if_m_core_side, //! master interface to the core
 
     //! @virtualbus partner_side_if @dir in partner side interface
     input wire logic i_valid_from_partner, //! valid signal from partner
@@ -50,7 +48,7 @@ assign g_buf_empty = r_rd_ptr.idx == r_wr_ptr.idx && r_rd_ptr.phase == r_wr_ptr.
 wire g_push_en; //! push enable signal
 assign g_push_en = i_valid_from_partner && !g_buf_full;
 wire g_pop_en; //! pop enable signal
-assign g_pop_en = i_ready_from_core && !g_buf_empty;
+assign g_pop_en = if_m_core_side.ready_core_to_reg_layer && !g_buf_empty;
 
 var T g_nxt_fifo_buf[2]; //! the value of `r_fifo_buf` right after the next clock rising edge
 var buf_ptr_t g_nxt_rd_ptr; //! the value of `r_rd_ptr` right after the next clock rising edge
@@ -60,8 +58,8 @@ var logic r_out_ready_to_partner; //! output register for `o_ready_to_partner`
 // --------------------
 
 // ---------- Drive output signals. ----------
-assign o_core_valid = !g_buf_empty;
-assign o_core_data = r_fifo_buf[r_rd_ptr.idx];
+assign if_m_core_side.valid_reg_layer_to_core = !g_buf_empty;
+assign if_m_core_side.data_reg_layer_to_core = r_fifo_buf[r_rd_ptr.idx];
 assign o_ready_to_partner = r_out_ready_to_partner;
 // --------------------
 
@@ -112,7 +110,7 @@ always_ff @(posedge i_clk) begin: blk_update_fifo_buf
 end
 
 //! Update the output register for ready signal to partner.
-always_ff @(posedge i_clk) begin: blk_update_fifo_buf
+always_ff @(posedge i_clk) begin: blk_update_ready_to_partner
     r_out_ready_to_partner <= !(g_nxt_wr_ptr.idx == g_nxt_rd_ptr.idx && g_nxt_wr_ptr.phase != g_nxt_rd_ptr.phase);
 end
 // --------------------

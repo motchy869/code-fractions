@@ -1,3 +1,6 @@
+`ifndef FRAG_TO_CHUNK_SVH_INCLUDED
+`define FRAG_TO_CHUNK_SVH_INCLUDED
+
 // Verible directive
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
@@ -42,3 +45,5 @@ extern module frag_to_chunk#(
 );
 
 `default_nettype wire
+
+`endif // FRAG_TO_CHUNK_SVH_INCLUDED

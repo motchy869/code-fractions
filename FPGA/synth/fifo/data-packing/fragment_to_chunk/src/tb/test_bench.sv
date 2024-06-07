@@ -11,6 +11,11 @@
 //! A test bench for sgl_clk_fifo.
 module test_bench;
 // ---------- parameters ----------
+// If enabled, `frag_to_chunk_fr` is used instead of `frag_to_chunk`.
+`define TEST_FULLY_REGISTERED_VERSION
+// --------------------
+
+// ---------- parameters ----------
 localparam int CLK_PERIOD_NS = 8; //! clock period in ns
 localparam int SIM_TIME_LIMIT_NS = 1000; //! simulation time limit in ns
 localparam int RELEASE_RST_AFTER_CLK = 2; //! Reset signal deasserts right after this clock rising-edge.
@@ -66,7 +71,12 @@ frag_to_chunk_if #(
 ) dut_if (.i_clk(r_clk));
 
 //! DUT instance
-frag_to_chunk #(
+`ifdef TEST_FULLY_REGISTERED_VERSION
+    frag_to_chunk_fr
+`else
+    frag_to_chunk
+`endif
+#(
     .S_MAX_IN(S_MAX_IN),
     .S_OUT(S_OUT),
     .T(T)

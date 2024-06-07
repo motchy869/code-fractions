@@ -6,8 +6,6 @@
 
 //! Receives data fragments from upstream and stores them in a buffer to construct data chunks.
 //! When the downstream is ready and there is a chunk in the buffer, it sends the chunk to the downstream.
-//!
-//! NOTE: **This module is not tested yet at all.**
 module frag_to_chunk#(
     parameter int S_MAX_IN = 16, //! max size of the input fragment
     parameter int S_OUT = 8, //! The size of the output chunk. **Recommended to be power of 2**. Other large numbers may lead to timing closure failure due to costly modulus operation.
