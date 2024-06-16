@@ -27,7 +27,7 @@ MAKEFILE_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 
 #-------------- Config ------------------------
 SHELL := /usr/bin/env bash
-VIVADO_DIR := /tools/Xilinx/Vivado/2023.2
+VIVADO_DIR := /tools/Xilinx/Vivado/2024.1
 XVLOG := $(VIVADO_DIR)/bin/xvlog
 XELAB := $(VIVADO_DIR)/bin/xelab
 XSIM := $(VIVADO_DIR)/bin/xsim
@@ -39,7 +39,7 @@ SRC_DIR := $(MAKEFILE_DIR)/../src
 INCLUDE_DIR :=
 
 SIM_CONSOLE_LOG_FILE_PATH := $(SIM_DIR)/sim_console.log
-SV_SRC_FILES := $(shell find $(SRC_DIR) -type f -name "*.sv" | tr '\n' ' ')
+SV_SRC_FILES := $(shell find $(SRC_DIR) -not -path $(SRC_DIR)/old/* -type f -name "*.sv" | tr '\n' ' ')
 
 TB_TOP := test_bench
 
