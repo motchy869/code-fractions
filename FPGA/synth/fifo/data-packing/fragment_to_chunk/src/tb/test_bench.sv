@@ -13,9 +13,7 @@ module test_bench;
 // ---------- parameters ----------
 // If enabled, `frag_to_chunk_fr` is used instead of `frag_to_chunk`.
 `define TEST_FULLY_REGISTERED_VERSION
-// --------------------
 
-// ---------- parameters ----------
 localparam int CLK_PERIOD_NS = 8; //! clock period in ns
 localparam int SIM_TIME_LIMIT_NS = 1000; //! simulation time limit in ns
 localparam int RELEASE_RST_AFTER_CLK = 2; //! Reset signal deasserts right after this clock rising-edge.
