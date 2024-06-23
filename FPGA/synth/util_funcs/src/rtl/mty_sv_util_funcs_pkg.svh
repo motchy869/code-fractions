@@ -14,7 +14,7 @@
 package mty_sv_util_funcs_pkg;
     // Provides various math functions.
     class Math #(
-        parameter type T // data type
+        parameter type T = int // data type
     );
         // Calculate the absolute value of a given number.
         // T is assumed to be signed.
