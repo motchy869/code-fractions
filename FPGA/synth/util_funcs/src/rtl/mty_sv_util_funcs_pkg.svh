@@ -69,7 +69,7 @@ package mty_sv_util_funcs_pkg;
     // Calculate the number of bits required to represent a given number.
     function automatic int bitWidthOfSignedInt(int n);
         const int abs_n = (n < 0) ? -n : n;
-        return $clog2(abs_n) + $onehot(abs_n) + 1; // +1 is for positive number case
+        return $clog2(abs_n) + int'($onehot(abs_n)) + 1; // +1 is for positive number case
     endfunction
 endpackage
 
