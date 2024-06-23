@@ -24,12 +24,14 @@ package mty_sv_util_funcs_pkg;
 
         // Clip a given number to a specified range.
         // T is assumed to be signed.
+        // Vivado 2024.1.1 SILENTLY fails to synthesize this function (due to class) and generates 0 output!
         static function automatic T clip(T val, T min_val, T max_val);
             return (val < min_val) ? min_val : ((val > max_val) ? max_val : val);
         endfunction
 
         // A class providing rounding functions.
         // T is assumed to be signed.
+        // Vivado 2024.1.1 SILENTLY fails to synthesize this function (due to class) and generates 0 output!
         class Rounding #(
             parameter int N_F = 1 // The number of fractional bits. N_F LSBs are treated as fractional bits.
         );
