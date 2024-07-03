@@ -25,7 +25,7 @@ typedef virtual interface skid_buf_if#(
 ) dut_vif_t;
 // --------------------
 
-// ---------- internal signal and storage ----------
+// ---------- signal and storage ----------
 interface skid_buf_if#(
     parameter type T = logic //! data type
 )(
