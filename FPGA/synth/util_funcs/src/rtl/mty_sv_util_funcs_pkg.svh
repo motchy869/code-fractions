@@ -78,16 +78,20 @@ package mty_sv_util_funcs_pkg;
             // Circular right shift
             static function automatic T [L-1:0] circ_right_shift(
                 input T [L-1:0] vec, // input vector
-                input logic [$clog2(L)-1:0] s // shift amount, clipped to [0, L-1]
+                input logic [$clog2(L+1)-1:0] s // shift amount, clipped to [0, L-1]
             );
-                localparam int unsigned BIT_WIDTH_S = $clog2(L);
+                localparam int unsigned BIT_WIDTH_S = $clog2(L+1);
+                localparam int unsigned BIT_WIDTH_IDX = $clog2(L);
                 automatic logic [BIT_WIDTH_S-1:0] s_clp = (s < L) ? s : BIT_WIDTH_S'(L-1);
                 automatic T [L-1:0] result;
+
                 for (int unsigned i=0; i<L; i++) begin
-                    if (BIT_WIDTH_S'(i) + s_clp < L) begin
-                        result[i] = vec[BIT_WIDTH_S'(i) + s_clp];
+                    localparam int unsigned BIT_WIDTH_NAIVE_IDX = BIT_WIDTH_IDX+1;
+                    automatic logic [BIT_WIDTH_NAIVE_IDX-1:0] naive_idx = BIT_WIDTH_NAIVE_IDX'(i) + BIT_WIDTH_NAIVE_IDX'(s_clp);
+                    if (naive_idx < BIT_WIDTH_NAIVE_IDX'(L)) begin
+                        result[i] = vec[BIT_WIDTH_IDX'(naive_idx)];
                     end else begin
-                        result[i] = vec[BIT_WIDTH_S'(i) + s_clp - BIT_WIDTH_S'(L)];
+                        result[i] = vec[BIT_WIDTH_IDX'(naive_idx - BIT_WIDTH_NAIVE_IDX'(L))];
                     end
                 end
                 return result;
