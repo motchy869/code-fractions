@@ -68,6 +68,33 @@ package mty_sv_util_funcs_pkg;
         endclass
     endclass
 
+    // Provides various data structure operations.
+    class DataStructOps #(
+        parameter type T = logic // **packed** data type
+    );
+        class Shift #(
+            parameter int unsigned L = 8 // vector length
+        );
+            // Circular right shift
+            static function automatic T [L-1:0] circ_right_shift(
+                input T [L-1:0] vec, // input vector
+                input logic [$clog2(L)-1:0] s // shift amount, clipped to [0, L-1]
+            );
+                localparam int unsigned BIT_WIDTH_S = $clog2(L);
+                automatic logic [BIT_WIDTH_S-1:0] s_clp = (s < L) ? s : BIT_WIDTH_S'(L-1);
+                automatic T [L-1:0] result;
+                for (int unsigned i=0; i<L; i++) begin
+                    if (BIT_WIDTH_S'(i) + s_clp < L) begin
+                        result[i] = vec[BIT_WIDTH_S'(i) + s_clp];
+                    end else begin
+                        result[i] = vec[BIT_WIDTH_S'(i) + s_clp - BIT_WIDTH_S'(L)];
+                    end
+                end
+                return result;
+            endfunction
+        endclass
+    endclass
+
     // Calculate the number of bits required to represent a given number.
     function automatic int bitWidthOfSignedInt(int n);
         const int abs_n = (n < 0) ? -n : n;
