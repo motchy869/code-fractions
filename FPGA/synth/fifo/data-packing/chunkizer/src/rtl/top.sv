@@ -10,7 +10,7 @@
 module top (
     input wire logic i_clk, //! clock signal
     input wire logic i_async_rst, //! reset signal **asynchronous** to clock
-    output wire logic [2:0] o_led //! Signals to o/off LEDs. This is generated from the output of DUT to prevent them from being optimized away.
+    output wire logic [2:0] o_led //! Signals to on/off LEDs. This is generated from the output of DUT to prevent them from being optimized away.
 );
 // ---------- parameters ----------
 localparam int unsigned SZ_MAX_IN = 8;//! max size of the input fragment
