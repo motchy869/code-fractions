@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="test_bench_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="test_bench" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="362.125 ns"></ZoomStartTime>
+      <ZoomEndTime time="412.376 ns"></ZoomEndTime>
+      <Cursor1Time time="404.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="257"></NameColumnWidth>
+      <ValueColumnWidth column_width="76"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="4" />
+   <wvobject type="logic" fp_name="/test_bench/r_clk">
+      <obj_property name="ElementShortName">r_clk</obj_property>
+      <obj_property name="ObjectShortName">r_clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_bench/r_sync_rst">
+      <obj_property name="ElementShortName">r_sync_rst</obj_property>
+      <obj_property name="ObjectShortName">r_sync_rst</obj_property>
+   </wvobject>
+   <wvobject type="group" fp_name="group37">
+      <obj_property name="label">dut_if</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="logic" fp_name="/test_bench/dut_if/frag_valid">
+         <obj_property name="ElementShortName">frag_valid</obj_property>
+         <obj_property name="ObjectShortName">frag_valid</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_if/frag_size">
+         <obj_property name="ElementShortName">frag_size[3:0]</obj_property>
+         <obj_property name="ObjectShortName">frag_size[3:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_if/flush">
+         <obj_property name="ElementShortName">flush</obj_property>
+         <obj_property name="ObjectShortName">flush</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_if/frag">
+         <obj_property name="ElementShortName">frag[7:0][7:0]</obj_property>
+         <obj_property name="ObjectShortName">frag[7:0][7:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_if/next_frag_ready">
+         <obj_property name="ElementShortName">next_frag_ready</obj_property>
+         <obj_property name="ObjectShortName">next_frag_ready</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_if/ds_ready">
+         <obj_property name="ElementShortName">ds_ready</obj_property>
+         <obj_property name="ObjectShortName">ds_ready</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_if/chunk_valid">
+         <obj_property name="ElementShortName">chunk_valid</obj_property>
+         <obj_property name="ObjectShortName">chunk_valid</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_if/chunk">
+         <obj_property name="ElementShortName">chunk[3:0][7:0]</obj_property>
+         <obj_property name="ObjectShortName">chunk[3:0][7:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="group" fp_name="group50">
+      <obj_property name="label">dut</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="array" fp_name="/test_bench/dut/g_frag_size_clp">
+         <obj_property name="ElementShortName">g_frag_size_clp[3:0]</obj_property>
+         <obj_property name="ObjectShortName">g_frag_size_clp[3:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/r_wr_dst_fifo_base_idx">
+         <obj_property name="ElementShortName">r_wr_dst_fifo_base_idx[3:0]</obj_property>
+         <obj_property name="ObjectShortName">r_wr_dst_fifo_base_idx[3:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/r_rd_src_fifo_base_idx">
+         <obj_property name="ElementShortName">r_rd_src_fifo_base_idx[3:0]</obj_property>
+         <obj_property name="ObjectShortName">r_rd_src_fifo_base_idx[3:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/g_fifo_ports">
+         <obj_property name="ElementShortName">g_fifo_ports[7:0]</obj_property>
+         <obj_property name="ObjectShortName">g_fifo_ports[7:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/test_bench/dut/g_fifo_ports[7]">
+            <obj_property name="ElementShortName">[7]</obj_property>
+            <obj_property name="ObjectShortName">[7]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/g_fifo_ports[6]">
+            <obj_property name="ElementShortName">[6]</obj_property>
+            <obj_property name="ObjectShortName">[6]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/g_fifo_ports[5]">
+            <obj_property name="ElementShortName">[5]</obj_property>
+            <obj_property name="ObjectShortName">[5]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/g_fifo_ports[4]">
+            <obj_property name="ElementShortName">[4]</obj_property>
+            <obj_property name="ObjectShortName">[4]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/g_fifo_ports[3]">
+            <obj_property name="ElementShortName">[3]</obj_property>
+            <obj_property name="ObjectShortName">[3]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/g_fifo_ports[2]">
+            <obj_property name="ElementShortName">[2]</obj_property>
+            <obj_property name="ObjectShortName">[2]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/g_fifo_ports[1]">
+            <obj_property name="ElementShortName">[1]</obj_property>
+            <obj_property name="ObjectShortName">[1]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/g_fifo_ports[0]">
+            <obj_property name="ElementShortName">[0]</obj_property>
+            <obj_property name="ObjectShortName">[0]</obj_property>
+            <obj_property name="isExpanded"></obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/g_fifo_in_frag_dst_range">
+         <obj_property name="ElementShortName">g_fifo_in_frag_dst_range[7:0]</obj_property>
+         <obj_property name="ObjectShortName">g_fifo_in_frag_dst_range[7:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/g_fifo_in_frag_dst_range_and_not_full">
+         <obj_property name="ElementShortName">g_fifo_in_frag_dst_range_and_not_full[7:0]</obj_property>
+         <obj_property name="ObjectShortName">g_fifo_in_frag_dst_range_and_not_full[7:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut/g_there_is_space_to_write_frag">
+         <obj_property name="ElementShortName">g_there_is_space_to_write_frag</obj_property>
+         <obj_property name="ObjectShortName">g_there_is_space_to_write_frag</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut/g_frag_push_en">
+         <obj_property name="ElementShortName">g_frag_push_en</obj_property>
+         <obj_property name="ObjectShortName">g_frag_push_en</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/g_fifo_in_chunk_src_range">
+         <obj_property name="ElementShortName">g_fifo_in_chunk_src_range[7:0]</obj_property>
+         <obj_property name="ObjectShortName">g_fifo_in_chunk_src_range[7:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/g_fifo_in_chunk_src_range_and_not_empty">
+         <obj_property name="ElementShortName">g_fifo_in_chunk_src_range_and_not_empty[7:0]</obj_property>
+         <obj_property name="ObjectShortName">g_fifo_in_chunk_src_range_and_not_empty[7:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut/g_there_is_complete_chunk">
+         <obj_property name="ElementShortName">g_there_is_complete_chunk</obj_property>
+         <obj_property name="ObjectShortName">g_there_is_complete_chunk</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut/g_there_is_incomplete_chunk">
+         <obj_property name="ElementShortName">g_there_is_incomplete_chunk</obj_property>
+         <obj_property name="ObjectShortName">g_there_is_incomplete_chunk</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/g_curr_chunk_net_sz">
+         <obj_property name="ElementShortName">g_curr_chunk_net_sz[2:0]</obj_property>
+         <obj_property name="ObjectShortName">g_curr_chunk_net_sz[2:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut/g_chunk_pop_en">
+         <obj_property name="ElementShortName">g_chunk_pop_en</obj_property>
+         <obj_property name="ObjectShortName">g_chunk_pop_en</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/g_chunk">
+         <obj_property name="ElementShortName">g_chunk[3:0][7:0]</obj_property>
+         <obj_property name="ObjectShortName">g_chunk[3:0][7:0]</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>
