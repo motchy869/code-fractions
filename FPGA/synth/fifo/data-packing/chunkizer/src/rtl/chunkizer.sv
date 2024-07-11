@@ -64,7 +64,7 @@ function automatic logic [NUM_FIFOS-1:0] f_circ_right_shift__NUM_FIFOS(
     return result;
 endfunction
 
-//! Counts the number of hot bits aligned to LSB. The length of the vit vector is ```SZ_OUT```.
+//! Counts the number of hot bits aligned to LSB. The length of the bit vector is ```SZ_OUT```.
 function automatic logic [BIT_WIDTH_SZ_OUT-1:0] f_cnt_lsb_aligned_hot_bits__SZ_OUT(input logic [SZ_OUT-1:0] val);
     automatic logic [BIT_WIDTH_SZ_OUT-1:0] cnt = '0;
     if (val == '0) begin
