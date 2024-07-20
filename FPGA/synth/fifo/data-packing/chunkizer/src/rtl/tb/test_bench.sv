@@ -17,9 +17,9 @@ localparam int unsigned SIM_TIME_LIMIT_NS = 500; //! simulation time limit in ns
 localparam int unsigned RELEASE_RST_AFTER_CLK = 2; //! Reset signal deasserts right after this clock rising-edge. For AMD FIFO Generator, **>= 100 ns reset duration is needed.**
 localparam int unsigned POST_RELEASING_RST_WAIT = 1; //! Wait for this clock cycles after releasing the reset signal to make sure some vendor IPs are ready to work.
 
-parameter int unsigned SZ_MAX_IN = 8;//! max size of the input fragment
-parameter int unsigned SZ_OUT = 4;//! The size of the output chunk.
-parameter int unsigned FRAG_ELEM_BIT_WIDTH = 8; //! the bit width of the fragment's element
+localparam int unsigned SZ_MAX_IN = 8;//! max size of the input fragment
+localparam int unsigned SZ_OUT = 4;//! The size of the output chunk.
+localparam int unsigned FRAG_ELEM_BIT_WIDTH = 8; //! the bit width of the fragment's element
 // --------------------
 
 // ---------- types ----------
