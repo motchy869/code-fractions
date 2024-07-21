@@ -19,7 +19,7 @@ localparam int unsigned BIT_WIDTH__OUTPUT = 8;
 localparam int unsigned BIT_WIDTH__INT_PART__PERIOD = 4;
 localparam int unsigned BIT_WIDTH__FRAC_PART__PERIOD = 4;
 localparam int unsigned SSR = 4;
-localparam int unsigned CYCLE_LATENCY = 9;
+localparam int unsigned CYCLE_LATENCY = 10;
 // --------------------
 
 // ---------- types ----------
@@ -116,30 +116,48 @@ task automatic drive_rst();
     end
 endtask
 
-task automatic configure_dut(ref dut_vif_t vif);
+task automatic drive_dut(ref dut_vif_t vif);
     localparam int unsigned END_VAL = 127;
     localparam int unsigned INT_PART__PERIOD = 12;
     localparam int unsigned FRAC_PART__PERIOD = 4;
+    localparam int unsigned NUM_CHUNKS_TO_RECORD = (5*INT_PART__PERIOD + SSR - 1)/SSR;
 
+    var logic [NUM_CHUNKS_TO_RECORD-1:0][SSR-1:0][BIT_WIDTH__OUTPUT-1:0] chunk_record = '0;
+    var logic [$clog2(NUM_CHUNKS_TO_RECORD)-1:0] cnt_chunk_record = '0;
+
+    // Set parameters.
     r_sync_rst <= 1'b1;
     vif.start_val <= '0;
     vif.end_val <= BIT_WIDTH__OUTPUT'(END_VAL);
     vif.int_part__period <= BIT_WIDTH__INT_PART__PERIOD'(INT_PART__PERIOD);
     vif.frac_part__period <= BIT_WIDTH__FRAC_PART__PERIOD'(FRAC_PART__PERIOD);
 
+    // Start waveform generation.
     @(posedge r_clk);
     r_sync_rst <= 1'b0;
     vif.ds_ready <= 1'b1;
 
-    repeat ((INT_PART__PERIOD + SSR - 1)/SSR + CYCLE_LATENCY + 5) begin
+    while (cnt_chunk_record < NUM_CHUNKS_TO_RECORD) begin
         @(posedge r_clk);
+        if (vif.chunk_valid) begin
+            chunk_record[cnt_chunk_record] = vif.chunk_data;
+
+            // Print chunk data.
+            $write("chunk_record[%0d]:", cnt_chunk_record);
+            for (int unsigned i=0; i<SSR; ++i) begin
+                $write(" %0d", chunk_record[cnt_chunk_record][i]);
+            end
+            $display("");
+
+            cnt_chunk_record = cnt_chunk_record + 1'b1;
+        end
     end
 endtask
 
 task automatic scenario();
     drive_rst();
     @(posedge r_clk);
-    configure_dut(dut_vif);
+    drive_dut(dut_vif);
     @(posedge r_clk);
     $finish;
 endtask
