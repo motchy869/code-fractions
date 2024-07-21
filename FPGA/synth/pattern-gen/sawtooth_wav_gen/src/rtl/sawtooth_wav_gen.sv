@@ -118,7 +118,7 @@ always_ff @(posedge i_clk) begin: blk_update_elem_ephemeral_idxes
             if (r_elem_ephemeral_idxes[i].int_part < WRAP_THRESHOLD__INT_PART__ELEM_EPHEMERAL_IDX) begin
                 r_elem_ephemeral_idxes[i].int_part <= r_elem_ephemeral_idxes[i].int_part + BIT_WIDTH__MAX__INT_PART__ELEM_EPHEMERAL_IDX'(SSR);
             end else begin
-                r_elem_ephemeral_idxes[i] <= r_rem__elem_ephemeral_idxes[LEN__PIPELINE__MODULO-1][i] + (BIT_WIDTH__MAX__INT_PART__ELEM_EPHEMERAL_IDX + BIT_WIDTH__FRAC_PART__PERIOD)'((LEN__PIPELINE__MODULO*SSR) << BIT_WIDTH__FRAC_PART__PERIOD);
+                r_elem_ephemeral_idxes[i] <= r_rem__elem_ephemeral_idxes[LEN__PIPELINE__MODULO-1][i] + (BIT_WIDTH__MAX__INT_PART__ELEM_EPHEMERAL_IDX + BIT_WIDTH__FRAC_PART__PERIOD)'(((LEN__PIPELINE__MODULO+1)*SSR) << BIT_WIDTH__FRAC_PART__PERIOD);
             end
         end
     end
