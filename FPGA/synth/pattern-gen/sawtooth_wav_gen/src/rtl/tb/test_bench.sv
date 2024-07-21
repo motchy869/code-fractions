@@ -117,7 +117,8 @@ task automatic drive_rst();
 endtask
 
 task automatic drive_dut(ref dut_vif_t vif);
-    localparam int unsigned END_VAL = 127;
+    localparam int signed START_VAL = -120;
+    localparam int signed END_VAL = 120;
     localparam int unsigned INT_PART__PERIOD = 12;
     localparam int unsigned FRAC_PART__PERIOD = 4;
     localparam int unsigned NUM_CHUNKS_TO_RECORD = (5*INT_PART__PERIOD + SSR - 1)/SSR;
@@ -127,8 +128,8 @@ task automatic drive_dut(ref dut_vif_t vif);
 
     // Set parameters.
     r_sync_rst <= 1'b1;
-    vif.start_val <= '0;
-    vif.end_val <= BIT_WIDTH__OUTPUT'(END_VAL);
+    vif.start_val <= signed'(BIT_WIDTH__OUTPUT'(START_VAL));
+    vif.end_val <= signed'(BIT_WIDTH__OUTPUT'(END_VAL));
     vif.int_part__period <= BIT_WIDTH__INT_PART__PERIOD'(INT_PART__PERIOD);
     vif.frac_part__period <= BIT_WIDTH__FRAC_PART__PERIOD'(FRAC_PART__PERIOD);
 
@@ -145,7 +146,7 @@ task automatic drive_dut(ref dut_vif_t vif);
             // Print chunk data.
             $write("chunk_record[%0d]:", cnt_chunk_record);
             for (int unsigned i=0; i<SSR; ++i) begin
-                $write(" %0d", chunk_record[cnt_chunk_record][i]);
+                $write(" %0d", signed'(chunk_record[cnt_chunk_record][i]));
             end
             $display("");
 

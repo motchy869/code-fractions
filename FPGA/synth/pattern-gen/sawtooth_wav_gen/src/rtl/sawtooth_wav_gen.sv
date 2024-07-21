@@ -140,7 +140,7 @@ always_ff @(posedge i_clk) begin: blk_update_beta
     end else if (i_ds_ready) begin
         // multiplication operation
         for (int unsigned i=0; i<SSR; ++i) begin
-            r_beta[0][i] <= r_alpha * r_rem__elem_ephemeral_idxes[LEN__PIPELINE__MODULO-1][i];
+            r_beta[0][i] <= r_alpha * signed'(BIT_WIDTH__BETA'(r_rem__elem_ephemeral_idxes[LEN__PIPELINE__MODULO-1][i]));
         end
 
         // pipeline update
@@ -157,7 +157,7 @@ always_ff @(posedge i_clk) begin: blk_update_gamma
     end else if (i_ds_ready) begin
         // division operation
         for (int unsigned i=0; i<SSR; ++i) begin
-            r_gamma[0][i] <= r_beta[LEN__PIPELINE__MULT__BETA-1][i] / {i_int_part__period, i_frac_part__period};
+            r_gamma[0][i] <= signed'(r_beta[LEN__PIPELINE__MULT__BETA-1][i]) / signed'({0, i_int_part__period, i_frac_part__period});
         end
 
         // pipeline update
