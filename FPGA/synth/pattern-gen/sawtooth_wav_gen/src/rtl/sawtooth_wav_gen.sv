@@ -39,9 +39,12 @@ localparam int unsigned MAX__INT_PART__ELEM_EPHEMERAL_IDX = `LARGER_ONE(SSR, (UP
 localparam int unsigned WRAP_THRESHOLD__INT_PART__ELEM_EPHEMERAL_IDX = MAX__INT_PART__ELEM_EPHEMERAL_IDX - SSR; //! threshold to wrap the element ephemeral index
 localparam int unsigned BIT_WIDTH__MAX__INT_PART__ELEM_EPHEMERAL_IDX = $clog2(MAX__INT_PART__ELEM_EPHEMERAL_IDX); //! bit width of the capacity of the integer part of element ephemeral index
 
-localparam int unsigned LEN__PIPELINE__MULT__BETA = 2; //! length of pipeline stages for multiplication operation of beta (described later in the DSP pipeline flow)
-localparam int unsigned LEN__PIPELINE__DIV__GAMMA = 4; //! length of pipeline stages for division operation of gamma (described later in the DSP pipeline flow)
-localparam int unsigned CYCLE_LATENCY = LEN__PIPELINE__MODULO + LEN__PIPELINE__MULT__BETA + LEN__PIPELINE__DIV__GAMMA; //! cycle latency of this module
+// parameters for DSP pipeline flow
+localparam int unsigned BIT_WIDTH__BETA = BIT_WIDTH__OUTPUT + BIT_WIDTH__MAX__INT_PART__ELEM_EPHEMERAL_IDX + BIT_WIDTH__FRAC_PART__PERIOD;  //! bit width of beta
+localparam int unsigned LEN__PIPELINE__MULT__BETA = 2; //! length of pipeline stages for multiplication operation of beta
+localparam int unsigned LEN__PIPELINE__DIV__GAMMA = 4; //! length of pipeline stages for division operation of gamma
+localparam int unsigned LEN__PIPELINE__DIV__THETA = 1; //! length of pipeline stages for theta
+localparam int unsigned CYCLE_LATENCY = LEN__PIPELINE__MODULO + LEN__PIPELINE__MULT__BETA + LEN__PIPELINE__DIV__GAMMA + LEN__PIPELINE__DIV__THETA; //! cycle latency of this module
 // --------------------
 
 // ---------- parameter validation ----------
@@ -67,10 +70,12 @@ var fxd_pnt_t [LEN__PIPELINE__MODULO-1:0][SSR-1:0] r_rem__elem_ephemeral_idxes; 
 //   r_beta[$left(r_beta):1] <= {r_beta[$left(r_beta)-1:0], r_beta[0]}
 //   r_gamma[0][i] <= r_beta[r_beta[$left(r_beta)][i]/{i_int_part__period, i_frac_part__period}
 //   r_gamma[$left(r_gamma):1] <= {r_gamma[$left(r_gamma)-1:0], r_gamma[0]}
+//   r_theta[i] <= i_start_val + r_gamma[LEN__PIPELINE__DIV__GAMMA-1][i]
 
-var logic signed [BIT_WIDTH__OUTPUT-1:0] r_alpha; //! difference between the start and end values
-var logic [LEN__PIPELINE__MULT__BETA-1:0][SSR-1:0][BIT_WIDTH__OUTPUT + BIT_WIDTH__MAX__INT_PART__ELEM_EPHEMERAL_IDX + BIT_WIDTH__FRAC_PART__PERIOD - 1:0] r_beta; //! intermediate values for multiplication operation
-var logic [LEN__PIPELINE__DIV__GAMMA-1:0][SSR-1:0][BIT_WIDTH__OUTPUT + BIT_WIDTH__MAX__INT_PART__ELEM_EPHEMERAL_IDX + BIT_WIDTH__FRAC_PART__PERIOD - 1:0] r_gamma; //! intermediate values for division operation
+var logic signed [BIT_WIDTH__OUTPUT:0] r_alpha; //! difference between the start and end values
+var logic [LEN__PIPELINE__MULT__BETA-1:0][SSR-1:0][BIT_WIDTH__BETA - 1:0] r_beta; //! intermediate values for multiplication operation
+var logic [LEN__PIPELINE__DIV__GAMMA-1:0][SSR-1:0][BIT_WIDTH__BETA - 1:0] r_gamma; //! intermediate values for division operation
+var logic [LEN__PIPELINE__DIV__THETA-1:0][SSR-1:0][BIT_WIDTH__BETA - 1:0] r_theta; //! final result
 
 var logic [CYCLE_LATENCY-1:0] r_vld_dly_line; //! delay line for the output valid signal
 // --------------------
@@ -83,7 +88,7 @@ assign o_chunk_valid = r_vld_dly_line[CYCLE_LATENCY-1];
 generate
     genvar i;
     for (i=0; i<SSR; ++i) begin: gen_assign_output_chunk_data
-        assign o_chunk_data[i] = r_gamma[LEN__PIPELINE__DIV__GAMMA-1][i][BIT_WIDTH__OUTPUT-1:0];
+        assign o_chunk_data[i] = r_theta[LEN__PIPELINE__DIV__THETA-1][i][BIT_WIDTH__OUTPUT-1:0];
     end
 endgenerate
 // --------------------
@@ -163,6 +168,23 @@ always_ff @(posedge i_clk) begin: blk_update_gamma
         // pipeline update
         for (int unsigned i=1; i<LEN__PIPELINE__DIV__GAMMA; ++i) begin
             r_gamma[i] <= r_gamma[i-1];
+        end
+    end
+end
+
+//! Updates theta.
+always_ff @(posedge i_clk) begin: blk_update_theta
+    if (i_sync_rst) begin
+        r_theta <= '0;
+    end else if (i_ds_ready) begin
+        // output value
+        for (int unsigned i=0; i<SSR; ++i) begin
+            r_theta[0][i] <= i_start_val + signed'(r_gamma[LEN__PIPELINE__DIV__GAMMA-1][i]);
+        end
+
+        // pipeline update
+        for (int unsigned i=1; i<LEN__PIPELINE__DIV__THETA; ++i) begin
+            r_theta[i] <= r_theta[i-1];
         end
     end
 end
