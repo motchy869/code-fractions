@@ -39,7 +39,7 @@ localparam int unsigned MAX__INT_PART__ELEM_EPHEMERAL_IDX = `LARGER_ONE(SSR, (UP
 localparam int unsigned WRAP_THRESHOLD__INT_PART__ELEM_EPHEMERAL_IDX = MAX__INT_PART__ELEM_EPHEMERAL_IDX - SSR; //! threshold to wrap the element ephemeral index
 localparam int unsigned BIT_WIDTH__MAX__INT_PART__ELEM_EPHEMERAL_IDX = $clog2(MAX__INT_PART__ELEM_EPHEMERAL_IDX); //! bit width of the capacity of the integer part of element ephemeral index
 
-localparam int unsigned LEN__PIPELINE__MULT__BETA = 1; //! length of pipeline stages for multiplication operation of beta (described later in the DSP pipeline flow)
+localparam int unsigned LEN__PIPELINE__MULT__BETA = 2; //! length of pipeline stages for multiplication operation of beta (described later in the DSP pipeline flow)
 localparam int unsigned LEN__PIPELINE__DIV__GAMMA = 4; //! length of pipeline stages for division operation of gamma (described later in the DSP pipeline flow)
 localparam int unsigned CYCLE_LATENCY = LEN__PIPELINE__MODULO + LEN__PIPELINE__MULT__BETA + LEN__PIPELINE__DIV__GAMMA; //! cycle latency of this module
 // --------------------
