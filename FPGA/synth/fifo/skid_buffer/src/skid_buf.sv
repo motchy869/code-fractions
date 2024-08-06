@@ -68,7 +68,7 @@ assign g_pop_en = o_ds_valid && i_ds_ready;
 // --------------------
 
 // ---------- Drive output signals. ----------
-assign o_us_ready = i_sync_rst ? 1'b0 : !g_buf_full;
+assign o_us_ready = !i_sync_rst && !g_buf_full;
 assign o_ds_valid = !g_buf_empty;
 assign o_ds_data = r_fifo_buf[r_rd_ptr.idx];
 // --------------------
