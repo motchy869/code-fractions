@@ -26,7 +26,7 @@ typedef virtual interface skid_buf_if#(
 // --------------------
 
 // ---------- signal and storage ----------
-interface skid_buf_if#(
+interface skid_buf_if #(
     parameter type T = logic //! data type
 )(
     input wire i_clk //! clock signal
@@ -49,12 +49,12 @@ dut_vif_t dut_vif;
 
 // ---------- instances ----------
 //! interface to the DUT
-skid_buf_if#(
+skid_buf_if #(
     .T(T)
 ) dut_if (.i_clk(r_clk));
 
 //! DUT instance
-skid_buf#(
+skid_buf #(
     .T(T)
 ) dut (
     .i_clk(r_clk),
