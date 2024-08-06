@@ -61,7 +61,6 @@ wire [1:0][BIT_WIDTH_DATA-1:0] w_nxt_fifo_buf_data; //! next FIFO buffer data
 // ---------- instances ----------
 //! Determines the next read pointer.
 g_nxt_rd_ptr g_nxt_rd_ptr (
-    .i_clk(i_clk),
     .i_sync_rst(i_sync_rst),
 
     .i_pop_en(g_pop_en),
@@ -70,7 +69,6 @@ g_nxt_rd_ptr g_nxt_rd_ptr (
 
 //! Determines the next write pointer.
 g_nxt_wr_ptr g_nxt_wr_ptr (
-    .i_clk(i_clk),
     .i_sync_rst(i_sync_rst),
 
     .i_push_en(g_push_en),
@@ -81,7 +79,6 @@ g_nxt_wr_ptr g_nxt_wr_ptr (
 g_nxt_fifo_buf #(
     .BIT_WIDTH_DATA(BIT_WIDTH_DATA)
 ) g_nxt_fifo_buf (
-    .i_clk(i_clk),
     .i_sync_rst(i_sync_rst),
 
     .i_wr_idx(r_wr_ptr.idx),

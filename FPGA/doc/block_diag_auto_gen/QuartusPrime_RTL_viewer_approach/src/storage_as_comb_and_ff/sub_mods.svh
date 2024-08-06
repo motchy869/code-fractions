@@ -11,7 +11,6 @@
 `default_nettype none
 
 module g_nxt_rd_ptr (
-    input wire logic i_clk, //! clock signal
     input wire logic i_sync_rst, //! synchronous reset signal
 
     input wire logic i_pop_en, //! pop enable signal
@@ -20,7 +19,6 @@ module g_nxt_rd_ptr (
 endmodule
 
 module g_nxt_wr_ptr (
-    input wire logic i_clk, //! clock signal
     input wire logic i_sync_rst, //! synchronous reset signal
 
     input wire logic i_push_en, //! push enable signal
@@ -31,7 +29,6 @@ endmodule
 module g_nxt_fifo_buf #(
     parameter int unsigned BIT_WIDTH_DATA = 8 //! bit width of data
 )(
-    input wire logic i_clk, //! clock signal
     input wire logic i_sync_rst, //! synchronous reset signal
 
     input wire logic i_wr_idx, //! write index
