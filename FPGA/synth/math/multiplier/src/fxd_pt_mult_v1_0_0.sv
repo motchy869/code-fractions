@@ -2,6 +2,8 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
+`include "round_hf2evn_v1_0_0.svh"
+
 `default_nettype none
 
 //! A fully-parametrized fixed-point number multiplier with optional rounding half to even.
