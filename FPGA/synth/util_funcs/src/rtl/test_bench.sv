@@ -105,7 +105,7 @@ task automatic test_round_hf_even();
     $display("%s", "test_round_hf_even");
 
     for (int unsigned i=0; i<NUM_VALS_TO_TEST; ++i) begin
-        automatic bit signed [N-1:0] result= mty_sv_util_funcs_pkg::Math#(.T(bit signed [N-1:0]))::Rounding#(.N_F(N_F))::round_hf_even(vals[i]);
+        automatic bit signed [N-1:0] result = mty_sv_util_funcs_pkg::Math#(.T(bit signed [N-1:0]))::Rounding#(.N_F(N_F))::round_hf_even(vals[i]);
         $display("i=%0d, input=8'%8b, result=8'%8b, expected=8'%8b", i, vals[i], result, expected_results[i]);
         if (result != expected_results[i]) begin
             $display("Error: result doesn't match the expected result.");
