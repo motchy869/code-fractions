@@ -17,9 +17,12 @@
 
 //! It depends on the synthesis tool whether DSP blocks are used or not.
 //! ## changelog
-//! ### [0.1.0] - 2024-08-01
+//! ### [1.0.1] - 2024-08-01
+//! #### Fixed:
+//! - missing bit width expansion at the RHS of non-blocking assignments to ```alpha_{0,1,2}```.
+//! ### [1.0.0] - 2024-08-01
 //! - initial release
-module cplx_mult_v1_0_0 #(
+module cplx_mult_v1_0_1 #(
     parameter int unsigned BIT_WIDTH_IN_A = 16, //! bit width of the input a
     parameter int unsigned BIT_WIDTH_IN_B = 16, //! bit width of the input b
     parameter int unsigned BIT_WIDTH_OUT = 16, //! bit width of the output
@@ -44,7 +47,7 @@ module cplx_mult_v1_0_0 #(
 );
 // ---------- parameters ----------
 localparam int unsigned CYCLE_LATENCY = 2 + MULT_PIPELINE_DEPTH + ENABLE_ROUNDING_HALF_TO_EVEN; //! cycle latency
-// Note that |Re(c)| < |Re(a)Re(b)| + |Im(a)*Im(b)| <= 2^(BIT_WIDTH_IN_A + BIT_WIDTH_IN_B - 1).
+// Note that |Re(c)| <= |Re(a)Re(b)| + |Im(a)*Im(b)| <= 2^(BIT_WIDTH_IN_A + BIT_WIDTH_IN_B - 1).
 localparam int unsigned BIT_WIDTH_INTERM_PROD = BIT_WIDTH_IN_A + BIT_WIDTH_IN_B; //! bit width of the intermediate product
 // --------------------
 
@@ -162,9 +165,9 @@ always_ff @(posedge i_clk) begin: blk_update_alphas
         r_alpha_1 <= '0;
         r_alpha_2 <= '0;
     end else if (g_adv_pip_ln) begin
-        r_alpha_0 <= signed'(i_b[0]) + signed'(i_b[1]);
-        r_alpha_1 <= signed'(i_a[0]) + signed'(i_a[1]);
-        r_alpha_2 <= signed'(i_a[1]) - signed'(i_a[0]);
+        r_alpha_0 <= (BIT_WIDTH_IN_B+1)'(signed'(i_b[0])) + (BIT_WIDTH_IN_B+1)'(signed'(i_b[1]));
+        r_alpha_1 <= (BIT_WIDTH_IN_A+1)'(signed'(i_a[0])) + (BIT_WIDTH_IN_A+1)'(signed'(i_a[1]));
+        r_alpha_2 <= (BIT_WIDTH_IN_A+1)'(signed'(i_a[1])) - (BIT_WIDTH_IN_A+1)'(signed'(i_a[0]));
     end
 end
 
