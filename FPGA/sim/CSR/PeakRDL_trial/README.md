@@ -41,7 +41,7 @@ Simulation can be run with the following commands:
 
 ```bash
 make -f build-tools/sim/without_uvm/Makefile elab # elaboration
-make -f build-tools/sim/without_uvm/Makefile dump  # Run simulation and dump waveforms
+make -f build-tools/sim/without_uvm/Makefile dump # Run simulation and dump waveforms
 make -f build-tools/sim/without_uvm/Makefile wave # Launch Vivado to view waveforms
 ```
 
