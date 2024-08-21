@@ -15,7 +15,7 @@
 //! |:--|:--|:--|
 //! | 0.1.0 | 2024-04-13 | initial version |
 //! | 0.2.0 | 2024-06-16 | Removed redundant logics in write control. |
-module my_axi4_lite_slv_template#(
+module my_axi4_lite_slv_template #(
     parameter int AXI4_LITE_ADDR_BIT_WIDTH = 32, //! bit width of AXI4-Lite address bus
     parameter int AXI4_LITE_DATA_BIT_WIDTH = 32 //! bit width of AXI4-Lite data bus
 )(
