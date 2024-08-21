@@ -10,7 +10,7 @@
 `endif
 
 class my_rt_sig_seq_item extends uvm_sequence_item;
-    typedef enum bit [1:0] {
+    typedef enum logic [1:0] {
         DRV_CMD_NOP,
         DRV_CMD_RESET,
         DRV_CMD_INPUT_VEC
