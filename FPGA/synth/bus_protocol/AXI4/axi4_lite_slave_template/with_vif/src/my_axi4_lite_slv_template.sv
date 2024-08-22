@@ -174,26 +174,26 @@ module my_axi4_lite_slv_template #(
             r_slv_reg3 <= '0;
         end else begin
             if (g_slv_reg_wr_en) begin
-                automatic logic [AXI4_LITE_DATA_BIT_WIDTH-1:0] g_data_with_wstrb;
+                automatic logic [AXI4_LITE_DATA_BIT_WIDTH-1:0] bit_mask;
 
                 for (int byte_index = 0; byte_index <= AXI4_LITE_DATA_BIT_WIDTH/8-1; byte_index += 1) begin
                     // verilog_lint: waive-start always-ff-non-blocking
-                    g_data_with_wstrb[byte_index*8 +: 8] = if_s_axi4_lite.wstrb[byte_index] ? if_s_axi4_lite.wdata[byte_index*8 +: 8] : g_data_with_wstrb[byte_index*8 +: 8];
+                    bit_mask[byte_index*8 +: 8] = if_s_axi4_lite.wstrb[byte_index] ? '1 : '0;
                     // verilog_lint: waive-stop always-ff-non-blocking
                 end
 
                 case (g_wr_word_addr)
                     BIT_WIDTH_WORD_ADDR'('h0): begin
-                        r_slv_reg0 <= g_data_with_wstrb;
+                        r_slv_reg0 <= (r_slv_reg0 & ~bit_mask) | (if_s_axi4_lite.wdata & bit_mask);
                     end
                     BIT_WIDTH_WORD_ADDR'('h1): begin
-                        r_slv_reg1 <= g_data_with_wstrb;
+                        r_slv_reg1 <= (r_slv_reg1 & ~bit_mask) | (if_s_axi4_lite.wdata & bit_mask);
                     end
                     BIT_WIDTH_WORD_ADDR'('h2): begin
-                        r_slv_reg2 <= g_data_with_wstrb;
+                        r_slv_reg2 <= (r_slv_reg2 & ~bit_mask) | (if_s_axi4_lite.wdata & bit_mask);
                     end
                     BIT_WIDTH_WORD_ADDR'('h3): begin
-                        r_slv_reg3 <= g_data_with_wstrb;
+                        r_slv_reg3 <= (r_slv_reg3 & ~bit_mask) | (if_s_axi4_lite.wdata & bit_mask);
                     end
                     default: begin
                         // nothing to do
