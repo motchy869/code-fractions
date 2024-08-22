@@ -54,7 +54,7 @@ module my_axi4_lite_slv_template_v0_1_0#(
     var logic g_wr_addr_is_in_range; //! Indicates that the write address is in valid range.
     wire g_slv_reg_rd_en; //! register read enable
     wire g_slv_reg_wr_en; //! register write enable
-    var logic [AXI4_LITE_DATA_BIT_WIDTH-1:0] r_reg_data_out; //! data in selected register
+    var logic [AXI4_LITE_DATA_BIT_WIDTH-1:0] g_reg_data_out; //! data in selected register
     wire g_curr_bvalid_accepted; //! Indicates the current BVALID signal is accepted by the master.
     var logic r_listen_to_wr_req; //! Indicates that there is no in-progress write transaction, and the slave listen to the next write request.
 
@@ -283,13 +283,13 @@ module my_axi4_lite_slv_template_v0_1_0#(
         // address decoding for reading registers
         g_rd_addr_is_in_range = 1'b1;
         case (g_rd_word_addr)
-            BIT_WIDTH_WORD_ADDR'('h0): r_reg_data_out = r_slv_reg0;
-            BIT_WIDTH_WORD_ADDR'('h1): r_reg_data_out = r_slv_reg1;
-            BIT_WIDTH_WORD_ADDR'('h2): r_reg_data_out = r_slv_reg2;
-            BIT_WIDTH_WORD_ADDR'('h3): r_reg_data_out = r_slv_reg3;
+            BIT_WIDTH_WORD_ADDR'('h0): g_reg_data_out = r_slv_reg0;
+            BIT_WIDTH_WORD_ADDR'('h1): g_reg_data_out = r_slv_reg1;
+            BIT_WIDTH_WORD_ADDR'('h2): g_reg_data_out = r_slv_reg2;
+            BIT_WIDTH_WORD_ADDR'('h3): g_reg_data_out = r_slv_reg3;
             default: begin
                 g_rd_addr_is_in_range = 1'b0;
-                r_reg_data_out = '0;
+                g_reg_data_out = '0;
             end
         endcase
     end
@@ -301,7 +301,7 @@ module my_axi4_lite_slv_template_v0_1_0#(
         end else begin
             // When there is a valid read address (ARVALID) with acceptance of read address by the slave (ARREADY), output the read dada.
             if (g_slv_reg_rd_en) begin
-                r_axi4_lite_sigs.rdata <= r_reg_data_out; // register read data
+                r_axi4_lite_sigs.rdata <= g_reg_data_out; // register read data
             end
         end
     end
