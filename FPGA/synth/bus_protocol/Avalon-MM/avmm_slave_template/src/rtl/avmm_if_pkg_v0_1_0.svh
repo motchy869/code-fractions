@@ -1,0 +1,17 @@
+`ifdef AVMM_IF_PKG_SVH_INCLUDED
+`define AVMM_IF_PKG_SVH_INCLUDED
+
+// Verible directive
+// verilog_lint: waive-start parameter-name-style
+// verilog_lint: waive-start line-length
+
+package avmm_if_pkg_v0_1_0;
+    typedef enum logic [1:0] {
+        AVMM_RESP_OKAY = 2'b00,
+        AVMM_RESP_RESERVED = 2'b01,
+        AVMM_RESP_SLVERR = 2'b10,
+        AVMM_RESP_DECODEERROR = 2'b11
+    } avmm_resp_t;
+endpackage
+
+`endif // AVMM_IF_PKG_SVH_INCLUDED
