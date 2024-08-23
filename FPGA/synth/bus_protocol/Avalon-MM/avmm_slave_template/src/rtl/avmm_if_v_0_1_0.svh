@@ -13,8 +13,8 @@
 //! This is a slightly-modified version of the original file published on the following web page.
 //! https://peakrdl-regblock.readthedocs.io/en/latest/cpuif/avalon.html
 interface avmm_if_v_0_1_0 #(
-    parameter int unsigned DATA_WIDTH = 32, //! data bit width
-    parameter int unsigned ADDR_WIDTH = 32 //! Address bit width. Note that in default Avalon uses **byte** addressing in hosts and **word** addressing in agents.
+    parameter int unsigned AVMM_ADDR_BIT_WIDTH = 32, //! Address bit width. Note that in default Avalon uses **byte** addressing in hosts and **word** addressing in agents.
+    parameter int unsigned AVMM_DATA_BIT_WIDTH = 32 //! data bit width
 )(
     input wire i_clk //! clock
 );
@@ -22,19 +22,19 @@ interface avmm_if_v_0_1_0 #(
     logic read;
     logic write;
     logic waitrequest;
-    logic [ADDR_WIDTH-1:0] address;
-    logic [DATA_WIDTH-1:0] writedata;
-    logic [DATA_WIDTH/8-1:0] byteenable;
+    logic [AVMM_ADDR_BIT_WIDTH-1:0] address;
+    logic [AVMM_DATA_BIT_WIDTH-1:0] writedata;
+    logic [AVMM_DATA_BIT_WIDTH/8-1:0] byteenable;
 
     // response
     logic readdatavalid;
     logic writeresponsevalid;
-    logic [DATA_WIDTH-1:0] readdata;
+    logic [AVMM_DATA_BIT_WIDTH-1:0] readdata;
     avmm_if_pkg_v0_1_0::avmm_resp_t response;
 
     // parameter validation
     generate
-        if (!($bits(byteenable) inside {2, 4, 8, 16, 32, 64, 128})) begin: gen_byteenable_bit_width_validation
+        if ((AVMM_DATA_BIT_WIDTH > 8) && !($bits(byteenable) inside {2, 4, 8, 16, 32, 64, 128})) begin: gen_byteenable_bit_width_validation
             nonexistent_module_to_throw_a_custom_error_message_for invalid_byteenable_bit_width();
         end
 
