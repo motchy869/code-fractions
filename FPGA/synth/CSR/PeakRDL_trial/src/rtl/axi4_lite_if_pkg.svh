@@ -35,7 +35,7 @@ package axi4_lite_if_pkg;
             // (2) Clocking block is buggy in Xcelium, so we decided to simply use `@(posedge vif.i_clk)`
             `define WAIT_CLK_POSEDGE @(posedge vif.i_clk)
 
-            //! Reset the master output signals.
+            //! Resets the master output signals.
             static task automatic reset_mst_out_sigs(
                 vif_t vif, //! virtual interface to DUT
                 input bit wait_for_next_clk_pos_edge = 1'b0 //! 1'b1/1'b0: wait/do not wait for the next positive edge of the clock before driving signals
@@ -56,7 +56,7 @@ package axi4_lite_if_pkg;
                 vif.rready <= 1'b0;
             endtask
 
-            //! Reset the slave output signals.
+            //! Resets the slave output signals.
             static task automatic reset_slv_out_sigs(
                 vif_t vif, //! virtual interface to DUT
                 input bit wait_for_next_clk_pos_edge = 1'b0 //! 1'b1/1'b0: wait/do not wait for the next positive edge of the clock before driving signals
@@ -74,7 +74,8 @@ package axi4_lite_if_pkg;
                 vif.rvalid <= 1'b0;
             endtask
 
-            //! Perform AXI4-Lite read transaction.
+            //! Performs AXI4-Lite read transaction.
+            //! When there is a preceding read transaction in progress, a fatal error is issued.
             //! This task is based on the following blog post.
             //! [Testing Verilog AXI4-Lite Peripherals](https://klickverbot.at/blog/2016/01/testing-verilog-axi4-lite-peripherals/)
             static task automatic axi4_lite_read(
@@ -84,18 +85,12 @@ package axi4_lite_if_pkg;
                 output axi4_resp_t resp //! storage for response
             );
                 if (vif.arvalid) begin
-                    const string msg = "There is a read transaction in progress. Waiting for it to complete.";
-                    `ifdef uvm_info
-                        `uvm_info("INFO", msg, UVM_MEDIUM);
+                    const string msg = "There is a preceding read transaction in progress!";
+                    `ifdef uvm_fatal
+                        `uvm_fatal("INFO", msg, UVM_MEDIUM);
                     `else
-                        $info(msg);
+                        $fatal(2, msg);
                     `endif
-                    forever begin
-                        `WAIT_CLK_POSEDGE;
-                        if (!vif.arvalid) begin
-                            break;
-                        end
-                    end
                 end
 
                 `WAIT_CLK_POSEDGE begin
@@ -125,7 +120,8 @@ package axi4_lite_if_pkg;
                 end
             endtask
 
-            //! Perform AXI4-Lite write transaction.
+            //! Performs AXI4-Lite write transaction.
+            //! When there is a preceding write transaction in progress, a fatal error is issued.
             //! This task is based on the following blog post.
             //! [Testing Verilog AXI4-Lite Peripherals](https://klickverbot.at/blog/2016/01/testing-verilog-axi4-lite-peripherals/)
             static task automatic axi4_lite_write(
@@ -136,18 +132,12 @@ package axi4_lite_if_pkg;
                 output axi4_resp_t resp //! storage for response
             );
                 if (vif.awvalid || vif.wvalid) begin
-                    const string msg = "There is a write transaction in progress. Waiting for it to complete.";
-                    `ifdef uvm_info
-                        `uvm_info("INFO", msg, UVM_MEDIUM);
+                    const string msg = "There is a preceding write transaction in progress!";
+                    `ifdef uvm_fatal
+                        `uvm_fatal("INFO", msg, UVM_MEDIUM);
                     `else
-                        $info(msg);
+                        $fatal(2, msg);
                     `endif
-                    forever begin
-                        `WAIT_CLK_POSEDGE;
-                        if (!vif.awvalid && !vif.wvalid) begin
-                            break;
-                        end
-                    end
                 end
 
                 `WAIT_CLK_POSEDGE begin

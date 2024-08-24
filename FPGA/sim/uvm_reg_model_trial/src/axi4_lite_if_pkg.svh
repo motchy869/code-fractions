@@ -35,7 +35,7 @@ package axi4_lite_if_pkg;
             // (2) Clocking block is buggy in Xcelium, so we decided to simply use `@(posedge vif.i_clk)`
             `define WAIT_CLK_POSEDGE @(posedge vif.i_clk)
 
-            //! Reset the master output signals.
+            //! Resets the master output signals.
             static task automatic reset_mst_out_sigs(
                 vif_t vif, //! virtual interface to DUT
                 input bit wait_for_next_clk_pos_edge = 1'b0 //! 1'b1/1'b0: wait/do not wait for the next positive edge of the clock before driving signals
@@ -56,7 +56,7 @@ package axi4_lite_if_pkg;
                 vif.rready <= 1'b0;
             endtask
 
-            //! Reset the slave output signals.
+            //! Resets the slave output signals.
             static task automatic reset_slv_out_sigs(
                 vif_t vif, //! virtual interface to DUT
                 input bit wait_for_next_clk_pos_edge = 1'b0 //! 1'b1/1'b0: wait/do not wait for the next positive edge of the clock before driving signals
@@ -74,7 +74,8 @@ package axi4_lite_if_pkg;
                 vif.rvalid <= 1'b0;
             endtask
 
-            //! Perform AXI4-Lite read transaction.
+            //! Performs AXI4-Lite read transaction.
+            //! When there is a preceding read transaction in progress, a fatal error is issued.
             //! This task is based on the following blog post.
             //! [Testing Verilog AXI4-Lite Peripherals](https://klickverbot.at/blog/2016/01/testing-verilog-axi4-lite-peripherals/)
             static task automatic axi4_lite_read(
@@ -84,13 +85,12 @@ package axi4_lite_if_pkg;
                 output axi4_resp_t resp //! storage for response
             );
                 if (vif.arvalid) begin
-                    const string msg = "There is a read transaction in progress. Waiting for it to complete.";
-                    `ifdef uvm_info
-                        `uvm_info("INFO", msg, UVM_MEDIUM);
+                    const string msg = "There is a preceding read transaction in progress!";
+                    `ifdef uvm_fatal
+                        `uvm_fatal("INFO", msg, UVM_MEDIUM);
                     `else
-                        $info(msg);
+                        $fatal(2, msg);
                     `endif
-                    wait(!vif.arvalid);
                 end
 
                 `WAIT_CLK_POSEDGE begin
@@ -99,32 +99,29 @@ package axi4_lite_if_pkg;
                     vif.rready <= 1'b1;
                 end
 
-                `WAIT_CLK_POSEDGE begin
-                    wait(vif.arready);
-                end
-
-                if (vif.rvalid) begin
-                    data = vif.rdata;
-                    resp = axi4_resp_t'(vif.rresp);
-                    `WAIT_CLK_POSEDGE begin
-                        vif.arvalid <= 1'b0;
-                        vif.rready <= 1'b0;
-                    end
-                end else begin
-                    `WAIT_CLK_POSEDGE begin
+                // Note that RVALID may come AFTER the ARREADY's falling edge.
+                forever begin
+                    `WAIT_CLK_POSEDGE;
+                    if (vif.arready) begin
                         vif.arvalid <= 1'b0; // Should be de-asserted here, otherwise possible protocol violation (AXI4_ERRM_ARVALID_STABLE: Once ARVALID is asserted, it must remain asserted until ARREADY is high. Spec: section A3.2.1.)
-                    end
-
-                    wait(vif.rvalid); // Note that RVALID may come AFTER the ARREADY's falling edge.
-                    data = vif.rdata;
-                    resp = axi4_resp_t'(vif.rresp);
-                    `WAIT_CLK_POSEDGE begin
+                        if (!vif.rvalid) begin
+                            forever begin
+                                `WAIT_CLK_POSEDGE;
+                                if (vif.rvalid) begin
+                                    break;
+                                end
+                            end
+                        end
+                        data = vif.rdata;
+                        resp = axi4_resp_t'(vif.rresp);
                         vif.rready <= 1'b0;
+                        break;
                     end
                 end
             endtask
 
-            //! Perform AXI4-Lite write transaction.
+            //! Performs AXI4-Lite write transaction.
+            //! When there is a preceding write transaction in progress, a fatal error is issued.
             //! This task is based on the following blog post.
             //! [Testing Verilog AXI4-Lite Peripherals](https://klickverbot.at/blog/2016/01/testing-verilog-axi4-lite-peripherals/)
             static task automatic axi4_lite_write(
@@ -135,13 +132,12 @@ package axi4_lite_if_pkg;
                 output axi4_resp_t resp //! storage for response
             );
                 if (vif.awvalid || vif.wvalid) begin
-                    const string msg = "There is a write transaction in progress. Waiting for it to complete.";
-                    `ifdef uvm_info
-                        `uvm_info("INFO", msg, UVM_MEDIUM);
+                    const string msg = "There is a preceding write transaction in progress!";
+                    `ifdef uvm_fatal
+                        `uvm_fatal("INFO", msg, UVM_MEDIUM);
                     `else
-                        $info(msg);
+                        $fatal(2, msg);
                     `endif
-                    wait(!vif.awvalid && !vif.wvalid);
                 end
 
                 `WAIT_CLK_POSEDGE begin
@@ -153,19 +149,23 @@ package axi4_lite_if_pkg;
                     vif.bready <= 1'b1;
                 end
 
-                `WAIT_CLK_POSEDGE begin
-                    wait(vif.awready && vif.wready);
-                end
-
-                `WAIT_CLK_POSEDGE begin
-                    vif.awvalid <= 1'b0;
-                    vif.wvalid <= 1'b0;
+                forever begin
+                    `WAIT_CLK_POSEDGE;
+                    if (vif.awready && vif.wready) begin
+                        vif.awvalid <= 1'b0;
+                        vif.wvalid <= 1'b0;
+                        break;
+                    end
                 end
 
                 // Note that BRESP can comes after WREADY.
                 if (!(vif.bready && vif.bvalid)) begin
-                    wait(vif.bready && vif.bvalid);
-                    `WAIT_CLK_POSEDGE;
+                    forever begin
+                        `WAIT_CLK_POSEDGE;
+                        if (vif.bready && vif.bvalid) begin
+                            break;
+                        end
+                    end
                 end
 
                 resp = axi4_resp_t'(vif.bresp);
