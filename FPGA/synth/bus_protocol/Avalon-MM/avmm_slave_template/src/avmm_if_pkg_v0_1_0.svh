@@ -1,11 +1,11 @@
-`ifdef AVMM_IF_PKG_SVH_INCLUDED
-`define AVMM_IF_PKG_SVH_INCLUDED
+`ifndef AVMM_IF_PKG__V0_1_0_SVH_INCLUDED
+`define AVMM_IF_PKG__V0_1_0_SVH_INCLUDED
 
 // Verible directive
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`include "avmm_if_v_0_1_0.svh"
+`include "avmm_if_v0_1_0.svh"
 
 package avmm_if_pkg_v0_1_0;
     //! Avalon MM response type
@@ -22,7 +22,7 @@ package avmm_if_pkg_v0_1_0;
             parameter int AVMM_ADDR_BIT_WIDTH = 32,
             parameter int AVMM_DATA_BIT_WIDTH = 32
         );
-            typedef virtual interface avmm_if_v_0_1_0 #(
+            typedef virtual interface avmm_if_v0_1_0 #(
                 .AVMM_ADDR_BIT_WIDTH(AVMM_ADDR_BIT_WIDTH),
                 .AVMM_DATA_BIT_WIDTH(AVMM_DATA_BIT_WIDTH)
             ) vif_t;
@@ -40,37 +40,6 @@ package avmm_if_pkg_v0_1_0;
                 vif.address <= '0;
                 vif.writedata <= '0;
                 vif.byteenable <= '0;
-            endtask
-
-            // Checks and waits preceding transaction.
-            static task automatic chk_and_wait_prec_txn(
-                vif_t vif, // virtual interface to DUT
-                input int unsigned timeout_cyc = 32, //! timeout in clock cycles
-                output bit is_timeout, //! 1 if timeout occurs, otherwise 0
-                output int unsigned time_cnt //! time counter
-            );
-                string msg;
-                bit prec_txn_is_read;
-
-                if (vif.read || vif.readdatavalid || vif.write || vif.writeresponsevalid) begin
-                    if (vif.read || vif.readdatavalid) begin
-                        msg = "There is a preceding read transaction in progress. Waiting for it to complete.";
-                        prec_txn_is_read = 1'b1;
-                    end else if (vif.write || vif.writeresponsevalid) begin
-                        msg = "There is a preceding write transaction in progress. Waiting for it to complete.";
-                        prec_txn_is_read = 1'b0;
-                    end
-                    `ifdef uvm_info
-                        `uvm_info("INFO", msg, UVM_MEDIUM);
-                    `else
-                        $info(msg);
-                    `endif
-                    if (prec_txn_is_read) begin
-                        wait_read_txn(vif, timeout_cyc, is_timeout, time_cnt);
-                    end else begin
-                        wait_write_txn(vif, timeout_cyc, is_timeout, time_cnt);
-                    end
-                end
             endtask
 
             // Performs read transaction.
@@ -158,4 +127,4 @@ package avmm_if_pkg_v0_1_0;
     `endif
 endpackage
 
-`endif // AVMM_IF_PKG_SVH_INCLUDED
+`endif // AVMM_IF_PKG__V0_1_0_SVH_INCLUDED

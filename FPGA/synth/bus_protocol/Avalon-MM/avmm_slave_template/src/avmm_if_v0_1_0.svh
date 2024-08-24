@@ -1,18 +1,16 @@
-`ifdef AVMM_IF_SVH_INCLUDED
-`define AVMM_IF_SVH_INCLUDED
+`ifndef AVMM_IF_V0_1_0_SVH_INCLUDED
+`define AVMM_IF_V0_1_0_SVH_INCLUDED
 
 // Verible directive
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 // verilog_lint: waive-start interface-name-style
 
-`include "avmm_if_pkg_v0_1_0.svh"
-
 //! Avalon Memory-Mapped Interface.
 //! Statements in modport's descriptions are quoted from Table 9. "Avalon Memory Mapped Signal Roles" in "Avalon Interface Specifications".
 //! This is a slightly-modified version of the original file published on the following web page.
 //! https://peakrdl-regblock.readthedocs.io/en/latest/cpuif/avalon.html
-interface avmm_if_v_0_1_0 #(
+interface avmm_if_v0_1_0 #(
     parameter int unsigned AVMM_ADDR_BIT_WIDTH = 32, //! Address bit width. Note that in default Avalon uses **byte** addressing in hosts and **word** addressing in agents.
     parameter int unsigned AVMM_DATA_BIT_WIDTH = 32 //! data bit width
 )(
@@ -30,7 +28,7 @@ interface avmm_if_v_0_1_0 #(
     logic readdatavalid;
     logic writeresponsevalid;
     logic [AVMM_DATA_BIT_WIDTH-1:0] readdata;
-    avmm_if_pkg_v0_1_0::avmm_resp_t response;
+    logic [1:0] response;
 
     // parameter validation
     generate
@@ -76,4 +74,4 @@ interface avmm_if_v_0_1_0 #(
     );
 endinterface
 
-`endif // AVMM_IF_SVH_INCLUDED
+`endif // AVMM_IF_V0_1_0_SVH_INCLUDED
