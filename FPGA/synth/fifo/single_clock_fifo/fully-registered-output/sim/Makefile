@@ -16,7 +16,7 @@
 #  1. make -f <path/to/this/Makefile> elab // Repeat this until all compilation error is resolved.
 #  2. make -f <path/to/this/Makefile> dump // Run simulation and create .wdb file which records all signals.
 #  3. To view waveform
-#    3.1. If waveform viewer is not opened, `make -f <path/to/this/Makefile> wave` to open it.
+#    3.1. If waveform viewer is not opened, `make -f <path/to/this/Makefile> view` to open it.
 #    3.2. If waveform viewer is already opened, Flow -> Open Static Simulation, then open all.wdb.
 #  4. To debug
 #    4.1. modify source files
