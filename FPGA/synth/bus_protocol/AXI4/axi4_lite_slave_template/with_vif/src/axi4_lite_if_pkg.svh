@@ -41,32 +41,19 @@ package axi4_lite_if_pkg;
                 input bit wait_for_next_clk_pos_edge = 1'b0 //! 1'b1/1'b0: wait/do not wait for the next positive edge of the clock before driving signals
             );
                 if (wait_for_next_clk_pos_edge) begin
-                    `WAIT_CLK_POSEDGE begin
-                        vif.awaddr <= '0;
-                        vif.awprot <= '0;
-                        vif.awvalid <= 1'b0;
-                        vif.wdata <= '0;
-                        vif.wstrb <= '0;
-                        vif.wvalid <= 1'b0;
-                        vif.bready <= 1'b0;
-                        vif.araddr <= '0;
-                        vif.arprot <= '0;
-                        vif.arvalid <= 1'b0;
-                        vif.rready <= 1'b0;
-                    end
-                end else begin
-                    vif.awaddr <= '0;
-                    vif.awprot <= '0;
-                    vif.awvalid <= 1'b0;
-                    vif.wdata <= '0;
-                    vif.wstrb <= '0;
-                    vif.wvalid <= 1'b0;
-                    vif.bready <= 1'b0;
-                    vif.araddr <= '0;
-                    vif.arprot <= '0;
-                    vif.arvalid <= 1'b0;
-                    vif.rready <= 1'b0;
+                    `WAIT_CLK_POSEDGE;
                 end
+                vif.awaddr <= '0;
+                vif.awprot <= '0;
+                vif.awvalid <= 1'b0;
+                vif.wdata <= '0;
+                vif.wstrb <= '0;
+                vif.wvalid <= 1'b0;
+                vif.bready <= 1'b0;
+                vif.araddr <= '0;
+                vif.arprot <= '0;
+                vif.arvalid <= 1'b0;
+                vif.rready <= 1'b0;
             endtask
 
             //! Reset the slave output signals.
@@ -75,26 +62,16 @@ package axi4_lite_if_pkg;
                 input bit wait_for_next_clk_pos_edge = 1'b0 //! 1'b1/1'b0: wait/do not wait for the next positive edge of the clock before driving signals
             );
                 if (wait_for_next_clk_pos_edge) begin
-                    `WAIT_CLK_POSEDGE begin
-                        vif.awready <= 1'b0;
-                        vif.wready <= 1'b0;
-                        vif.bresp <= '0;
-                        vif.bvalid <= 1'b0;
-                        vif.arready <= 1'b0;
-                        vif.rdata <= '0;
-                        vif.rresp <= '0;
-                        vif.rvalid <= 1'b0;
-                    end
-                end else begin
-                    vif.awready <= 1'b0;
-                    vif.wready <= 1'b0;
-                    vif.bresp <= '0;
-                    vif.bvalid <= 1'b0;
-                    vif.arready <= 1'b0;
-                    vif.rdata <= '0;
-                    vif.rresp <= '0;
-                    vif.rvalid <= 1'b0;
+                    `WAIT_CLK_POSEDGE;
                 end
+                vif.awready <= 1'b0;
+                vif.wready <= 1'b0;
+                vif.bresp <= '0;
+                vif.bvalid <= 1'b0;
+                vif.arready <= 1'b0;
+                vif.rdata <= '0;
+                vif.rresp <= '0;
+                vif.rvalid <= 1'b0;
             endtask
 
             //! Perform AXI4-Lite read transaction.
