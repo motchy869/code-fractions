@@ -76,24 +76,33 @@ task automatic drive_rst();
 endtask
 
 task automatic reg_check();
-    const var bit [AVMM_DATA_BIT_WIDTH-1:0] write_data[4] = {'h12345678, 'h87654321, 'hABCDEF01, 'h10FEDCBA};
+    localparam int unsigned NUM_TEST_WRITE_DATA = 6;
+    localparam int unsigned NUM_TEST_READ_DATA = 4;
+    const var bit [AVMM_ADDR_BIT_WIDTH-1:0] write_addr[NUM_TEST_WRITE_DATA] = {'h0, 'h1, 'h2, 'h3, 'h0, 'h3};
+    const var bit [AVMM_DATA_BIT_WIDTH-1:0] write_data[NUM_TEST_WRITE_DATA] = {'h12345678, 'h87654321, 'hABCDEF01, 'h10FEDCBA, 'hC001FACE, 'hBADCACA0};
+    const var bit [AVMM_DATA_BIT_WIDTH/8-1:0] byte_enable[NUM_TEST_WRITE_DATA] = {'hF, 'hF, 'hF, 'hF, 'b0011, 'b0110};
+    const var bit [AVMM_ADDR_BIT_WIDTH-1:0] read_addr[NUM_TEST_READ_DATA] = {'h0, 'h1, 'h2, 'h3};
+    const var bit [AVMM_DATA_BIT_WIDTH-1:0] expected_read_back_data[NUM_TEST_READ_DATA] = {'h1234FACE, 'h87654321, 'hABCDEF01, 'h10DCACBA};
     var bit [AVMM_DATA_BIT_WIDTH-1:0] read_back_data;
     var avmm_if_pkg_v0_1_0::avmm_resp_t resp;
 
-    for (int i=0; i<4; ++i) begin
-        avmm_access_t::write(dut_vif, AVMM_ADDR_BIT_WIDTH'(i), write_data[i], '1, resp);
-        $info("Write data 0x%h to word address 0x%h, response: %p", write_data[i], i, resp);
+    for (int unsigned i=0; i<NUM_TEST_WRITE_DATA; ++i) begin
+        avmm_access_t::write(dut_vif, write_addr[i], write_data[i], byte_enable[i], resp);
+        $info("Write data 0x%h with byteenable 4'b%b to word address 0x%h, response: %p", write_data[i], byte_enable[i], write_addr[i], resp);
         if (resp != avmm_if_pkg_v0_1_0::AVMM_RESP_OKAY) begin
-            $fatal(2, "Write failed.");
+            $fatal(2, "Unexpected response.");
         end
         @(posedge r_clk);
     end
 
-    for (int i=0; i<4; ++i) begin
-        avmm_access_t::read(dut_vif, AVMM_ADDR_BIT_WIDTH'(i), read_back_data, resp);
-        $info("Read back data from word address 0x%h: 0x%h, response: %p", i, read_back_data, resp);
-        if (resp != avmm_if_pkg_v0_1_0::AVMM_RESP_OKAY || read_back_data != write_data[i]) begin
-            $fatal(2, "Read failed.");
+    for (int unsigned i=0; i<NUM_TEST_READ_DATA; ++i) begin
+        avmm_access_t::read(dut_vif, read_addr[i], read_back_data, resp);
+        $info("Read back data 0x%h from word address 0x%h, response: %p", read_back_data, read_addr[i], resp);
+        if (resp != avmm_if_pkg_v0_1_0::AVMM_RESP_OKAY) begin
+            $fatal(2, "Unexpected response.");
+        end
+        if (read_back_data != expected_read_back_data[i]) begin
+            $fatal(2, "Unexpected read back data.");
         end
         @(posedge r_clk);
     end
