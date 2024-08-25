@@ -16,6 +16,14 @@ interface avmm_if_v0_1_0 #(
 )(
     input wire i_clk //! clock
 );
+    // To avoid circular dependency, put the definition of avmm_resp_t which is the same as the one in avmm_if_pkg_v0_1_0.
+    typedef enum logic [1:0] {
+        AVMM_RESP_OKAY = 2'b00,
+        AVMM_RESP_RESERVED = 2'b01,
+        AVMM_RESP_SLVERR = 2'b10,
+        AVMM_RESP_DECODEERROR = 2'b11
+    } avmm_resp_t;
+
     // command
     logic read;
     logic write;
@@ -28,7 +36,7 @@ interface avmm_if_v0_1_0 #(
     logic readdatavalid;
     logic writeresponsevalid;
     logic [AVMM_DATA_BIT_WIDTH-1:0] readdata;
-    logic [1:0] response;
+    avmm_resp_t [1:0] response;
 
     // parameter validation
     generate

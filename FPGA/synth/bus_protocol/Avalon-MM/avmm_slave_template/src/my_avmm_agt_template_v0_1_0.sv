@@ -28,7 +28,7 @@ localparam int unsigned NUM_REGS = 1 << AVMM_ADDR_BIT_WIDTH; //! The number of r
 
 // ---------- signals and storage ----------
 wire g_addr_is_in_range; //! Indicates that the address is in valid range.
-assign g_addr_is_in_range = if_agt_avmm.address < AVMM_ADDR_BIT_WIDTH'(NUM_REGS);
+assign g_addr_is_in_range = if_agt_avmm.address <= AVMM_ADDR_BIT_WIDTH'(NUM_REGS - 1);
 wire [AVMM_DATA_BIT_WIDTH-1:0] g_byte_en_bit_mask; //! byte enable bit mask
 generate
     genvar i_gen;
@@ -37,7 +37,7 @@ generate
     end
 endgenerate
 
-var logic r_wr_resp_vld_next; //! the value of ```writeresponsevalid``` right AFTER the next rising edge of the clock
+var logic r_wr_resp_vld; //! the value of ```writeresponsevalid``` right AFTER the next rising edge of the clock
 var logic [AVMM_DATA_BIT_WIDTH-1:0] g_rd_data; //! read data
 var avmm_if_pkg_v0_1_0::avmm_resp_t g_rd_resp; //! read response
 var avmm_if_pkg_v0_1_0::avmm_resp_t r_wr_resp; //! the value of ```response``` right AFTER the next rising edge of the clock when the current request is write.
@@ -54,7 +54,7 @@ var logic [AVMM_DATA_BIT_WIDTH-1:0] r_reg_3; //! register 3
 // ---------- Drive output signals. ----------
 assign if_agt_avmm.waitrequest = 1'b0; // always ready because there is no stall
 assign if_agt_avmm.readdatavalid = if_agt_avmm.read & g_addr_is_in_range;
-assign if_agt_avmm.writeresponsevalid = r_wr_resp_vld_next;
+assign if_agt_avmm.writeresponsevalid = r_wr_resp_vld;
 assign if_agt_avmm.readdata = g_rd_data;
 assign if_agt_avmm.response = if_agt_avmm.read ? g_rd_resp : r_wr_resp;
 // --------------------
@@ -88,11 +88,12 @@ always_ff @(posedge i_clk) begin: blk_write_regs
         r_reg_2 <= '0;
         r_reg_3 <= '0;
     end else if (if_agt_avmm.write) begin
+        automatic logic [AVMM_DATA_BIT_WIDTH-1:0] masked_wr_dat = if_agt_avmm.writedata & g_byte_en_bit_mask;
         case (if_agt_avmm.address)
-            AVMM_ADDR_BIT_WIDTH'(0): r_reg_0 <= (r_reg_0 & ~g_byte_en_bit_mask) | (if_agt_avmm.writedata & g_byte_en_bit_mask);
-            AVMM_ADDR_BIT_WIDTH'(1): r_reg_1 <= (r_reg_1 & ~g_byte_en_bit_mask) | (if_agt_avmm.writedata & g_byte_en_bit_mask);
-            AVMM_ADDR_BIT_WIDTH'(2): r_reg_2 <= (r_reg_2 & ~g_byte_en_bit_mask) | (if_agt_avmm.writedata & g_byte_en_bit_mask);
-            AVMM_ADDR_BIT_WIDTH'(3): r_reg_3 <= (r_reg_3 & ~g_byte_en_bit_mask) | (if_agt_avmm.writedata & g_byte_en_bit_mask);
+            AVMM_ADDR_BIT_WIDTH'(0): r_reg_0 <= (r_reg_0 & ~g_byte_en_bit_mask) | masked_wr_dat;
+            AVMM_ADDR_BIT_WIDTH'(1): r_reg_1 <= (r_reg_1 & ~g_byte_en_bit_mask) | masked_wr_dat;
+            AVMM_ADDR_BIT_WIDTH'(2): r_reg_2 <= (r_reg_2 & ~g_byte_en_bit_mask) | masked_wr_dat;
+            AVMM_ADDR_BIT_WIDTH'(3): r_reg_3 <= (r_reg_3 & ~g_byte_en_bit_mask) | masked_wr_dat;
             default: begin
                 // nothing to do
             end
@@ -102,11 +103,11 @@ end
 
 //! Drive write response.
 always_ff @(posedge i_clk) begin: blk_drive_wr_resp
-    if (i_sync_rst || !if_agt_avmm.write) begin
-        r_wr_resp_vld_next <= 1'b0;
+    if (i_sync_rst || !if_agt_avmm.write || r_wr_resp_vld) begin
+        r_wr_resp_vld <= 1'b0;
         r_wr_resp <= avmm_if_pkg_v0_1_0::AVMM_RESP_OKAY;
     end else begin
-        r_wr_resp_vld_next <= 1'b1;
+        r_wr_resp_vld <= 1'b1;
         r_wr_resp <= g_addr_is_in_range ? avmm_if_pkg_v0_1_0::AVMM_RESP_OKAY : avmm_if_pkg_v0_1_0::AVMM_RESP_DECODEERROR;
     end
 end

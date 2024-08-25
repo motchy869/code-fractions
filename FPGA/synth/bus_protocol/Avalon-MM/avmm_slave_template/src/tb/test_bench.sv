@@ -14,7 +14,7 @@ timeprecision 1ps;
 module test_bench;
 // ---------- parameters ----------
 localparam int CLK_PERIOD_NS = 8; //! clock period in ns
-localparam int SIM_TIME_LIMIT_NS = 100; //! simulation time limit in ns
+localparam int SIM_TIME_LIMIT_NS = 300; //! simulation time limit in ns
 localparam int RST_DURATION_CYCLE = 1; //! reset duration in cycles
 
 localparam int AVMM_ADDR_BIT_WIDTH = 2; //! bit width of Avalon-MM address bus
@@ -81,14 +81,20 @@ task automatic reg_check();
     var avmm_if_pkg_v0_1_0::avmm_resp_t resp;
 
     for (int i=0; i<4; ++i) begin
-        avmm_access_t::write(dut_vif, AVMM_ADDR_BIT_WIDTH'(i*4), write_data[i], '1, resp);
+        avmm_access_t::write(dut_vif, AVMM_ADDR_BIT_WIDTH'(i), write_data[i], '1, resp);
+        $info("Write data 0x%h to word address 0x%h, response: %p", write_data[i], i, resp);
+        if (resp != avmm_if_pkg_v0_1_0::AVMM_RESP_OKAY) begin
+            $fatal(2, "Write failed.");
+        end
         @(posedge r_clk);
-        $info("Write data %h to address %h, response: %0s", write_data[i], i*4, resp.name());
     end
 
     for (int i=0; i<4; ++i) begin
-        avmm_access_t::read(dut_vif, AVMM_ADDR_BIT_WIDTH'(i*4), read_back_data, resp);
-        $info("Read back data from address %h: %h, response: %0s", i*4, read_back_data, resp.name());
+        avmm_access_t::read(dut_vif, AVMM_ADDR_BIT_WIDTH'(i), read_back_data, resp);
+        $info("Read back data from word address 0x%h: 0x%h, response: %p", i, read_back_data, resp);
+        if (resp != avmm_if_pkg_v0_1_0::AVMM_RESP_OKAY || read_back_data != write_data[i]) begin
+            $fatal(2, "Read failed.");
+        end
         @(posedge r_clk);
     end
 endtask

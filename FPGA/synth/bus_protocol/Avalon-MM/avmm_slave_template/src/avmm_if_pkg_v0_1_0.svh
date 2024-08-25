@@ -48,15 +48,16 @@ package avmm_if_pkg_v0_1_0;
                 vif_t vif, // virtual interface to DUT
                 input bit [AVMM_ADDR_BIT_WIDTH-1:0] addr, // address
                 output bit [AVMM_DATA_BIT_WIDTH-1:0] data, // storage for read data
-                output avmm_resp_t resp // storage for response
+                output avmm_resp_t resp, // storage for response
+                input bit wait_for_next_clk_pos_edge = 1'b0 //! 1/0: wait/do not wait for the next positive edge of the clock before driving signals
             );
                 string msg;
 
                 if (vif.read || vif.readdatavalid || vif.write || vif.writeresponsevalid) begin
                     if (vif.read || vif.readdatavalid) begin
-                        msg = "There is a preceding read transaction in progress. Waiting for it to complete.";
+                        msg = "There is a preceding read transaction in progress.";
                     end else if (vif.write || vif.writeresponsevalid) begin
-                        msg = "There is a preceding write transaction in progress. Waiting for it to complete.";
+                        msg = "There is a preceding write transaction in progress.";
                     end
                     `ifdef uvm_fatal
                         `uvm_fatal("INFO", msg, UVM_MEDIUM);
@@ -66,7 +67,9 @@ package avmm_if_pkg_v0_1_0;
                 end
 
                 // Issues a read request.
-                @(posedge vif.i_clk);
+                if (wait_for_next_clk_pos_edge) begin
+                    @(posedge vif.i_clk);
+                end
                 vif.read <= 1'b1;
                 vif.write <= 1'b0;
                 vif.address <= addr;
@@ -75,12 +78,14 @@ package avmm_if_pkg_v0_1_0;
                 forever begin
                     @(posedge vif.i_clk);
                     if (!vif.waitrequest && vif.readdatavalid) begin
+                        vif.read <= 1'b0;
+                        vif.address <= '0;
                         break;
                     end
                 end
 
                 data = vif.readdata;
-                resp = vif.response;
+                $cast(resp, vif.response);
             endtask
 
             // Performs write transaction.
@@ -90,15 +95,16 @@ package avmm_if_pkg_v0_1_0;
                 input bit [AVMM_ADDR_BIT_WIDTH-1:0] addr, // address
                 input bit [AVMM_DATA_BIT_WIDTH-1:0] data, // data to write
                 input bit [AVMM_DATA_BIT_WIDTH/8-1:0] byte_en, // byte enable
-                output avmm_resp_t resp // storage for response
+                output avmm_resp_t resp, // storage for response
+                input bit wait_for_next_clk_pos_edge = 1'b0 //! 1/0: wait/do not wait for the next positive edge of the clock before driving signals
             );
                 string msg;
 
                 if (vif.read || vif.readdatavalid || vif.write || vif.writeresponsevalid) begin
                     if (vif.read || vif.readdatavalid) begin
-                        msg = "There is a preceding read transaction in progress. Waiting for it to complete.";
+                        msg = "There is a preceding read transaction in progress.";
                     end else if (vif.write || vif.writeresponsevalid) begin
-                        msg = "There is a preceding write transaction in progress. Waiting for it to complete.";
+                        msg = "There is a preceding write transaction in progress.";
                     end
                     `ifdef uvm_fatal
                         `uvm_fatal("INFO", msg, UVM_MEDIUM);
@@ -108,20 +114,28 @@ package avmm_if_pkg_v0_1_0;
                 end
 
                 // Issues a write request.
-                @(posedge vif.i_clk);
+                if (wait_for_next_clk_pos_edge) begin
+                    @(posedge vif.i_clk);
+                end
                 vif.read <= 1'b0;
                 vif.write <= 1'b1;
                 vif.address <= addr;
+                vif.writedata <= data;
+                vif.byteenable <= byte_en;
 
                 // Waits until the write response is valid.
                 forever begin
                     @(posedge vif.i_clk);
                     if (!vif.waitrequest && vif.writeresponsevalid) begin
+                        vif.write <= 1'b0;
+                        vif.address <= '0;
+                        vif.writedata <= '0;
+                        vif.byteenable <= '0;
                         break;
                     end
                 end
 
-                resp = vif.response;
+                $cast(resp, vif.response);
             endtask
         endclass
     `endif
