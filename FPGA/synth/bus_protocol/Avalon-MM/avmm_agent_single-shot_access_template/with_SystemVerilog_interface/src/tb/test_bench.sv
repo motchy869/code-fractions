@@ -3,7 +3,7 @@
 // verilog_lint: waive-start line-length
 
 `include "avmm_if_pkg_v0_1_0.svh"
-`include "my_avmm_agt_template_v0_1_0.svh"
+`include "my_avmm_agt_sgl_shot_acc_template_v0_1_0.svh"
 
 `default_nettype none
 
@@ -52,7 +52,7 @@ avmm_if_v0_1_0 #(
 ) dut_if (.i_clk(r_clk));
 
 //! DUT instance
-my_avmm_agt_template_v0_1_0 #(
+my_avmm_agt_sgl_shot_acc_template_v0_1_0 #(
     .AVMM_ADDR_BIT_WIDTH(AVMM_ADDR_BIT_WIDTH),
     .AVMM_DATA_BIT_WIDTH(AVMM_DATA_BIT_WIDTH)
 ) dut (

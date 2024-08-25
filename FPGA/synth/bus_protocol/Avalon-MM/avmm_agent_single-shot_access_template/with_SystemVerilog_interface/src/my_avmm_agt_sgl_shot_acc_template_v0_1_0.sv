@@ -8,7 +8,8 @@
 
 //! A quite simple Avalon-MM agent template with 4 writable registers.
 //! Read and write latency is 0 and 1, respectively.
-module my_avmm_agt_template_v0_1_0 #(
+//! This module only supports single-shot access (does not support burst access), but this is enough in most cases (such as CSR).
+module my_avmm_agt_sgl_shot_acc_template_v0_1_0 #(
     parameter int AVMM_ADDR_BIT_WIDTH = 2, //! Bit width of Avalon-MM address bus. Typically log2(number of registers). Note that in default Avalon uses **byte** addressing in hosts and **word** addressing in agents.
     parameter int AVMM_DATA_BIT_WIDTH = 32 //! bit width of Avalon-MM data bus
 )(

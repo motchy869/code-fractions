@@ -7,9 +7,18 @@
 // verilog_lint: waive-start interface-name-style
 
 //! Avalon Memory-Mapped Interface.
+//!
 //! Statements in modport's descriptions are quoted from Table 9. "Avalon Memory Mapped Signal Roles" in "Avalon Interface Specifications".
-//! This is a slightly-modified version of the original file published on the following web page.
-//! https://peakrdl-regblock.readthedocs.io/en/latest/cpuif/avalon.html
+//!
+//! This is a slightly-modified version of the original file published on the following web page:
+//!
+//! [https://peakrdl-regblock.readthedocs.io/en/latest/cpuif/avalon.html](https://peakrdl-regblock.readthedocs.io/en/latest/cpuif/avalon.html)
+//!
+//! Features currently not supported:
+//!
+//! 1. ```lock``` signal
+//!
+//! 2. burst access
 interface avmm_if_v0_1_0 #(
     parameter int unsigned AVMM_ADDR_BIT_WIDTH = 32, //! Address bit width. Note that in default Avalon uses **byte** addressing in hosts and **word** addressing in agents.
     parameter int unsigned AVMM_DATA_BIT_WIDTH = 32 //! data bit width
