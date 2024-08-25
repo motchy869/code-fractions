@@ -113,7 +113,7 @@ package axi4_lite_if_pkg;
                             end
                         end
                         data = vif.rdata;
-                        resp = axi4_resp_t'(vif.rresp);
+                        $cast(resp, vif.rresp);
                         vif.rready <= 1'b0;
                         break;
                     end
@@ -168,7 +168,7 @@ package axi4_lite_if_pkg;
                     end
                 end
 
-                resp = axi4_resp_t'(vif.bresp);
+                $cast(resp, vif.bresp);
             endtask
 
             `undef WAIT_CLK_POSEDGE
