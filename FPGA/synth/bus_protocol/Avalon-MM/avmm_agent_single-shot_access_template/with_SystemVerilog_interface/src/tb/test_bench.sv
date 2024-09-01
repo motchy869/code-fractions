@@ -2,8 +2,8 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`include "avmm_if_pkg_v0_1_0.svh"
-`include "my_avmm_agt_sgl_shot_acc_template_v0_1_0.svh"
+`include "avmm_if_ops_pkg_v0_1_0.svh"
+`include "my_avmm_agt_template_v0_1_1.svh"
 
 `default_nettype none
 
@@ -28,12 +28,12 @@ localparam int AVMM_DATA_BIT_WIDTH = 32; //! bit width of Avalon-MM data bus
 // --------------------
 
 // ---------- signals and storage ----------
-typedef avmm_if_pkg_v0_1_0::avmm_access #(
+typedef avmm_if_ops_pkg_v0_1_0::avmm_if_lv0_access #(
     .AVMM_ADDR_BIT_WIDTH(AVMM_ADDR_BIT_WIDTH),
     .AVMM_DATA_BIT_WIDTH(AVMM_DATA_BIT_WIDTH)
 ) avmm_access_t;
 
-typedef virtual interface avmm_if_v0_1_0 #(
+typedef virtual interface avmm_if_lv0_v0_1_0 #(
     .AVMM_ADDR_BIT_WIDTH(AVMM_ADDR_BIT_WIDTH),
     .AVMM_DATA_BIT_WIDTH(AVMM_DATA_BIT_WIDTH)
 ) vif_t;
@@ -46,13 +46,13 @@ vif_t dut_vif; //! virtual interface to DUT
 
 // ---------- instances ----------
 //! interface to DUT
-avmm_if_v0_1_0 #(
+avmm_if_lv0_v0_1_0 #(
     .AVMM_ADDR_BIT_WIDTH(AVMM_ADDR_BIT_WIDTH),
     .AVMM_DATA_BIT_WIDTH(AVMM_DATA_BIT_WIDTH)
 ) dut_if (.i_clk(r_clk));
 
 //! DUT instance
-my_avmm_agt_sgl_shot_acc_template_v0_1_0 #(
+my_avmm_agt_template_v0_1_1 #(
     .AVMM_ADDR_BIT_WIDTH(AVMM_ADDR_BIT_WIDTH),
     .AVMM_DATA_BIT_WIDTH(AVMM_DATA_BIT_WIDTH)
 ) dut (
@@ -84,12 +84,12 @@ task automatic reg_check();
     const var bit [AVMM_ADDR_BIT_WIDTH-1:0] read_addr[NUM_TEST_READ_DATA] = {'h0, 'h1, 'h2, 'h3};
     const var bit [AVMM_DATA_BIT_WIDTH-1:0] expected_read_back_data[NUM_TEST_READ_DATA] = {'h1234FACE, 'h87654321, 'hABCDEF01, 'h10DCACBA};
     var bit [AVMM_DATA_BIT_WIDTH-1:0] read_back_data;
-    var avmm_if_pkg_v0_1_0::avmm_resp_t resp;
+    var avmm_if_defs_pkg_v0_1_0::avmm_resp_t resp;
 
     for (int unsigned i=0; i<NUM_TEST_WRITE_DATA; ++i) begin
         avmm_access_t::write(dut_vif, write_addr[i], write_data[i], byte_enable[i], resp);
         $info("Write data 0x%h with byteenable 4'b%b to word address 0x%h, response: %p", write_data[i], byte_enable[i], write_addr[i], resp);
-        if (resp != avmm_if_pkg_v0_1_0::AVMM_RESP_OKAY) begin
+        if (resp != avmm_if_defs_pkg_v0_1_0::AVMM_RESP_OKAY) begin
             $fatal(2, "Unexpected response.");
         end
         @(posedge r_clk);
@@ -98,7 +98,7 @@ task automatic reg_check();
     for (int unsigned i=0; i<NUM_TEST_READ_DATA; ++i) begin
         avmm_access_t::read(dut_vif, read_addr[i], read_back_data, resp);
         $info("Read back data 0x%h from word address 0x%h, response: %p", read_back_data, read_addr[i], resp);
-        if (resp != avmm_if_pkg_v0_1_0::AVMM_RESP_OKAY) begin
+        if (resp != avmm_if_defs_pkg_v0_1_0::AVMM_RESP_OKAY) begin
             $fatal(2, "Unexpected response.");
         end
         if (read_back_data != expected_read_back_data[i]) begin

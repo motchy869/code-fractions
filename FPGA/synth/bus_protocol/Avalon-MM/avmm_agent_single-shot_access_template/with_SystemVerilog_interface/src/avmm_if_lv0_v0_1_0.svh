@@ -6,20 +6,15 @@
 // verilog_lint: waive-start line-length
 // verilog_lint: waive-start interface-name-style
 
-//! Avalon Memory-Mapped Interface.
+//! Avalon Memory-Mapped Interface **without** pipelined transfer.
+//! We call this as "level 0".
 //!
 //! Statements in modport's descriptions are quoted from Table 9. "Avalon Memory Mapped Signal Roles" in "Avalon Interface Specifications".
 //!
-//! This is a slightly-modified version of the original file published on the following web page:
+//! This is a modified version of the original file published on the following web page:
 //!
 //! [https://peakrdl-regblock.readthedocs.io/en/latest/cpuif/avalon.html](https://peakrdl-regblock.readthedocs.io/en/latest/cpuif/avalon.html)
-//!
-//! Features currently not supported:
-//!
-//! 1. ```lock``` signal
-//!
-//! 2. burst access
-interface avmm_if_v0_1_0 #(
+interface avmm_if_lv0_v0_1_0 #(
     parameter int unsigned AVMM_ADDR_BIT_WIDTH = 32, //! Address bit width. Note that in default Avalon uses **byte** addressing in hosts and **word** addressing in agents.
     parameter int unsigned AVMM_DATA_BIT_WIDTH = 32 //! data bit width
 )(
@@ -36,14 +31,11 @@ interface avmm_if_v0_1_0 #(
     // command
     logic read;
     logic write;
-    logic waitrequest;
     logic [AVMM_ADDR_BIT_WIDTH-1:0] address;
     logic [AVMM_DATA_BIT_WIDTH-1:0] writedata;
     logic [AVMM_DATA_BIT_WIDTH/8-1:0] byteenable;
 
     // response
-    logic readdatavalid;
-    logic writeresponsevalid;
     logic [AVMM_DATA_BIT_WIDTH-1:0] readdata;
     avmm_resp_t [1:0] response;
 
@@ -65,13 +57,10 @@ interface avmm_if_v0_1_0 #(
     modport hst_pt (
         output read, //! Asserted to indicate a read transfer.
         output write, //! Asserted to indicate a write transfer.
-        input waitrequest, //! An agent asserts waitrequest when unable to respond to a read or write request.
         output address, //! By default, the address signal represents a byte address.
         output writedata, //! data for write transfers
         output byteenable, //! Enables one or more specific byte lanes during transfers on interfaces of width greater than 8 bits.
 
-        input readdatavalid, //! Used for variable-latency, pipelined read transfers. When asserted, indicates that the readdata signal contains valid data.
-        input writeresponsevalid, //! When asserted, the value on the response signal is a valid write response.
         input readdata, //! The readdata driven from the agent to the host in response to a read transfer.
         input response //! The signal that carries the response status.
     );
@@ -79,13 +68,10 @@ interface avmm_if_v0_1_0 #(
     modport agt_pt (
         input read, //! Refer to the description of the host interface.
         input write, //! Refer to the description of the host interface.
-        output waitrequest, //! Refer to the description of the host interface.
         input address, //! Refer to the description of the host interface.
         input writedata, //! Refer to the description of the host interface.
         input byteenable, //! Refer to the description of the host interface.
 
-        output readdatavalid, //! Refer to the description of the host interface.
-        output writeresponsevalid, //! Refer to the description of the host interface.
         output readdata, //! Refer to the description of the host interface.
         output response //! Refer to the description of the host interface.
     );
