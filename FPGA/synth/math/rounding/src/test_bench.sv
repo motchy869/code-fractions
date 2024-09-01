@@ -27,7 +27,7 @@ interface round_hf2evn_v1_0_0_if #(
     parameter int unsigned N = 24,
     parameter int unsigned N_F = 8
 )(
-    input wire i_clk
+    input wire logic i_clk
 );
     logic signed [N-1:0] in_val;
     logic signed [N-N_F-1:0] out_val;

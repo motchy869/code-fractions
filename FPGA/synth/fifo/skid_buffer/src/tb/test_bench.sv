@@ -29,7 +29,7 @@ typedef virtual interface skid_buf_if#(
 interface skid_buf_if #(
     parameter type T = logic //! data type
 )(
-    input wire i_clk //! clock signal
+    input wire logic i_clk //! clock signal
 );
     logic us_valid; //! valid signal from upstream
     T us_data; //! data from upstream

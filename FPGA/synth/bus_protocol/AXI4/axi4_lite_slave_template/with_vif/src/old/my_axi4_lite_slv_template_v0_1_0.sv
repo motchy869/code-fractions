@@ -13,8 +13,8 @@ module my_axi4_lite_slv_template_v0_1_0#(
     parameter int AXI4_LITE_ADDR_BIT_WIDTH = 32, //! bit width of AXI4-Lite address bus
     parameter int AXI4_LITE_DATA_BIT_WIDTH = 32 //! bit width of AXI4-Lite data bus
 )(
-    input wire i_clk, //! clock signal
-    input wire i_sync_rst, //! reset signal synchronous to clock
+    input wire logic i_clk, //! clock signal
+    input wire logic i_sync_rst, //! reset signal synchronous to clock
     axi4_lite_if.slv_port if_s_axi4_lite //! AXI4-Lite slave interface
 );
     // ---------- parameters ----------

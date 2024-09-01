@@ -12,7 +12,7 @@ interface axi4_lite_if #(
     parameter int ADDR_BIT_WIDTH = 32, //! address bit width
     parameter int DATA_BIT_WIDTH = 32 //! data bit width
 )(
-    input wire i_clk //! clock
+    input wire logic i_clk //! clock
 );
     logic [ADDR_BIT_WIDTH-1:0] awaddr;
     logic [2:0] awprot;

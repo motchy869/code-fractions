@@ -39,7 +39,7 @@ interface frag_to_chunk_if#(
     parameter type T = logic,
     localparam int BIT_WIDTH__S_MAX_IN = $clog2(S_MAX_IN+1)
 )(
-    input wire i_clk
+    input wire logic i_clk
 );
     logic frag_valid;
     logic [BIT_WIDTH__S_MAX_IN-1:0] frag_size;

@@ -31,7 +31,7 @@ interface sgl_clk_fifo_if#(
     parameter int DATA_BIT_WIDTH = 8, //! data bit width
     parameter int DEPTH = 16 //! FIFO depth
 )(
-    input wire i_clk //! clock signal
+    input wire logic i_clk //! clock signal
 );
     logic we; //! write enable
     logic [DATA_BIT_WIDTH-1:0] data_in; //! input data

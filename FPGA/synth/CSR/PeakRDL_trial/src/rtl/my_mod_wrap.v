@@ -13,10 +13,10 @@ module my_mod_wrap #(
 )(
     (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 i_clk CLK" *)
     (* X_INTERFACE_PARAMETER = "ASSOCIATED_BUSIF s_axi4_lite, ASSOCIATED_RESET i_sync_rst, FREQ_HZ 125000000" *)
-    input wire i_clk, //! clock signal
+    input wire logic i_clk, //! clock signal
     (* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 i_sync_rst RST" *)
     (* X_INTERFACE_PARAMETER = "POLARITY ACTIVE_HIGH" *)
-    input wire i_sync_rst, //! synchronous reset signal
+    input wire logic i_sync_rst, //! synchronous reset signal
 
     //! @virtualbus s_axi4_lite @dir in
     (* X_INTERFACE_INFO = "xilinx.com:interface:aximm:1.0 s_axi4_lite AWADDR" *)
