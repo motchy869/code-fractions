@@ -37,6 +37,7 @@ SIM_DIR := $(MAKEFILE_DIR)/sim_result
 SRC_DIR := $(MAKEFILE_DIR)/../src
 
 SV_SRC_FILES := $(shell find $(SRC_DIR) -type f -name "*.sv" | tr '\n' ' ')
+SV_HEADER_FILES := $(shell find $(SRC_DIR) -type f -name "*.svh" | tr '\n' ' ')
 INCLUDE_DIRS := $(shell find $(SRC_DIR) -type f -name "*.svh" | sed 's|/[^/]*$$||' | uniq | tr '\n' ' ')
 COMPILE_LOG_FILE_PATH := $(SIM_DIR)/compile.log
 SIM_LOG_FILE_PATH := $(SIM_DIR)/sim.log
@@ -87,7 +88,8 @@ $(SIM_DIR)/work: $(SIM_DIR)
 	$(VLIB) work && \
 	$(VMAP) work work
 
-$(SIM_DIR)/work/_info: $(SIM_DIR)/work $(SV_SRC_FILES)
+# Questa Sim is clever enough to skip already-compiled files.
+$(SIM_DIR)/work/_info: $(SIM_DIR)/work $(SV_SRC_FILES) $(SV_HEADER_FILES)
 	cd $(SIM_DIR) && \
 	$(VLOG) -sv -work work $(VLOG_FLAGS) $(SV_SRC_FILES)
 
