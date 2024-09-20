@@ -24,7 +24,7 @@
 //! ## changelog
 //! ### [Unreleased]
 //! - Seemingly OK, but NOT tested AT ALL.
-module fxd_pt_mul_sum_altera_vp_dsp_18x19_v0_1_0_wip #(
+module fxd_pt_mul_sum_altera_vp_dsp_18x19_v0_1_0 #(
     parameter int unsigned BW_IN_A_0 = 16, //! bit width of the input a_0, must be <= 18
     parameter int unsigned BW_IN_B_0 = 16, //! bit width of the input b_0, must be <= **19**
     parameter int unsigned BW_IN_A_1 = 16, //! bit width of the input a_1, must be <= 18
@@ -40,10 +40,10 @@ module fxd_pt_mul_sum_altera_vp_dsp_18x19_v0_1_0_wip #(
     //! @virtualbus us_side_if @dir in configuration interface
     output wire logic o_ready, //! ready signal to upstream side which indicates that the upstream side is allowed to update input data (to this module) right AFTER the next rising edge of the clock
     input wire logic i_input_valid, //! Valid signal from upstream side. This is also used as freezing signal like clock-enable deassertion. When this is low, the module internal state is frozen.
-    input wire logic signed [BW_IN_A-1:0] i_a_0, //! input a_0
-    input wire logic signed [BW_IN_B-1:0] i_b_0, //! input b_0
-    input wire logic signed [BW_IN_A-1:0] i_a_1, //! input a_1
-    input wire logic signed [BW_IN_B-1:0] i_b_1, //! input b_1
+    input wire logic signed [BW_IN_A_0-1:0] i_a_0, //! input a_0
+    input wire logic signed [BW_IN_B_0-1:0] i_b_0, //! input b_0
+    input wire logic signed [BW_IN_A_1-1:0] i_a_1, //! input a_1
+    input wire logic signed [BW_IN_B_1-1:0] i_b_1, //! input b_1
     input wire logic i_sub, //! Add/subtract dynamic control signal. 0/1: add/subtract. If this signal is compile-time constant, the synthesis tool will optimize-out the unused logics.
     //! @end
     //! @virtualbus ds_side_if @dir out downstream side interface
@@ -160,7 +160,7 @@ assign o_ready = g_can_adv_pip_ln;
 assign o_output_valid = i_input_valid & r_vld_dly_line[CYCLE_LAT-1];
 generate
     if (EN_RND_HF2EVN) begin: gen_out_rnd
-        assign o_c = gen_rnd_sigs.g_rnd_res;
+        assign o_c = gen_rnd_sigs.r_c_post_slc_rnd;
     end else begin: gen_out_trunc
         assign o_c = signed'(w_c_pre_slc_rnd[BIT_SLC_OFFSET_OUT +: BW_OUT]);
     end
@@ -182,23 +182,23 @@ generate
     if (DSP_BLK_INPUT_STG_REG_CHAIN_LEN > 0) begin: gen_update_dsp_blk_input_stg_reg_chain
         always_ff @(posedge i_clk) begin: blk_update_dsp_blk_input_stg_reg_chain
             if (i_sync_rst) begin
-                r_a_0 <= '0;
-                r_b_0 <= '0;
-                r_a_1 <= '0;
-                r_b_1 <= '0;
+                gen_input_stg_reg_chain.r_a_0 <= '0;
+                gen_input_stg_reg_chain.r_b_0 <= '0;
+                gen_input_stg_reg_chain.r_a_1 <= '0;
+                gen_input_stg_reg_chain.r_b_1 <= '0;
             end else if (g_adv_pip_ln) begin
                 // advance pipeline
                 for (int unsigned d=DSP_BLK_INPUT_STG_REG_CHAIN_LEN-1; d>0; --d) begin
-                    r_a_0[d] <= r_a_0[d-1];
-                    r_b_0[d] <= r_b_0[d-1];
-                    r_a_1[d] <= r_a_1[d-1];
-                    r_b_1[d] <= r_b_1[d-1];
+                    gen_input_stg_reg_chain.r_a_0[d] <= gen_input_stg_reg_chain.r_a_0[d-1];
+                    gen_input_stg_reg_chain.r_b_0[d] <= gen_input_stg_reg_chain.r_b_0[d-1];
+                    gen_input_stg_reg_chain.r_a_1[d] <= gen_input_stg_reg_chain.r_a_1[d-1];
+                    gen_input_stg_reg_chain.r_b_1[d] <= gen_input_stg_reg_chain.r_b_1[d-1];
                 end
 
-                r_a_0[0] <= i_a_0;
-                r_b_0[0] <= i_b_0;
-                r_a_1[0] <= i_a_1;
-                r_b_1[0] <= i_b_1;
+                gen_input_stg_reg_chain.r_a_0[0] <= i_a_0;
+                gen_input_stg_reg_chain.r_b_0[0] <= i_b_0;
+                gen_input_stg_reg_chain.r_a_1[0] <= i_a_1;
+                gen_input_stg_reg_chain.r_b_1[0] <= i_b_1;
             end else begin
             end
         end
@@ -208,18 +208,27 @@ generate
     if (DSP_BLK_OUTPUT_STG_REG_CHAIN_LEN > 0) begin: gen_update_dsp_blk_output_stg_reg_chain
         always_ff @(posedge i_clk) begin: blk_update_dsp_blk_output_stg_reg_chain
             if (i_sync_rst) begin
-                r_c_pre_slc_rnd <= '0;
+                gen_output_stg_reg_chain.r_c_pre_slc_rnd <= '0;
             end else if (g_adv_pip_ln) begin
                 // advance pipeline
                 for (int unsigned d=DSP_BLK_OUTPUT_STG_REG_CHAIN_LEN-1; d>0; --d) begin
-                    r_c_pre_slc_rnd[d] <= r_c_pre_slc_rnd[d-1];
+                    gen_output_stg_reg_chain.r_c_pre_slc_rnd[d] <= gen_output_stg_reg_chain.r_c_pre_slc_rnd[d-1];
                 end
 
-                r_c_pre_slc_rnd[0] <= g_c_from_dsp_blk;
+                gen_output_stg_reg_chain.r_c_pre_slc_rnd[0] <= g_c_from_dsp_blk;
             end
         end
     end
 endgenerate
+
+//! Updates post-clipping value register.
+always_ff @(posedge i_clk) begin: blk_update_post_clip_val_reg
+    if (i_sync_rst) begin
+        gen_rnd_sigs.r_c_post_slc_rnd <= '0;
+    end else if (g_adv_pip_ln) begin
+        gen_rnd_sigs.r_c_post_slc_rnd <= gen_rnd_sigs.g_rnd_res[BW_OUT-1:0];
+    end
+end
 // --------------------
 endmodule
 
