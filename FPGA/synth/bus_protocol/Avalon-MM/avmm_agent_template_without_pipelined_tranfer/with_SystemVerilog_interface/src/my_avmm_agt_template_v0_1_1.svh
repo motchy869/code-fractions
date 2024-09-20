@@ -1,3 +1,6 @@
+`ifndef MY_AVMM_AGT_TEMPLATE_V0_1_1_SVH_INCLUDED
+`define MY_AVMM_AGT_TEMPLATE_V0_1_1_SVH_INCLUDED
+
 // Verible directive
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
@@ -19,3 +22,5 @@ extern module my_avmm_agt_template_v0_1_1 #(
 );
 
 `default_nettype wire
+
+`endif // MY_AVMM_AGT_TEMPLATE_V0_1_1_SVH_INCLUDED
