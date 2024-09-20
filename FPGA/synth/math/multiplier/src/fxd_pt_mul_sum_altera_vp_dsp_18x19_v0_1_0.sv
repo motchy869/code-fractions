@@ -102,12 +102,13 @@ wire signed [BW_LHS_MULT-1:0] w_a_0_to_dsp_blk; //! input a_0 to the DSP block
 wire signed [BW_RHS_MULT-1:0] w_b_0_to_dsp_blk; //! input b_0 to the DSP block
 wire signed [BW_LHS_MULT-1:0] w_a_1_to_dsp_blk; //! input a_1 to the DSP block
 wire signed [BW_RHS_MULT-1:0] w_b_1_to_dsp_blk; //! input b_1 to the DSP block
+wire w_sub_to_dsp_blk; //! input sub to the DSP block
 wire signed [BW_INTERM_PROD-1:0] w_a_0_by_b_0; //! a_0 * b_0
 assign w_a_0_by_b_0 = BW_INTERM_PROD'(w_a_0_to_dsp_blk)*BW_INTERM_PROD'(w_b_0_to_dsp_blk);
 wire signed [BW_INTERM_PROD-1:0] w_a_1_by_b_1; //! a_1 * b_1
 assign w_a_1_by_b_1 = BW_INTERM_PROD'(w_a_1_to_dsp_blk)*BW_INTERM_PROD'(w_b_1_to_dsp_blk);
 wire signed [BW_INTERM_SUM-1:0] g_c_from_dsp_blk; //! output c from the DSP block
-assign g_c_from_dsp_blk = i_sub ? BW_INTERM_SUM'(w_a_0_by_b_0) - BW_INTERM_SUM'(w_a_1_by_b_1) : BW_INTERM_SUM'(w_a_0_by_b_0) + BW_INTERM_SUM'(w_a_1_by_b_1);
+assign g_c_from_dsp_blk = w_sub_to_dsp_blk ? BW_INTERM_SUM'(w_a_0_by_b_0) - BW_INTERM_SUM'(w_a_1_by_b_1) : BW_INTERM_SUM'(w_a_0_by_b_0) + BW_INTERM_SUM'(w_a_1_by_b_1);
 wire signed [BW_INTERM_SUM-1:0] w_c_pre_slc_rnd; //! c before slicing/rounding
 
 generate
@@ -116,15 +117,18 @@ generate
         var logic [DSP_BLK_INPUT_STG_REG_CHAIN_LEN-1:0][BW_RHS_MULT-1:0] r_b_0; //! input stage register chain for b_0
         var logic [DSP_BLK_INPUT_STG_REG_CHAIN_LEN-1:0][BW_LHS_MULT-1:0] r_a_1; //! input stage register chain for a_1
         var logic [DSP_BLK_INPUT_STG_REG_CHAIN_LEN-1:0][BW_RHS_MULT-1:0] r_b_1; //! input stage register chain for b_1
+        var logic [DSP_BLK_INPUT_STG_REG_CHAIN_LEN-1:0] r_sub; //! input stage register chain for sub
         assign w_a_0_to_dsp_blk = signed'(r_a_0[DSP_BLK_INPUT_STG_REG_CHAIN_LEN-1]);
         assign w_b_0_to_dsp_blk = signed'(r_b_0[DSP_BLK_INPUT_STG_REG_CHAIN_LEN-1]);
         assign w_a_1_to_dsp_blk = signed'(r_a_1[DSP_BLK_INPUT_STG_REG_CHAIN_LEN-1]);
         assign w_b_1_to_dsp_blk = signed'(r_b_1[DSP_BLK_INPUT_STG_REG_CHAIN_LEN-1]);
+        assign w_sub_to_dsp_blk = r_sub[DSP_BLK_INPUT_STG_REG_CHAIN_LEN-1];
     end else begin: gen_no_input_stg_reg_chain
         assign w_a_0_to_dsp_blk = BW_LHS_MULT'(i_a_0);
         assign w_b_0_to_dsp_blk = BW_RHS_MULT'(i_b_0);
         assign w_a_1_to_dsp_blk = BW_LHS_MULT'(i_a_1);
         assign w_b_1_to_dsp_blk = BW_RHS_MULT'(i_b_1);
+        assign w_sub_to_dsp_blk = i_sub;
     end
 
     if (DSP_BLK_OUTPUT_STG_REG_CHAIN_LEN > 0) begin: gen_output_stg_reg_chain
@@ -186,6 +190,7 @@ generate
                 gen_input_stg_reg_chain.r_b_0 <= '0;
                 gen_input_stg_reg_chain.r_a_1 <= '0;
                 gen_input_stg_reg_chain.r_b_1 <= '0;
+                gen_input_stg_reg_chain.r_sub <= '0;
             end else if (g_adv_pip_ln) begin
                 // advance pipeline
                 for (int unsigned d=DSP_BLK_INPUT_STG_REG_CHAIN_LEN-1; d>0; --d) begin
@@ -193,12 +198,14 @@ generate
                     gen_input_stg_reg_chain.r_b_0[d] <= gen_input_stg_reg_chain.r_b_0[d-1];
                     gen_input_stg_reg_chain.r_a_1[d] <= gen_input_stg_reg_chain.r_a_1[d-1];
                     gen_input_stg_reg_chain.r_b_1[d] <= gen_input_stg_reg_chain.r_b_1[d-1];
+                    gen_input_stg_reg_chain.r_sub[d] <= gen_input_stg_reg_chain.r_sub[d-1];
                 end
 
                 gen_input_stg_reg_chain.r_a_0[0] <= i_a_0;
                 gen_input_stg_reg_chain.r_b_0[0] <= i_b_0;
                 gen_input_stg_reg_chain.r_a_1[0] <= i_a_1;
                 gen_input_stg_reg_chain.r_b_1[0] <= i_b_1;
+                gen_input_stg_reg_chain.r_sub[0] <= i_sub;
             end else begin
             end
         end
