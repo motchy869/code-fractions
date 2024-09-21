@@ -56,9 +56,9 @@ module fxd_pt_mul_sum_altera_vp_dsp_18x19_v1_0_0 #(
 // ---------- parameters ----------
 localparam int unsigned BW_LHS_MULT = 18; //! bit width of the left-hand side input to the 18x19 multiplier
 localparam int unsigned BW_RHS_MULT = 19; //! bit width of the right-hand side input to the 18x19 multiplier
-localparam int unsigned CYCLE_LAT = DSP_BLK_INPUT_STG_REG_CHAIN_LEN + DSP_BLK_OUTPUT_STG_REG_CHAIN_LEN + EN_RND_HF2EVN; //! cycle latency
 localparam int unsigned BW_INTERM_PROD = BW_LHS_MULT + BW_RHS_MULT; //! bit width of the intermediate product
 localparam int unsigned BW_INTERM_SUM = BW_INTERM_PROD + 1; //! bit width of the intermediate sum
+localparam int unsigned CYCLE_LAT = DSP_BLK_INPUT_STG_REG_CHAIN_LEN + DSP_BLK_OUTPUT_STG_REG_CHAIN_LEN + EN_RND_HF2EVN; //! cycle latency
 // --------------------
 
 // ---------- parameter validation ----------
