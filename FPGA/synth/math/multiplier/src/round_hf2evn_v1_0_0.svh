@@ -1,3 +1,6 @@
+`ifndef ROUND_HF2EVN_SVH_INCLUDED
+`define ROUND_HF2EVN_SVH_INCLUDED
+
 // Verible directive
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
@@ -15,3 +18,5 @@ extern module round_hf2evn #(
 );
 
 `default_nettype wire
+
+`endif // ROUND_HF2EVN_SVH_INCLUDED
