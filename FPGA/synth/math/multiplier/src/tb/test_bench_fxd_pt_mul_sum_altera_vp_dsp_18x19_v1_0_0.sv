@@ -10,9 +10,9 @@
 
 module test_bench_fxd_pt_mul_sum_altera_vp_dsp_18x19_v1_0_0;
 // ---------- parameters ----------
-localparam int CLK_PERIOD_NS = 8; //! clock period in ns
-localparam int SIM_TIME_LIMIT_NS = 200; //! simulation time limit in ns
-localparam int RST_DURATION_CYCLE = 1; //! reset duration in cycles
+localparam int unsigned CLK_PERIOD_NS = 8; //! clock period in ns
+localparam int unsigned SIM_TIME_LIMIT_NS = 200; //! simulation time limit in ns
+localparam int unsigned RST_DURATION_CYCLE = 1; //! reset duration in cycles
 
 localparam int unsigned DUT_BW_IN_A_0 = 18; //! Details are in the DUT documentation.
 localparam int unsigned DUT_BW_IN_B_0 = 19; //! ditto

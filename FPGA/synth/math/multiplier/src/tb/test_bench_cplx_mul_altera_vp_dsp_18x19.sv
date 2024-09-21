@@ -8,9 +8,9 @@
 
 module test_bench_cplx_mul_altera_vp_dsp_18x19;
 // ---------- parameters ----------
-localparam int CLK_PERIOD_NS = 8; //! clock period in ns
-localparam int SIM_TIME_LIMIT_NS = 200; //! simulation time limit in ns
-localparam int RST_DURATION_CYCLE = 1; //! reset duration in cycles
+localparam int unsigned CLK_PERIOD_NS = 8; //! clock period in ns
+localparam int unsigned SIM_TIME_LIMIT_NS = 200; //! simulation time limit in ns
+localparam int unsigned RST_DURATION_CYCLE = 1; //! reset duration in cycles
 
 localparam int unsigned DUT_BW_IN_A = 18; //! Details are in the DUT documentation.
 localparam int unsigned DUT_BW_IN_B = 19; //! ditto
