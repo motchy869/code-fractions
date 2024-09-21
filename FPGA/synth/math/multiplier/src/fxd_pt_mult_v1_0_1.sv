@@ -14,9 +14,11 @@
 //!
 //! It depends on the synthesis tool whether DSP blocks are used or not.
 //! ## changelog
-//! ### [0.1.0] - 2024-08-01
+//! ### [1.0.1] - 2024-09-20
+//! - fix: slipping valid signal delay line
+//! ### [1.0.0] - 2024-08-01
 //! - initial release
-module fxd_pt_mult_v1_0_0 #(
+module fxd_pt_mult_v1_0_1 #(
     parameter int unsigned BIT_WIDTH_IN_A = 16, //! bit width of the input a
     parameter int unsigned BIT_WIDTH_IN_B = 16, //! bit width of the input b
     parameter int unsigned BIT_WIDTH_OUT = 16, //! bit width of the output
@@ -110,7 +112,7 @@ endgenerate
 always_ff @(posedge i_clk) begin: blk_update_vld_dly_line
     if (i_sync_rst) begin
         r_vld_dly_line <= '0;
-    end else if (i_input_valid) begin
+    end else if (g_adv_pip_ln) begin
         r_vld_dly_line <= {r_vld_dly_line[$left(r_vld_dly_line)-1:0], 1'b1};
     end
 end

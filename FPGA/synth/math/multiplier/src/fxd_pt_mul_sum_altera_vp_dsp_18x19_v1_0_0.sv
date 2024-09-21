@@ -176,7 +176,7 @@ endgenerate
 always_ff @(posedge i_clk) begin: blk_update_vld_dly_line
     if (i_sync_rst) begin
         r_vld_dly_line <= '0;
-    end else if (i_input_valid) begin
+    end else if (g_adv_pip_ln) begin
         r_vld_dly_line <= {r_vld_dly_line[CYCLE_LAT-1:0], 1'b1};
     end
 end
