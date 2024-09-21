@@ -32,7 +32,7 @@ module cplx_mult_v1_0_1 #(
 )(
     input wire logic i_clk, //! input clock
     input wire logic i_sync_rst, //! input reset synchronous to the input clock
-    //! @virtualbus us_side_if @dir in configuration interface
+    //! @virtualbus us_side_if @dir in upstream side interface
     output wire logic o_ready, //! ready signal to upstream side which indicates that the upstream side is allowed to update input data (to this module) right AFTER the next rising edge of the clock
     input wire logic i_input_valid, //! valid signal from upstream side
     input wire logic [1:0][BIT_WIDTH_IN_A-1:0] i_a, //! Input a. The elements [0] and [1] are the real and imaginary parts, respectively.

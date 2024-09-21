@@ -37,7 +37,7 @@ module fxd_pt_mul_sum_altera_vp_dsp_18x19_v1_0_0 #(
 )(
     input wire logic i_clk, //! input clock
     input wire logic i_sync_rst, //! input reset synchronous to the input clock
-    //! @virtualbus us_side_if @dir in configuration interface
+    //! @virtualbus us_side_if @dir in upstream side interface
     output wire logic o_ready, //! ready signal to upstream side which indicates that the upstream side is allowed to update input data (to this module) right AFTER the next rising edge of the clock
     input wire logic i_input_valid, //! Valid signal from upstream side. This is also used as freezing signal like clock-enable deassertion. When this is low, the module internal state is frozen.
     input wire logic signed [BW_IN_A_0-1:0] i_a_0, //! input a_0

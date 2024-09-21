@@ -22,7 +22,7 @@ extern module fxd_pt_mul_sum_altera_vp_dsp_18x19_v1_0_0 #(
 )(
     input wire logic i_clk,
     input wire logic i_sync_rst,
-    //! @virtualbus us_side_if @dir in configuration interface
+    //! @virtualbus us_side_if @dir in upstream side interface
     output wire logic o_ready,
     input wire logic i_input_valid,
     input wire logic signed [BW_IN_A_0-1:0] i_a_0,
