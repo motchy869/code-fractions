@@ -182,14 +182,16 @@ task automatic feed_data(ref dut_vif_t vif);
             vif.b_1 <= testCases[cnt_input].b_1;
             vif.sub <= testCases[cnt_input].sub;
             vif.ready_from_ds <= 1'b1;
-            cnt_input++;
+            cnt_input += 1;
         end
         if (cnt_output < NUM_TEST_CASES && vif.output_valid) begin
+            if (cnt_output == 0) begin
+                assert(cnt_input == DUT_CYCLE_LAT + 2) else $fatal(2, "cnt_input = %0d, expected = %0d", cnt_input, DUT_CYCLE_LAT + 1);
+            end
             if (vif.c != testCases[cnt_output].c_expected) begin
                 $display("Test case %0d failed: c = %0d, expected = %0d", cnt_output, vif.c, testCases[cnt_output].c_expected);
-                //$finish(1);
             end
-            cnt_output++;
+            cnt_output += 1;
         end
         @(posedge r_clk);
     end
