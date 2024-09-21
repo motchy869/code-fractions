@@ -22,9 +22,9 @@
 //! ## References
 //! 1. [Cyclone V Device Handbook Volume 1: Device Interfaces and Integration](https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://cdrdv2-public.intel.com/666995/cv_5v2-683375-666995.pdf&ved=2ahUKEwiuqoyYo8qIAxU5k1YBHRX0HysQFnoECBMQAQ&usg=AOvVaw2qYeHcb4LpcBs5EUXl-iRo)
 //! ## changelog
-//! ### [Unreleased]
-//! - Seemingly OK, but NOT tested AT ALL.
-module fxd_pt_mul_sum_altera_vp_dsp_18x19_v0_1_0 #(
+//! ### [1.0.0] - 2024-09-21
+//! - initial release
+module fxd_pt_mul_sum_altera_vp_dsp_18x19_v1_0_0 #(
     parameter int unsigned BW_IN_A_0 = 16, //! bit width of the input a_0, must be <= 18
     parameter int unsigned BW_IN_B_0 = 16, //! bit width of the input b_0, must be <= **19**
     parameter int unsigned BW_IN_A_1 = 16, //! bit width of the input a_1, must be <= 18
