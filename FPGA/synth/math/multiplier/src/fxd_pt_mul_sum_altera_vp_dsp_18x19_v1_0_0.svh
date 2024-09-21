@@ -1,5 +1,5 @@
-`ifndef fxd_pt_mul_sum_altera_vp_dsp_18x19_v1_0_0_SVH_INCLUDED
-`define fxd_pt_mul_sum_altera_vp_dsp_18x19_v1_0_0_SVH_INCLUDED
+`ifndef FXD_PT_MUL_SUM_ALTERA_VP_DSP_18X19_V1_0_0_SVH_INCLUDED
+`define FXD_PT_MUL_SUM_ALTERA_VP_DSP_18X19_V1_0_0_SVH_INCLUDED
 
 // Verible directive
 // verilog_lint: waive-start parameter-name-style
@@ -40,4 +40,4 @@ extern module fxd_pt_mul_sum_altera_vp_dsp_18x19_v1_0_0 #(
 
 `default_nettype none
 
-`endif // fxd_pt_mul_sum_altera_vp_dsp_18x19_v1_0_0_SVH_INCLUDED
+`endif // FXD_PT_MUL_SUM_ALTERA_VP_DSP_18X19_V1_0_0_SVH_INCLUDED
