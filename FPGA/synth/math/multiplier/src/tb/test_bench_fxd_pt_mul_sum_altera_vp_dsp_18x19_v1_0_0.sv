@@ -170,6 +170,7 @@ task automatic feed_data(ref dut_vif_t vif);
         {DUT_BW_IN_A_0'(33_905),   DUT_BW_IN_B_0'(-122_300), DUT_BW_IN_A_1'(28_174),   DUT_BW_IN_B_1'(123_990),  1'b1, DUT_BW_OUT'(3_061)}
     };
 
+    bit is_error = 1'b0;
     int unsigned cnt_input = 0;
     int unsigned cnt_output = 0;
 
@@ -189,11 +190,16 @@ task automatic feed_data(ref dut_vif_t vif);
                 assert(cnt_input == DUT_CYCLE_LAT + 2) else $fatal(2, "cnt_input = %0d, expected = %0d", cnt_input, DUT_CYCLE_LAT + 1);
             end
             if (vif.c != testCases[cnt_output].c_expected) begin
-                $display("Test case %0d failed: c = %0d, expected = %0d", cnt_output, vif.c, testCases[cnt_output].c_expected);
+                $error("Test case %0d failed: c = %0d, expected = %0d", cnt_output, vif.c, testCases[cnt_output].c_expected);
+                is_error = 1'b1;
             end
             cnt_output += 1;
         end
         @(posedge r_clk);
+    end
+
+    if (!is_error) begin
+        $display("All test cases passed.");
     end
 endtask
 
