@@ -6,7 +6,7 @@
 
 `default_nettype none
 
-//! A fully-parametrized complex multiplier with optional rounding half to even.
+//! A fully-parametrized fixed-point number complex multiplier with optional rounding half to even.
 //! This module uses 3 (not 4) real multipliers.
 //! This technique is described in the chapter 2 of "Complex Multiplier v6.0 LogiCORE IP Product Guide"
 //!
