@@ -14,7 +14,7 @@
 //!
 //! It depends on the synthesis tool whether DSP blocks are used or not.
 //! ## changelog
-//! ### [Unreleased]
+//! ### [2.0.0] - 2024-09-24
 //! - change:
 //!   1. Renamed module to ```fxd_pt_mul_v2_0_0```.
 //!   2. Default value of output stage pipeline depth of the multiplier is now 1.
