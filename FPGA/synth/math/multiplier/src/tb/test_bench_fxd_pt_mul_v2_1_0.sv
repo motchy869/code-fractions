@@ -6,7 +6,7 @@
 
 // timescale is defined in Makefile.
 
-module test_bench_fxd_pt_mul_v2_0_0;
+module test_bench_fxd_pt_mul_v2_1_0;
 // ---------- parameters ----------
 localparam int unsigned CLK_PERIOD_NS = 8; //! clock period in ns
 localparam int unsigned SIM_TIME_LIMIT_NS = 200; //! simulation time limit in ns
@@ -79,7 +79,7 @@ dut_if #(
 ) dut_if_0 (.i_clk(r_clk));
 
 //! DUT instance
-fxd_pt_mul_v2_0_0 #(
+fxd_pt_mul_v2_1_0 #(
     .BIT_WIDTH_IN_A(DUT_BIT_WIDTH_IN_A),
     .BIT_WIDTH_IN_B(DUT_BIT_WIDTH_IN_B),
     .BIT_WIDTH_OUT(DUT_BIT_WIDTH_OUT),

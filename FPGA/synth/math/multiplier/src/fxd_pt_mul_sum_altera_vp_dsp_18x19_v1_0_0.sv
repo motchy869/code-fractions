@@ -103,12 +103,12 @@ wire signed [BW_RHS_MULT-1:0] w_b_0_to_dsp_blk; //! input b_0 to the DSP block
 wire signed [BW_LHS_MULT-1:0] w_a_1_to_dsp_blk; //! input a_1 to the DSP block
 wire signed [BW_RHS_MULT-1:0] w_b_1_to_dsp_blk; //! input b_1 to the DSP block
 wire w_sub_to_dsp_blk; //! input sub to the DSP block
-wire signed [BW_INTERM_PROD-1:0] w_a_0_by_b_0; //! a_0 * b_0
-assign w_a_0_by_b_0 = BW_INTERM_PROD'(w_a_0_to_dsp_blk)*BW_INTERM_PROD'(w_b_0_to_dsp_blk);
-wire signed [BW_INTERM_PROD-1:0] w_a_1_by_b_1; //! a_1 * b_1
-assign w_a_1_by_b_1 = BW_INTERM_PROD'(w_a_1_to_dsp_blk)*BW_INTERM_PROD'(w_b_1_to_dsp_blk);
+wire signed [BW_INTERM_PROD-1:0] g_a_0_by_b_0; //! a_0 * b_0
+assign g_a_0_by_b_0 = BW_INTERM_PROD'(w_a_0_to_dsp_blk)*BW_INTERM_PROD'(w_b_0_to_dsp_blk);
+wire signed [BW_INTERM_PROD-1:0] g_a_1_by_b_1; //! a_1 * b_1
+assign g_a_1_by_b_1 = BW_INTERM_PROD'(w_a_1_to_dsp_blk)*BW_INTERM_PROD'(w_b_1_to_dsp_blk);
 wire signed [BW_INTERM_SUM-1:0] g_c_from_dsp_blk; //! output c from the DSP block
-assign g_c_from_dsp_blk = w_sub_to_dsp_blk ? BW_INTERM_SUM'(w_a_0_by_b_0) - BW_INTERM_SUM'(w_a_1_by_b_1) : BW_INTERM_SUM'(w_a_0_by_b_0) + BW_INTERM_SUM'(w_a_1_by_b_1);
+assign g_c_from_dsp_blk = w_sub_to_dsp_blk ? BW_INTERM_SUM'(g_a_0_by_b_0) - BW_INTERM_SUM'(g_a_1_by_b_1) : BW_INTERM_SUM'(g_a_0_by_b_0) + BW_INTERM_SUM'(g_a_1_by_b_1);
 wire signed [BW_INTERM_SUM-1:0] w_c_pre_slc_rnd; //! c before slicing/rounding
 
 generate
