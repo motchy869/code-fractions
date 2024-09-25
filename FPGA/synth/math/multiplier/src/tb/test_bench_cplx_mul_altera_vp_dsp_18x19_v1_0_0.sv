@@ -6,7 +6,7 @@
 
 // timescale is defined in Makefile.
 
-module test_bench_cplx_mul_altera_vp_dsp_18x19;
+module test_bench_cplx_mul_altera_vp_dsp_18x19_v1_0_0;
 // ---------- parameters ----------
 localparam int unsigned CLK_PERIOD_NS = 8; //! clock period in ns
 localparam int unsigned SIM_TIME_LIMIT_NS = 200; //! simulation time limit in ns
