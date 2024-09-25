@@ -40,9 +40,9 @@ INCLUDE_DIR :=
 
 SIM_CONSOLE_LOG_FILE_PATH := $(SIM_DIR)/sim_console.log
 #SV_SRC_FILES := $(shell find $(SRC_DIR) -type f -name "*.sv" | tr '\n' ' ')
-SV_SRC_FILES := $(SRC_DIR)/round_hf2evn_v1_0_0.sv $(SRC_DIR)/fxd_pt_mul_sum_altera_vp_dsp_18x19_v1_0_0.sv $(SRC_DIR)/cplx_mul_altera_vp_dsp_18x19_v1_0_0.sv $(SRC_DIR)/tb/test_bench_cplx_mul_altera_vp_dsp_18x19.sv
+SV_SRC_FILES := $(SRC_DIR)/round_hf2evn_v1_0_0.sv $(SRC_DIR)/fxd_pt_mul_v2_0_0.sv $(SRC_DIR)/tb/test_bench_fxd_pt_mul_v2_0_0.sv
 
-TB_TOP := test_bench_cplx_mul_altera_vp_dsp_18x19
+TB_TOP := test_bench_fxd_pt_mul_v2_0_0
 
 DEFAULT_TIME_SCALE := 1ns/1ps
 

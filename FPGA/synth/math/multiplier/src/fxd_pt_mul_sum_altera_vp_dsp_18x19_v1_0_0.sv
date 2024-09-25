@@ -140,7 +140,7 @@ generate
 
     if (EN_RND_HF2EVN) begin: gen_rnd_sigs
         wire signed [BW_INTERM_SUM - BIT_SLC_OFFSET_OUT - 1:0] g_rnd_res; //! result of rounding
-        var logic signed [BW_OUT-1:0] r_c_post_slc_rnd; //! c after slicing/rounding
+        var logic signed [BW_OUT-1:0] r_c_post_rnd_slc; //! c after rounding&slicing
     end
 endgenerate
 // --------------------
@@ -164,7 +164,7 @@ assign o_ready = g_can_adv_pip_ln;
 assign o_output_valid = i_input_valid & r_vld_dly_line[CYCLE_LAT-1];
 generate
     if (EN_RND_HF2EVN) begin: gen_out_rnd
-        assign o_c = gen_rnd_sigs.r_c_post_slc_rnd;
+        assign o_c = gen_rnd_sigs.r_c_post_rnd_slc;
     end else begin: gen_out_trunc
         assign o_c = signed'(w_c_pre_slc_rnd[BIT_SLC_OFFSET_OUT +: BW_OUT]);
     end
@@ -228,12 +228,12 @@ generate
     end
 endgenerate
 
-//! Updates post-clipping value register.
-always_ff @(posedge i_clk) begin: blk_update_post_clip_val_reg
+//! Updates post-rounding registers.
+always_ff @(posedge i_clk) begin: blk_update_post_rnd_regs
     if (i_sync_rst) begin
-        gen_rnd_sigs.r_c_post_slc_rnd <= '0;
+        gen_rnd_sigs.r_c_post_rnd_slc <= '0;
     end else if (g_adv_pip_ln) begin
-        gen_rnd_sigs.r_c_post_slc_rnd <= gen_rnd_sigs.g_rnd_res[BW_OUT-1:0];
+        gen_rnd_sigs.r_c_post_rnd_slc <= gen_rnd_sigs.g_rnd_res[BW_OUT-1:0];
     end
 end
 // --------------------
