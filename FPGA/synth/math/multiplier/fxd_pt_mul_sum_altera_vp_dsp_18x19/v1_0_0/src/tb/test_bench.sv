@@ -2,13 +2,11 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`include "../fxd_pt_mul_sum_altera_vp_dsp_18x19_v1_0_0.svh"
-
 `default_nettype none
 
 // timescale is defined in Makefile.
 
-module test_bench_fxd_pt_mul_sum_altera_vp_dsp_18x19_v1_0_0;
+module test_bench;
 // ---------- parameters ----------
 localparam int unsigned CLK_PERIOD_NS = 8; //! clock period in ns
 localparam int unsigned SIM_TIME_LIMIT_NS = 200; //! simulation time limit in ns
