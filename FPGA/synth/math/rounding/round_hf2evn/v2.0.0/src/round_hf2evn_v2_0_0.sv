@@ -8,6 +8,9 @@
 //! Optional output register is available.
 //! - When the output register is enabled, the cycle latency of this module is 1.
 //! - When the output register is disabled, this module is just a **combinational** logic and timing signals such as clock, reset, valid, ready are not used.
+//!
+//! ![brief schematic diagram](../doc/module_schematic_diagram.png "brief schematic diagram")
+//!
 //! ## Changelog
 //! ### [2.0.0] - 2024-09-29
 //! - added output register
