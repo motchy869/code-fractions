@@ -2,11 +2,11 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`include "round_hf2evn_v1_0_0.svh"
+`include "../round_hf2evn_v1_0_0.svh"
 
 `default_nettype none
 //! test bench for round_hf2evn_v1_0_0
-module test_bench();
+module test_bench_for_v1_0_0();
 // ---------- parameters ----------
 localparam int CLK_PERIOD_NS = 8; //! clock period in ns
 localparam int SIM_TIME_LIMIT_NS = 200; //! simulation time limit in ns
@@ -114,6 +114,8 @@ task automatic drive_dut(ref dut_vif_t vif);
     };
     // verilog_lint: waive-stop
 
+    var logic is_error = 1'b0;
+
     for (int unsigned i=0; i<NUM_VALS_TO_TEST; ++i) begin
         bit signed [N-N_F-1:0] result;
         @(posedge vif.i_clk);
@@ -123,7 +125,12 @@ task automatic drive_dut(ref dut_vif_t vif);
         $display("i=%0d, input=8'%8b, result=6'%6b, expected=6'%6b", i, vals[i], result, expected_results[i]);
         if (result != expected_results[i]) begin
             $display("Error: result doesn't match the expected result.");
+            is_error = 1'b1;
         end
+    end
+
+    if (!is_error) begin
+        $display("All test cases passed.");
     end
 endtask
 
