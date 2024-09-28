@@ -18,7 +18,7 @@
 //! - fix: slipping valid signal delay line
 //! ### [1.0.0] - 2024-08-01
 //! - initial release
-module fxd_pt_mult_v1_0_1 #(
+module fxd_pt_mul_v1_0_1 #(
     parameter int unsigned BIT_WIDTH_IN_A = 16, //! bit width of the input a
     parameter int unsigned BIT_WIDTH_IN_B = 16, //! bit width of the input b
     parameter int unsigned BIT_WIDTH_OUT = 16, //! bit width of the output
