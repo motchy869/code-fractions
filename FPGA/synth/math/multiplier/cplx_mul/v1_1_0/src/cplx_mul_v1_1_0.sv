@@ -25,7 +25,7 @@
 //! - fix: missing bit width expansion at the RHS of non-blocking assignments to ```alpha_{0,1,2}```.
 //! ### [1.0.0] - 2024-08-01
 //! - initial release
-module cplx_mult_v1_1_0 #(
+module cplx_mul_v1_1_0 #(
     parameter int unsigned BIT_WIDTH_IN_A = 16, //! bit width of the input a
     parameter int unsigned BIT_WIDTH_IN_B = 16, //! bit width of the input b
     parameter int unsigned BIT_WIDTH_OUT = 16, //! bit width of the output
