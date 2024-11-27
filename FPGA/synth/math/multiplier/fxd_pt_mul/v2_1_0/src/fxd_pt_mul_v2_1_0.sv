@@ -14,6 +14,8 @@
 //!
 //! It depends on the synthesis tool whether DSP blocks are used or not.
 //! ## changelog
+//! ### [2.1.0] - 2024-09-25
+//! - feat: removable input/output stage registers
 //! ### [2.0.0] - 2024-09-24
 //! - change:
 //!   1. Renamed module to ```fxd_pt_mul_v2_0_0```.
