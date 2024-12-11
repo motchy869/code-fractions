@@ -18,7 +18,7 @@ module ramp_p4_v0_1_0#(
 )(
     //! common ports
     input wire logic i_clk, //! input clock
-    input wire logic i_sync_rst, //! input reset synchronous to the input clock
+    input wire logic i_sync_rst, //! input reset signal synchronous to the input clock
 
     //! @virtualbus us_side_if @dir in upstream side interface
     input wire logic ip_start_req, //! Start request pulse for waveform generation. The request is accepted only when `o_idle` is high. The pulse length must be 1 clock-cycle.

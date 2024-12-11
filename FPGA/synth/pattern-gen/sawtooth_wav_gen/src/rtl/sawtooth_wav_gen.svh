@@ -15,7 +15,7 @@ extern module sawtooth_wav_gen #(
     parameter int unsigned SSR = 4 //! Super Sample Rate
 )(
     input wire logic i_clk, //! input clock
-    input wire logic i_sync_rst, //! input reset synchronous to the input clock
+    input wire logic i_sync_rst, //! input reset signal synchronous to the input clock
     //! @virtualbus cfg_if @dir in configuration interface
     input wire logic signed [BIT_WIDTH__OUTPUT-1:0] i_start_val, //! start value
     input wire logic signed [BIT_WIDTH__OUTPUT-1:0] i_end_val, //! end value

@@ -19,7 +19,7 @@ extern module cplx_add (
     cplx_num_if.agt_pt agt_pt_cplx_b, //! second complex number b
     input wire logic i_sub, //! Add/subtract dynamic control signal. 0/1: add/subtract. If this signal is compile-time constant, the synthesis tool will optimize-out the unused logics.
 
-    input wire logic i_ds_ready, //! ready signal from downstream side which indicates that this module is allowed to update input data (to downstream side) right AFTER the next rising edge of the clock
+    input wire logic i_ds_ready, //! ready signal from downstream side which indicates that this module is allowed to update output data (to downstream side) right AFTER the next rising edge of the clock
     output wire logic o_output_valid, //! output valid signal
     cplx_num_if.hst_pt mst_pt_cplx_c //! a+b or a-b
 );

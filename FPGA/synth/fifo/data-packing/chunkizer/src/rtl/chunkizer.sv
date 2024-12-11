@@ -14,7 +14,7 @@ module chunkizer #(
     localparam int unsigned BIT_WIDTH__SZ_MAX_IN = $clog2(SZ_MAX_IN+1) //! bit width required to represent ```SZ_MAX_IN```
 )(
     input wire logic i_clk, //! input clock
-    input wire logic i_sync_rst, //! input reset synchronous to the input clock
+    input wire logic i_sync_rst, //! input reset signal synchronous to the input clock
     //! @virtualbus us_side_if @dir in upstream side interface
     input wire logic i_frag_valid, //! input valid signal which indicates that the input fragment is valid
     input wire logic [BIT_WIDTH__SZ_MAX_IN-1:0] i_frag_size, //! the size of the input fragment, **clipped** to ```SZ_MAX_IN```
