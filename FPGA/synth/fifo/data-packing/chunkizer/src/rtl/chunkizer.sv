@@ -14,7 +14,7 @@ module chunkizer #(
     localparam int unsigned BIT_WIDTH__SZ_MAX_IN = $clog2(SZ_MAX_IN+1) //! bit width required to represent ```SZ_MAX_IN```
 )(
     input wire logic i_clk, //! input clock
-    input wire logic i_sync_rst, //! input reset synchronous to the input clock
+    input wire logic i_sync_rst, //! input reset signal synchronous to the input clock
     //! @virtualbus us_side_if @dir in upstream side interface
     input wire logic i_frag_valid, //! input valid signal which indicates that the input fragment is valid
     input wire logic [BIT_WIDTH__SZ_MAX_IN-1:0] i_frag_size, //! the size of the input fragment, **clipped** to ```SZ_MAX_IN```
@@ -137,7 +137,7 @@ generate
 endgenerate
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign o_next_frag_ready = !i_sync_rst && g_there_is_space_to_write_frag;
 assign o_chunk_valid = g_there_is_complete_chunk || (g_there_is_incomplete_chunk && i_flush);
 assign o_chunk = g_chunk;

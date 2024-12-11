@@ -123,7 +123,7 @@ csr_to_ram_bridge#(
 );
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 // --------------------
 
 // CSR -> bridge

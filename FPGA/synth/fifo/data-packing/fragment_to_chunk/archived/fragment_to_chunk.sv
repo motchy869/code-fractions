@@ -15,7 +15,7 @@ module fragment_to_chunk#(
 )(
     //! common ports
     input wire logic i_clk, //! input clock
-    input wire logic i_sync_rst, //! input reset synchronous to the input clock
+    input wire logic i_sync_rst, //! input reset signal synchronous to the input clock
 
     //! @virtualbus us_side_if @dir in upstream side interface
     input wire logic i_frag_valid, //! input valid signal which indicates that the input fragment is valid
@@ -99,7 +99,7 @@ assign o_next_frag_ready = !i_sync_rst && g_frag_size_good && (g_pop_en ? r_buf_
 assign o_chunk_valid = !i_sync_rst && r_buf_cnt >= $bits(r_buf_cnt)'(S_OUT);
 assign o_chunk = r_frag_buf[$bits(r_buf_cnt)'(r_read_page_ptr)*$bits(r_buf_cnt)'(S_OUT)+:S_OUT];
 
-//! Update the fragment buffer count.
+//! Updates the fragment buffer count.
 always_ff @(posedge i_clk) begin: update_buf_cnt
     if (i_sync_rst) begin
         r_buf_cnt <= '0;
@@ -108,7 +108,7 @@ always_ff @(posedge i_clk) begin: update_buf_cnt
     end
 end
 
-//! Update the read page pointer.
+//! Updates the read page pointer.
 always_ff @(posedge i_clk) begin: update_read_page_ptr
     if (i_sync_rst) begin
         r_read_page_ptr <= 1'b0;
@@ -117,7 +117,7 @@ always_ff @(posedge i_clk) begin: update_read_page_ptr
     end
 end
 
-//! Update the fragment buffer.
+//! Updates the fragment buffer.
 always_ff @(posedge i_clk) begin: update_fragment_buffer
     if (i_sync_rst) begin
         r_frag_buf <= '{default:0};

@@ -53,11 +53,11 @@ var logic [WORD_BIT_WIDTH-1:0] r_ram [DEPTH]; //! RAM
 var logic [USE_OUTPUT_REG:0][WORD_BIT_WIDTH-1:0] r_out_reg; //! output register
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign o_data = r_out_reg[USE_OUTPUT_REG];
 // --------------------
 
-//! Update RAM content.
+//! Updates RAM content.
 always_ff @(posedge i_clk) begin: update_ram
     if (!i_sync_rst && i_we) begin
         for (int i=0; i<WORD_BIT_WIDTH/8; ++i) begin

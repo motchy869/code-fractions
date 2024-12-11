@@ -2,7 +2,7 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`include "../skid_buf.svh"
+`include "../skid_buf_v0_1_0.svh"
 
 `default_nettype none
 
@@ -54,11 +54,12 @@ skid_buf_if #(
 ) dut_if (.i_clk(r_clk));
 
 //! DUT instance
-skid_buf #(
+skid_buf_v0_1_0 #(
     .T(T)
 ) dut (
     .i_clk(r_clk),
     .i_sync_rst(r_sync_rst),
+    .i_freeze(1'b0),
     .i_us_valid(dut_if.us_valid),
     .i_us_data(dut_if.us_data),
     .o_us_ready(dut_if.us_ready),

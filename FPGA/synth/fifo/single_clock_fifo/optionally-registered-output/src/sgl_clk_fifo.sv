@@ -62,7 +62,7 @@ var logic r_out_empty; //! output register for `o_empty`, will be optimized away
 var logic [DATA_BIT_WIDTH-1:0] r_out_data; //! output register for `o_data`, will be optimized away if `EN_DS_OUT_REG` is 0
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign o_full = EN_US_OUT_REG ? r_out_full : r_wr_ptr.idx == r_rd_ptr.idx && r_wr_ptr.phase != r_rd_ptr.phase;
 assign o_empty = EN_DS_OUT_REG ? r_out_empty : r_wr_ptr.idx == r_rd_ptr.idx && r_wr_ptr.phase == r_rd_ptr.phase;
 assign o_data = EN_DS_OUT_REG ? r_out_data : r_fifo_buf[r_rd_ptr.idx];
@@ -86,7 +86,7 @@ always_comb begin: blk_det_nxt_rd_ptr
     end
 end
 
-//! Update FIFO read pointer.
+//! Updates FIFO read pointer.
 always_ff @(posedge i_clk) begin: blk_update_rd_ptr
     r_rd_ptr <= g_nxt_rd_ptr;
 end
@@ -108,7 +108,7 @@ always_comb begin: blk_det_nxt_wr_ptr
     end
 end
 
-//! Update FIFO write pointer.
+//! Updates FIFO write pointer.
 always_ff @(posedge i_clk) begin: blk_update_wr_ptr
     r_wr_ptr <= g_nxt_wr_ptr;
 end
@@ -124,12 +124,12 @@ always_comb begin: blk_det_nxt_fifo_buf
     end
 end
 
-//! Update FIFO buffer.
+//! Updates FIFO buffer.
 always_ff @(posedge i_clk) begin: blk_update_fifo_buf
     r_fifo_buf <= g_nxt_fifo_buf;
 end
 
-//! Update output registers.
+//! Updates output registers.
 always_ff @(posedge i_clk) begin: blk_update_out_regs
     if (EN_US_OUT_REG) begin
         r_out_full <= g_nxt_wr_ptr.idx == g_nxt_rd_ptr.idx && g_nxt_wr_ptr.phase != g_nxt_rd_ptr.phase;

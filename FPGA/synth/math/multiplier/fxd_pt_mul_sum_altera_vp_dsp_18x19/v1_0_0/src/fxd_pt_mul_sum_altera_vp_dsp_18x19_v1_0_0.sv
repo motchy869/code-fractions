@@ -36,7 +36,7 @@ module fxd_pt_mul_sum_altera_vp_dsp_18x19_v1_0_0 #(
     parameter bit EN_RND_HF2EVN = 1'b1 //! enable rounding half to even
 )(
     input wire logic i_clk, //! input clock
-    input wire logic i_sync_rst, //! input reset synchronous to the input clock
+    input wire logic i_sync_rst, //! input reset signal synchronous to the input clock
     //! @virtualbus us_side_if @dir in upstream side interface
     output wire logic o_ready, //! ready signal to upstream side which indicates that the upstream side is allowed to update input data (to this module) right AFTER the next rising edge of the clock
     input wire logic i_input_valid, //! Valid signal from upstream side. This is also used as freezing signal like clock-enable deassertion. When this is low, the module internal state is frozen.
@@ -47,7 +47,7 @@ module fxd_pt_mul_sum_altera_vp_dsp_18x19_v1_0_0 #(
     input wire logic i_sub, //! Add/subtract dynamic control signal. 0/1: add/subtract. If this signal is compile-time constant, the synthesis tool will optimize-out the unused logics.
     //! @end
     //! @virtualbus ds_side_if @dir out downstream side interface
-    //! ready signal from downstream side which indicates that this module is allowed to update input data (to downstream side) right AFTER the next rising edge of the clock
+    //! ready signal from downstream side which indicates that this module is allowed to update output data (to downstream side) right AFTER the next rising edge of the clock
     input wire logic i_ds_ready,
     output wire logic o_output_valid, //! output valid signal
     output wire logic signed [BW_OUT-1:0] o_c //! output c
@@ -159,7 +159,7 @@ generate
 endgenerate
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign o_ready = g_can_adv_pip_ln;
 assign o_output_valid = i_input_valid & r_vld_dly_line[CYCLE_LAT-1];
 generate

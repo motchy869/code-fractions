@@ -35,7 +35,7 @@ module fxd_pt_mul_v2_1_0 #(
     parameter bit ENABLE_ROUNDING_HALF_TO_EVEN = 1'b1 //! enable rounding half to even
 )(
     input wire logic i_clk, //! input clock
-    input wire logic i_sync_rst, //! input reset synchronous to the input clock
+    input wire logic i_sync_rst, //! input reset signal synchronous to the input clock
     //! @virtualbus us_side_if @dir in upstream side interface
     output wire logic o_ready, //! ready signal to upstream side which indicates that the upstream side is allowed to update input data (to this module) right AFTER the next rising edge of the clock
     input wire logic i_input_valid, //! valid signal from upstream side
@@ -43,7 +43,7 @@ module fxd_pt_mul_v2_1_0 #(
     input wire logic signed [BIT_WIDTH_IN_B-1:0] i_b, //! Input b.
     //! @end
     //! @virtualbus ds_side_if @dir out downstream side interface
-    //! ready signal from downstream side which indicates that this module is allowed to update input data (to downstream side) right AFTER the next rising edge of the clock
+    //! ready signal from downstream side which indicates that this module is allowed to update output data (to downstream side) right AFTER the next rising edge of the clock
     input wire logic i_ds_ready,
     output wire logic o_output_valid, //! output valid signal
     output wire logic signed [BIT_WIDTH_OUT-1:0] o_c //! output c = ab
@@ -121,7 +121,7 @@ generate
 endgenerate
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign o_ready = g_can_adv_pip_ln;
 assign o_output_valid = i_input_valid & r_vld_dly_line[CYCLE_LATENCY-1];
 generate

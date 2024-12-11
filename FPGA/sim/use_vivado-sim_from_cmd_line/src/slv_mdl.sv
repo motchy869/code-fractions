@@ -17,7 +17,7 @@ var logic r_rd_data_vld; //! read back data valid
 var logic [DATA_BIT_WIDTH-1:0] r_rd_data; //! read back data
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign if_bus.rd_data_vld = r_rd_data_vld;
 assign if_bus.rd_data = r_rd_data;
 // --------------------

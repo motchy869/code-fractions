@@ -84,7 +84,7 @@ r_fifo_buf r_fifo_buf (
 );
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign o_us_ready = i_sync_rst ? 1'b0 : !g_buf_full;
 assign o_ds_valid = !g_buf_empty;
 // --------------------

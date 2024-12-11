@@ -17,7 +17,7 @@ module frag_to_chunk_fr#(
 )(
     //! common ports
     input wire logic i_clk, //! input clock
-    input wire logic i_sync_rst, //! input reset synchronous to the input clock
+    input wire logic i_sync_rst, //! input reset signal synchronous to the input clock
 
     //! @virtualbus us_side_if @dir in upstream side interface
     input wire logic i_frag_valid, //! input valid signal which indicates that the input fragment is valid
@@ -121,7 +121,7 @@ frag_to_chunk#(.S_MAX_IN(S_MAX_IN), .S_OUT(S_OUT), .T(T)) core_inst (
 );
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign o_chunk = w_data_to_ds.chunk;
 // --------------------
 

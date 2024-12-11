@@ -18,7 +18,7 @@ module ramp_p4_v0_1_0#(
 )(
     //! common ports
     input wire logic i_clk, //! input clock
-    input wire logic i_sync_rst, //! input reset synchronous to the input clock
+    input wire logic i_sync_rst, //! input reset signal synchronous to the input clock
 
     //! @virtualbus us_side_if @dir in upstream side interface
     input wire logic ip_start_req, //! Start request pulse for waveform generation. The request is accepted only when `o_idle` is high. The pulse length must be 1 clock-cycle.
@@ -87,7 +87,7 @@ assign g_last_chunk_flg = r_curr_state == STAT_WAV_GEN && `PLUS_ONE(r_sent_chunk
 var logic [P-1:0][BW_VAL-1:0] g_chunk; //! current chunk
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign o_idle = !i_sync_rst && r_curr_state == STAT_IDLE;
 
 assign o_chunk_valid = !i_sync_rst && r_curr_state == STAT_WAV_GEN;
@@ -115,7 +115,7 @@ always_comb begin: decide_next_state
     endcase
 end
 
-//! Update `r_curr_state`.
+//! Updates `r_curr_state`.
 always_ff @(posedge i_clk) begin: update_state
     if (i_sync_rst) begin
         r_curr_state <= STAT_RST;
@@ -124,7 +124,7 @@ always_ff @(posedge i_clk) begin: update_state
     end
 end
 
-//! Update `r_wav_param`.
+//! Updates `r_wav_param`.
 always_ff @(posedge i_clk) begin: update_wav_param
     if (i_sync_rst) begin
         r_wav_param <= '{default:'0};
@@ -138,7 +138,7 @@ always_ff @(posedge i_clk) begin: update_wav_param
     end
 end
 
-//! Update `r_sent_chunk_cnt`.
+//! Updates `r_sent_chunk_cnt`.
 always_ff @(posedge i_clk) begin: update_sent_chunk_cnt
     if (i_sync_rst) begin
         r_sent_chunk_cnt <= '0;
@@ -149,7 +149,7 @@ always_ff @(posedge i_clk) begin: update_sent_chunk_cnt
     end
 end
 
-//! Update `r_sent_treads_cnt`.
+//! Updates `r_sent_treads_cnt`.
 always_ff @(posedge i_clk) begin: update_sent_treads_cnt
     if (i_sync_rst) begin
         r_sent_treads_cnt <= '0;
@@ -164,7 +164,7 @@ always_ff @(posedge i_clk) begin: update_sent_treads_cnt
     end
 end
 
-//! Update `r_intra_tread_chunk_head_pos`.
+//! Updates `r_intra_tread_chunk_head_pos`.
 always_ff @(posedge i_clk) begin: update_intra_tread_chunk_head_pos
     if (i_sync_rst) begin
         r_intra_tread_chunk_head_pos <= '0;
@@ -179,7 +179,7 @@ always_ff @(posedge i_clk) begin: update_intra_tread_chunk_head_pos
     end
 end
 
-//! Update `r_chunk_head_val`.
+//! Updates `r_chunk_head_val`.
 always_ff @(posedge i_clk) begin: update_chunk_head_val
     if (i_sync_rst) begin
         r_chunk_head_val <= '0;

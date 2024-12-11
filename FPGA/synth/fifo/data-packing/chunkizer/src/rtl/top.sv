@@ -72,7 +72,7 @@ chunkizer #(
 );
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign o_led[0] = r_next_frag_ready;
 assign o_led[1] = r_chunk_valid;
 assign o_led[2] = ! r_chunk;

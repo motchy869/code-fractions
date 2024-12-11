@@ -22,14 +22,14 @@ module round_hf2evn_v2_0_0 #(
     parameter bit EN_OUT_REG = 0 //! Enable output register. 0/1: disable/enable
 )(
     input wire logic i_clk, //! input clock, used only when ```EN_OUT_REG``` is 1.
-    input wire logic i_sync_rst, //! input reset synchronous to the input clock, used only when ```EN_OUT_REG``` is 1.
+    input wire logic i_sync_rst, //! input reset signal synchronous to the input clock, used only when ```EN_OUT_REG``` is 1.
     //! @virtualbus us_side_if @dir in upstream side interface
     output wire logic o_ready, //! Ready signal to upstream side which indicates that the upstream side is allowed to update input data (to this module) right AFTER the next rising edge of the clock. When ```EN_OUT_REG``` is 1, this is set to constant 1.
     input wire logic i_input_valid, //! valid signal from upstream side, used only when ```EN_OUT_REG``` is 1.
     input wire logic signed [N-1:0] i_val, //! input value
     //! @end
     //! @virtualbus ds_side_if @dir out downstream side interface
-    //! Ready signal from downstream side which indicates that this module is allowed to update input data (to downstream side) right AFTER the next rising edge of the clock. This is used only when ```EN_OUT_REG``` is 1.
+    //! Ready signal from downstream side which indicates that this module is allowed to update output data (to downstream side) right AFTER the next rising edge of the clock. This is used only when ```EN_OUT_REG``` is 1.
     input wire logic i_ds_ready,
     output wire logic o_output_valid, //! Output valid signal. When ```EN_OUT_REG``` is 1, this is set to constant 1.
     output wire logic signed [N-N_F-1:0] o_val //! output value (integer part only)
@@ -91,7 +91,7 @@ endgenerate
 // ---------- instances ----------
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 generate
     if (EN_OUT_REG) begin: gen_drv_out_sigs_with_out_reg
         assign o_ready = gen_out_reg_sigs.g_can_adv_pip_ln;

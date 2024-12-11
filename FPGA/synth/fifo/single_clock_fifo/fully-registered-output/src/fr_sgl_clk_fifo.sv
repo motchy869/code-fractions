@@ -55,7 +55,7 @@ var buf_ptr_t g_nxt_rd_ptr; //! the value of `r_rd_ptr` right after the next clo
 var buf_ptr_t g_nxt_wr_ptr; //! the value of `r_wr_ptr` right after the next clock rising edge
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 // --------------------
 
 // ---------- blocks ----------
@@ -76,7 +76,7 @@ always_comb begin: blk_det_nxt_rd_ptr
     end
 end
 
-//! Update FIFO read pointer.
+//! Updates FIFO read pointer.
 always_ff @(posedge i_clk) begin: blk_update_rd_ptr
     r_rd_ptr <= g_nxt_rd_ptr;
 end
@@ -98,7 +98,7 @@ always_comb begin: blk_det_nxt_wr_ptr
     end
 end
 
-//! Update FIFO write pointer.
+//! Updates FIFO write pointer.
 always_ff @(posedge i_clk) begin: blk_update_wr_ptr
     r_wr_ptr <= g_nxt_wr_ptr;
 end
@@ -114,22 +114,22 @@ always_comb begin: blk_det_nxt_fifo_buf
     end
 end
 
-//! Update FIFO buffer.
+//! Updates FIFO buffer.
 always_ff @(posedge i_clk) begin: blk_update_fifo_buf
     r_fifo_buf <= g_nxt_fifo_buf;
 end
 
-//! Update full flag output register.
+//! Updates full flag output register.
 always_ff @(posedge i_clk) begin: blk_update_full_flag
     or_full <= g_nxt_wr_ptr.idx == g_nxt_rd_ptr.idx && g_nxt_wr_ptr.phase != g_nxt_rd_ptr.phase;
 end
 
-//! Update empty flag output register.
+//! Updates empty flag output register.
 always_ff @(posedge i_clk) begin: blk_update_empty_flag
     or_empty <= g_nxt_wr_ptr.idx == g_nxt_rd_ptr.idx && g_nxt_wr_ptr.phase == g_nxt_rd_ptr.phase;
 end
 
-//! Update data output register.
+//! Updates data output register.
 always_ff @(posedge i_clk) begin: blk_update_data_out
     or_data <= g_nxt_fifo_buf[g_nxt_rd_ptr.idx];
 end

@@ -8,7 +8,7 @@
 `default_nettype none
 
 //! simple skid buffer which can be used to cut timing arc
-extern module skid_buf #(
+extern module skid_buf_v0_1_0 #(
     // Quartus Prime Lite 23.1std.1 doesn't support type parameter.
     `ifdef QUARTUS_PRIME_LITE // This macro should be set MANUALLY in the project settings
         parameter int unsigned BIT_WIDTH_DATA = 8 //! bit width of the data
