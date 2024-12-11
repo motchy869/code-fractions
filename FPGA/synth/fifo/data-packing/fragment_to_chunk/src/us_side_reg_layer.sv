@@ -57,7 +57,7 @@ var buf_ptr_t g_nxt_wr_ptr; //! the value of `r_wr_ptr` right after the next clo
 var logic r_out_ready_to_partner; //! output register for `o_ready_to_partner`
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign if_m_core_side.valid_reg_layer_to_core = !g_buf_empty;
 assign if_m_core_side.data_reg_layer_to_core = r_fifo_buf[r_rd_ptr.idx];
 assign o_ready_to_partner = r_out_ready_to_partner;
@@ -76,7 +76,7 @@ always_comb begin: blk_det_nxt_rd_ptr
     end
 end
 
-//! Update FIFO read pointer.
+//! Updates FIFO read pointer.
 always_ff @(posedge i_clk) begin: blk_update_rd_ptr
     r_rd_ptr <= g_nxt_rd_ptr;
 end
@@ -93,7 +93,7 @@ always_comb begin: blk_det_nxt_wr_ptr
     end
 end
 
-//! Update FIFO write pointer.
+//! Updates FIFO write pointer.
 always_ff @(posedge i_clk) begin: blk_update_wr_ptr
     r_wr_ptr <= g_nxt_wr_ptr;
 end
@@ -104,12 +104,12 @@ always_comb begin: blk_det_nxt_fifo_buf
     g_nxt_fifo_buf[1] = (g_push_en && r_wr_ptr.idx) ? i_data_from_partner : r_fifo_buf[1];
 end
 
-//! Update FIFO buffer.
+//! Updates FIFO buffer.
 always_ff @(posedge i_clk) begin: blk_update_fifo_buf
     r_fifo_buf <= g_nxt_fifo_buf;
 end
 
-//! Update the output register for ready signal to partner.
+//! Updates the output register for ready signal to partner.
 always_ff @(posedge i_clk) begin: blk_update_ready_to_partner
     r_out_ready_to_partner <= !(g_nxt_wr_ptr.idx == g_nxt_rd_ptr.idx && g_nxt_wr_ptr.phase != g_nxt_rd_ptr.phase);
 end

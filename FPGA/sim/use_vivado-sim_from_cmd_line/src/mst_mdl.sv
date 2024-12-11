@@ -37,7 +37,7 @@ var logic [ADDR_BIT_WIDTH-1:0] r_addr; //! R/W address
 var logic [DATA_BIT_WIDTH-1:0] r_wr_data; //! write data
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign if_bus.addr = r_addr;
 assign if_bus.rd_req = (r_curr_state == OP_STATE_READ);
 assign if_bus.wr_req = (r_curr_state == OP_STATE_WRITE);
@@ -76,7 +76,7 @@ always_comb begin: next_op_state_decision
     endcase
 end
 
-//! Update operation state.
+//! Updates operation state.
 always_ff @(posedge i_clk) begin: op_state_update
     if (i_sync_rst) begin
         r_curr_state <= OP_STATE_RST;

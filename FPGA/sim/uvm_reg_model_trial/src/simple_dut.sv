@@ -72,7 +72,7 @@ module simple_dut#(
     assign g_curr_bvalid_accepted = if_s_axi4_lite.bready && r_axi4_lite_sigs.bvalid;
     // --------------------
 
-    // ---------- Drive output signals. ----------
+    // ---------- Drives output signals. ----------
     // Drive the AXI4-Lite slave output signals.
     // Note that all of them are registered.
     assign if_s_axi4_lite.awready = r_axi4_lite_sigs.awready;

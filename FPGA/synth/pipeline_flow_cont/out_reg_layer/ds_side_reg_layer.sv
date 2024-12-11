@@ -34,14 +34,14 @@ var T r_data_buf; //! buffer for data signal
 
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign if_s_core_side.ready_reg_layer_to_core = !r_valid_buf || i_ready_from_partner;
 assign o_valid_to_partner = r_valid_buf;
 assign o_data_to_partner = r_data_buf;
 // --------------------
 
 // ---------- blocks ----------
-//! Update data buffer.
+//! Updates data buffer.
 always_ff @(posedge i_clk) begin: blk_update_core_data_buf
     if (i_sync_rst) begin
         r_valid_buf <= 1'b0;

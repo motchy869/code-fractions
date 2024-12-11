@@ -50,14 +50,14 @@ wire g_push_en; //! push enable signal
 assign g_push_en = i_we && !o_full;
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign o_full = i_sync_rst || (r_wr_ptr.idx == r_rd_ptr.idx && r_wr_ptr.phase != r_rd_ptr.phase);
 assign o_empty = r_wr_ptr.idx == r_rd_ptr.idx && r_wr_ptr.phase == r_rd_ptr.phase;
 assign o_data = r_fifo_buf[r_rd_ptr.idx];
 // --------------------
 
 // ---------- blocks ----------
-//! Update read pointer.
+//! Updates read pointer.
 always_ff @(posedge i_clk) begin: blk_update_rd_ptr
     if (i_sync_rst) begin
         r_rd_ptr <= '{default:'0};
@@ -71,7 +71,7 @@ always_ff @(posedge i_clk) begin: blk_update_rd_ptr
     end
 end
 
-//! Update write pointer.
+//! Updates write pointer.
 always_ff @(posedge i_clk) begin: blk_update_wr_ptr
     if (i_sync_rst) begin
         r_wr_ptr <= '{default:'0};
@@ -85,7 +85,7 @@ always_ff @(posedge i_clk) begin: blk_update_wr_ptr
     end
 end
 
-//! Update FIFO data storage.
+//! Updates FIFO data storage.
 always_ff @(posedge i_clk) begin: blk_update_fifo_buf
     if (i_sync_rst) begin
         ; // r_fifo_buf <= '{default:'0}; // Costly. Don't worry about exposing garbage data to the downstream because there is an empty flag.

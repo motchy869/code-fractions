@@ -93,7 +93,7 @@ endgenerate
 // ---------- instances ----------
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 generate
     if (EN_OUT_REG) begin: gen_drv_out_sigs_with_out_reg
         assign o_ready = gen_out_reg_sigs.g_can_adv_pip_ln;

@@ -137,7 +137,7 @@ generate
 endgenerate
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign o_next_frag_ready = !i_sync_rst && g_there_is_space_to_write_frag;
 assign o_chunk_valid = g_there_is_complete_chunk || (g_there_is_incomplete_chunk && i_flush);
 assign o_chunk = g_chunk;

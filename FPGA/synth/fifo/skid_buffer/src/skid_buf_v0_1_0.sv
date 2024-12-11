@@ -71,14 +71,14 @@ wire g_pop_en; //! pop enable signal
 assign g_pop_en = o_ds_valid && i_ds_ready;
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign o_us_ready = !i_sync_rst && !g_buf_full;
 assign o_ds_valid = !g_buf_empty;
 assign o_ds_data = r_fifo_buf[r_rd_ptr.idx];
 // --------------------
 
 // ---------- blocks ----------
-//! Update write pointer.
+//! Updates write pointer.
 always_ff @(posedge i_clk) begin: blk_update_wr_ptr
     if (i_sync_rst) begin
         r_wr_ptr <= '{default:'0};
@@ -92,7 +92,7 @@ always_ff @(posedge i_clk) begin: blk_update_wr_ptr
     end
 end
 
-//! Update read pointer.
+//! Updates read pointer.
 always_ff @(posedge i_clk) begin: blk_update_rd_ptr
     if (i_sync_rst) begin
         r_rd_ptr <= '{default:'0};
@@ -106,7 +106,7 @@ always_ff @(posedge i_clk) begin: blk_update_rd_ptr
     end
 end
 
-//! Update FIFO data storage.
+//! Updates FIFO data storage.
 always_ff @(posedge i_clk) begin: blk_update_fifo_buf
     if (i_sync_rst) begin
         r_fifo_buf <= '{default:'0};

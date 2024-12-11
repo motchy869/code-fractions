@@ -50,7 +50,7 @@ var logic [OUTPUT_REG_IS_USED_IN_RAM:0] r_rd_ack; //! read acknowledge signal
 var logic r_wr_ack; //! write acknowledge signal
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign if_csr_side.rd_ack = r_rd_ack[OUTPUT_REG_IS_USED_IN_RAM];
 assign if_csr_side.rd_data = if_ram_side.rd_data;
 assign if_csr_side.wr_ack = r_wr_ack;

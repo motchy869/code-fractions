@@ -65,14 +65,14 @@ assign g_out_ppb_pop_en = i_ds_ready && o_out_valid;
 // ---------- instances ----------
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign o_ready = !g_out_ppb_full;
 assign o_out_valid = !g_out_ppb_empty;
 assign o_sum = r_out_ping_pong_buf[r_out_ppb_rd_ptr.idx];
 // --------------------
 
 // ---------- blocks ----------
-//! Update output ping-pong buffer write pointer.
+//! Updates output ping-pong buffer write pointer.
 always_ff @(posedge i_clk) begin: blk_update_out_ppb_wr_ptr
     if (i_sync_rst) begin
         r_out_ppb_wr_ptr <= '{default:'0};
@@ -86,7 +86,7 @@ always_ff @(posedge i_clk) begin: blk_update_out_ppb_wr_ptr
     end
 end
 
-//! Update output ping-pong buffer read pointer.
+//! Updates output ping-pong buffer read pointer.
 always_ff @(posedge i_clk) begin: blk_update_out_ppb_rd_ptr
     if (i_sync_rst) begin
         r_out_ppb_rd_ptr <= '{default:'0};
@@ -100,7 +100,7 @@ always_ff @(posedge i_clk) begin: blk_update_out_ppb_rd_ptr
     end
 end
 
-//! Update output ping-pong buffer entries.
+//! Updates output ping-pong buffer entries.
 always_ff @(posedge i_clk) begin: blk_update_out_ppb_entries
     if (i_sync_rst) begin
         r_out_ping_pong_buf <= '{default:'0};

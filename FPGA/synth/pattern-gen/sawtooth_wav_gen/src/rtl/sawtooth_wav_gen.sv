@@ -83,7 +83,7 @@ var logic [CYCLE_LATENCY-1:0] r_vld_dly_line; //! delay line for the output vali
 // ---------- instances ----------
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign o_chunk_valid = r_vld_dly_line[CYCLE_LATENCY-1];
 generate
     genvar i;

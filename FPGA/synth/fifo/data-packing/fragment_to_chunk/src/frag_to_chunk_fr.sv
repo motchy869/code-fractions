@@ -121,7 +121,7 @@ frag_to_chunk#(.S_MAX_IN(S_MAX_IN), .S_OUT(S_OUT), .T(T)) core_inst (
 );
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign o_chunk = w_data_to_ds.chunk;
 // --------------------
 

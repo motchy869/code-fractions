@@ -97,7 +97,7 @@ my_mod my_mod_0 (
 );
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign s_axi4_lite_awready = axi4_lite_if_0.awready;
 assign s_axi4_lite_wready = axi4_lite_if_0.wready;
 assign s_axi4_lite_bresp = axi4_lite_if_0.bresp;

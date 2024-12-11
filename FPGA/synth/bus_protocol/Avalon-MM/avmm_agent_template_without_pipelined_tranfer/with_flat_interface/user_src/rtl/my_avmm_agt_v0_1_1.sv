@@ -72,7 +72,7 @@ var logic [AVMM_DATA_BIT_WIDTH-1:0] r_reg_3; //! register 3
 // ---------- instances ----------
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign avmm_agt_readdata = g_rd_data;
 assign avmm_agt_response = avmm_agt_read ? g_rd_resp : g_wr_resp;
 // --------------------

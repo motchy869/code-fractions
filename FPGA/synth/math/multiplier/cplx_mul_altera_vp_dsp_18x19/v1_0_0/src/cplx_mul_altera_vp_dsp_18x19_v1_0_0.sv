@@ -150,7 +150,7 @@ fxd_pt_mul_sum_altera_vp_dsp_18x19_v1_0_0 #(
 );
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 // --------------------
 
 // ---------- blocks ----------

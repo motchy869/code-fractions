@@ -116,7 +116,7 @@ wire logic [BIT_WIDTH__FRAG_BUF_CAP-1:0] g_delta_elem_write_ptr; //! the increme
 assign g_delta_elem_write_ptr = (g_frag_push_en ? BIT_WIDTH__FRAG_BUF_CAP'(i_frag_size) : '0) + BIT_WIDTH__FRAG_BUF_CAP'(g_num_pad_elem);
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign o_next_frag_ready = !i_sync_rst && g_frag_size_good && (g_chunk_pop_en ? r_buf_elem_cnt - BIT_WIDTH__FRAG_BUF_CAP'(S_OUT) : r_buf_elem_cnt) + i_frag_size <= BIT_WIDTH__FRAG_BUF_CAP'(FRAG_BUF_CAP);
 assign o_chunk_valid = r_buf_elem_cnt >= BIT_WIDTH__FRAG_BUF_CAP'(S_OUT);
 assign o_chunk = r_frag_buf[BIT_WIDTH__FRAG_BUF_CAP'(r_page_read_ptr)*BIT_WIDTH__FRAG_BUF_CAP'(S_OUT)+:S_OUT];
@@ -139,7 +139,7 @@ assign o_chunk = r_frag_buf[BIT_WIDTH__FRAG_BUF_CAP'(r_page_read_ptr)*BIT_WIDTH_
     end
 `endif
 
-//! Update the fragment buffer elements count.
+//! Updates the fragment buffer elements count.
 always_ff @(posedge i_clk) begin: blk_update_buf_elem_cnt
     if (i_sync_rst) begin
         r_buf_elem_cnt <= '0;
@@ -149,7 +149,7 @@ always_ff @(posedge i_clk) begin: blk_update_buf_elem_cnt
     end
 end
 
-//! Update the page read-pointer.
+//! Updates the page read-pointer.
 always_ff @(posedge i_clk) begin: blk_update_page_read_ptr
     if (i_sync_rst) begin
         r_page_read_ptr <= '0;
@@ -163,7 +163,7 @@ always_ff @(posedge i_clk) begin: blk_update_page_read_ptr
     `ASST_VAL_IN_RANGE(r_page_read_ptr <= NUM_FRAG_BUF_READ_PAGES)
 end
 
-//! Update the elem write-pointer.
+//! Updates the elem write-pointer.
 always_ff @(posedge i_clk) begin: blk_update_elem_write_ptr
     if (i_sync_rst) begin
         r_elem_write_ptr <= '0;
@@ -177,7 +177,7 @@ always_ff @(posedge i_clk) begin: blk_update_elem_write_ptr
     `ASST_VAL_IN_RANGE(r_elem_write_ptr < FRAG_BUF_CAP)
 end
 
-//! Update the fragment buffer.
+//! Updates the fragment buffer.
 always_ff @(posedge i_clk) begin: blk_update_frag_buf
     if (i_sync_rst) begin
         // r_frag_buf <= '{default:0}; // Costly. This is not mandatory because there is `o_chunk_valid`.

@@ -95,7 +95,7 @@ generate
 endgenerate
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign o_ready = g_can_adv_pip_ln;
 assign o_output_valid = i_input_valid & r_vld_dly_line[$left(r_vld_dly_line)];
 generate

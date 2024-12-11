@@ -48,7 +48,7 @@ var logic signed [BIT_WIDTH_OUT-1:0] r_sum; //! sum
 // ---------- instances ----------
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign o_out_valid = !i_sync_rst && r_vld_dly_line[CYCLE_LATENCY-1];
 assign o_sum = r_sum;
 // --------------------

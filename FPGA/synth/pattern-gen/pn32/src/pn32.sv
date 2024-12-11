@@ -33,7 +33,7 @@ var logic [L-1:0] r_shift_reg = '0; //! shift register
 // ---------- instances ----------
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign o_bit_out = r_shift_reg[0];
 // --------------------
 

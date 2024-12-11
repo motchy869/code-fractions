@@ -56,7 +56,7 @@ assign g_frac_part_is_0p5 = (w_frac_part == FRAC_PART_ZP5);
 // ---------- instances ----------
 // --------------------
 
-// ---------- Drive output signals. ----------
+// ---------- Drives output signals. ----------
 assign o_val = g_frac_part_is_0 ? signed'(w_int_part)
     // Note that the sign doesn't matter (except for clipping).
     // For example, val = -2.3, the integer and fractional parts obtained from bit slice are -3 and 0.7 respectively.
