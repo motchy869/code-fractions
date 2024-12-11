@@ -43,48 +43,70 @@ endgenerate
 // ---------- signals and storage ----------
 wire g_adv_pipeline; //! signal indicating that the pipeline should advance
 assign g_adv_pipeline = i_in_valid && o_ready;
-var logic r_vld_dly_line; //! valid delay line before the output skid buffer
-var logic signed [BIT_WIDTH_OUT-1:0] r_sum; //! pipeline for sum
+
+// ping-pong buffer read and write pointer type
+typedef struct packed {
+    logic idx; //! buffer index
+    logic phase; //! The buffer phase. Begins at 0 and toggles between 0 and 1 every time the index wraps around. This is utilized for distinguishing between full and empty conditions.
+} ping_pong_buf_ptr_t;
+
+typedef logic [BIT_WIDTH_OUT-1:0] output_ppb_data_t; //! output ping-pong buffer data type
+var output_ppb_data_t [1:0] r_out_ping_pong_buf; //! output ping-pong buffer
+var ping_pong_buf_ptr_t r_out_ppb_rd_ptr; //! output ping-pong buffer read pointer
+var ping_pong_buf_ptr_t r_out_ppb_wr_ptr; //! output ping-pong buffer write pointer
+wire g_out_ppb_full; //! output ping-pong buffer full signal
+assign g_out_ppb_full = r_out_ppb_rd_ptr.idx == r_out_ppb_wr_ptr.idx && r_out_ppb_rd_ptr.phase != r_out_ppb_wr_ptr.phase;
+wire g_out_ppb_empty; //! output ping-pong buffer empty signal
+assign g_out_ppb_empty = r_out_ppb_rd_ptr.idx == r_out_ppb_wr_ptr.idx && r_out_ppb_rd_ptr.phase == r_out_ppb_wr_ptr.phase;
+wire g_out_ppb_pop_en; //! output ping-pong buffer pop enable signal
+assign g_out_ppb_pop_en = i_ds_ready && o_out_valid;
 // --------------------
 
 // ---------- instances ----------
-skid_buf_v0_1_0 #(
-    .T(logic [BIT_WIDTH_OUT-1:0])
-) output_skid_buf (
-    .i_clk(i_clk),
-    .i_sync_rst(i_sync_rst),
-    .i_freeze(i_freeze),
-    .i_us_valid(i_in_valid && r_vld_dly_line),
-    .i_us_data(r_sum),
-    .o_us_ready(o_ready),
-    .i_ds_ready(i_ds_ready),
-    .o_ds_valid(o_out_valid),
-    .o_ds_data(o_sum)
-);
 // --------------------
 
 // ---------- Drives output signals. ----------
+assign o_ready = !g_out_ppb_full;
+assign o_out_valid = !g_out_ppb_empty;
+assign o_sum = r_out_ping_pong_buf[r_out_ppb_rd_ptr.idx];
 // --------------------
 
 // ---------- blocks ----------
-//! Updates valid delay line.
-always_ff @(posedge i_clk) begin: blk_update_vld_dly_line
+//! Updates output ping-pong buffer write pointer.
+always_ff @(posedge i_clk) begin: blk_update_out_ppb_wr_ptr
     if (i_sync_rst) begin
-        r_vld_dly_line <= '0;
+        r_out_ppb_wr_ptr <= '{default:'0};
     end else if (!i_freeze) begin
         if (g_adv_pipeline) begin
-            r_vld_dly_line <= 1'b1;
+            r_out_ppb_wr_ptr.idx <= ~r_out_ppb_wr_ptr.idx;
+            if (r_out_ppb_wr_ptr.idx) begin
+                r_out_ppb_wr_ptr.phase <= ~r_out_ppb_wr_ptr.phase;
+            end
         end
     end
 end
 
-//! Updates sum.
-always_ff @(posedge i_clk) begin: blk_update_sum
+//! Updates output ping-pong buffer read pointer.
+always_ff @(posedge i_clk) begin: blk_update_out_ppb_rd_ptr
     if (i_sync_rst) begin
-        r_sum <= '0;
+        r_out_ppb_rd_ptr <= '{default:'0};
+    end else if (!i_freeze) begin
+        if (g_out_ppb_pop_en) begin
+            r_out_ppb_rd_ptr.idx <= ~r_out_ppb_rd_ptr.idx;
+            if (r_out_ppb_rd_ptr.idx) begin
+                r_out_ppb_rd_ptr.phase <= ~r_out_ppb_rd_ptr.phase;
+            end
+        end
+    end
+end
+
+//! Updates output ping-pong buffer entries.
+always_ff @(posedge i_clk) begin: blk_update_out_ppb_entries
+    if (i_sync_rst) begin
+        r_out_ping_pong_buf <= '{default:'0};
     end else if (!i_freeze) begin
         if (g_adv_pipeline) begin
-            r_sum <= BIT_WIDTH_OUT'(i_a) + BIT_WIDTH_OUT'(i_b);
+            r_out_ping_pong_buf[r_out_ppb_wr_ptr.idx] <= BIT_WIDTH_OUT'(i_a) + BIT_WIDTH_OUT'(i_b);
         end
     end
 end
