@@ -54,7 +54,7 @@ typedef struct packed {
     logic phase; //! The buffer phase. Begins at 0 and toggles between 0 and 1 every time the index wraps around. This is utilized for distinguishing between full and empty conditions.
 } buf_ptr_t;
 
-var T r_fifo_buf[2]; //! FIFO buffer
+var T [1:0] r_fifo_buf; //! FIFO buffer
 var buf_ptr_t r_rd_ptr; //! FIFO read pointer
 var buf_ptr_t r_wr_ptr; //! FIFO write pointer
 wire g_buf_full; //! buffer full signal
