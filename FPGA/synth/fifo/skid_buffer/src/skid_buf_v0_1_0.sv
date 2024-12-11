@@ -5,7 +5,10 @@
 `default_nettype none
 
 //! simple skid buffer which can be used to cut timing arc
-module skid_buf #(
+//! ## changelog
+//! ### [0.1.0] - 2024-12-12
+//! - initial release
+module skid_buf_v0_1_0 #(
     // Quartus Prime Lite 23.1std.1 doesn't support type parameter.
     `ifdef QUARTUS_PRIME_LITE // This macro should be set MANUALLY in the project settings
         parameter int unsigned BIT_WIDTH_DATA = 8 //! bit width of the data
@@ -15,6 +18,7 @@ module skid_buf #(
 )(
     input wire logic i_clk, //! clock signal
     input wire logic i_sync_rst, //! synchronous reset signal
+    input wire logic i_freeze, //! freeze directive, which stops all state transitions except for the reset
 
     //! @virtualbus us_side_if @dir in upstream side interface
     input wire logic i_us_valid, //! valid signal from upstream
@@ -78,10 +82,12 @@ assign o_ds_data = r_fifo_buf[r_rd_ptr.idx];
 always_ff @(posedge i_clk) begin: blk_update_wr_ptr
     if (i_sync_rst) begin
         r_wr_ptr <= '{default:'0};
-    end else if (g_push_en) begin
-        r_wr_ptr.idx <= ~r_wr_ptr.idx;
-        if (r_wr_ptr.idx) begin
-            r_wr_ptr.phase <= ~r_wr_ptr.phase;
+    end else if (!i_freeze) begin
+        if (g_push_en) begin
+            r_wr_ptr.idx <= ~r_wr_ptr.idx;
+            if (r_wr_ptr.idx) begin
+                r_wr_ptr.phase <= ~r_wr_ptr.phase;
+            end
         end
     end
 end
@@ -90,10 +96,12 @@ end
 always_ff @(posedge i_clk) begin: blk_update_rd_ptr
     if (i_sync_rst) begin
         r_rd_ptr <= '{default:'0};
-    end else if (g_pop_en) begin
-        r_rd_ptr.idx <= ~r_rd_ptr.idx;
-        if (r_rd_ptr.idx) begin
-            r_rd_ptr.phase <= ~r_rd_ptr.phase;
+    end else if (!i_freeze) begin
+        if (g_pop_en) begin
+            r_rd_ptr.idx <= ~r_rd_ptr.idx;
+            if (r_rd_ptr.idx) begin
+                r_rd_ptr.phase <= ~r_rd_ptr.phase;
+            end
         end
     end
 end
@@ -102,8 +110,10 @@ end
 always_ff @(posedge i_clk) begin: blk_update_fifo_buf
     if (i_sync_rst) begin
         r_fifo_buf <= '{default:'0};
-    end else if (g_push_en) begin
-        r_fifo_buf[r_wr_ptr.idx] <= i_us_data;
+    end else if (!i_freeze) begin
+        if (g_push_en) begin
+            r_fifo_buf[r_wr_ptr.idx] <= i_us_data;
+        end
     end
 end
 // --------------------
