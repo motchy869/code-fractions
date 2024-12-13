@@ -30,12 +30,12 @@ interface dut_if (
     cplx_num_if if_cplx_b, //! second complex number b
     cplx_num_if if_cplx_c //! a+b or a-b
 );
-    // interface between upstream-side and DUT
+    // signals between upstream-side and DUT
     logic ready_to_us;
     logic input_valid;
     logic sub;
 
-    // interface between DUT and downstream-side and DUT
+    // signals between DUT and downstream-side
     logic ready_from_ds;
     logic output_valid;
 

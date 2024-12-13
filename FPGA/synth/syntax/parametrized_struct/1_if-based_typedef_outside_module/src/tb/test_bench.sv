@@ -36,14 +36,14 @@ typedef type(temp_if_for_out_cplx_t.num) out_cplx_t;
 interface dut_if (
     input wire logic i_clk //! clock signal
 );
-    // interface between upstream-side and DUT
+    // signals between upstream-side and DUT
     logic ready_to_us;
     logic input_valid;
     in_cplx_t a;
     in_cplx_t b;
     logic sub;
 
-    // interface between DUT and downstream-side and DUT
+    // signals between DUT and downstream-side
     logic ready_from_ds;
     logic output_valid;
     out_cplx_t c;

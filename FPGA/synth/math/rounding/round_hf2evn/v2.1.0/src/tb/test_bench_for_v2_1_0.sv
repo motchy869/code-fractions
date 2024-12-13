@@ -29,12 +29,12 @@ interface dut_if #(
 )(
     input wire logic i_clk
 );
-    // interface between upstream-side and DUT
+    // signals between upstream-side and DUT
     logic ready_to_us;
     logic input_valid;
     logic signed [N-1:0] in_val;
 
-    // interface between DUT and downstream-side and DUT
+    // signals between DUT and downstream-side
     logic ready_from_ds;
     logic output_valid;
     logic signed [N-N_F-1:0] out_val;

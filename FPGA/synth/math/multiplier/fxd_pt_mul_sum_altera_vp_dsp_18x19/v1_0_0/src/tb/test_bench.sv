@@ -41,7 +41,7 @@ interface dut_if #(
 )(
     input wire logic i_clk //! clock signal
 );
-    // interface between upstream-side and DUT
+    // signals between upstream-side and DUT
     logic ready_to_us;
     logic input_valid;
     logic signed [BW_IN_A_0-1:0] a_0;
@@ -50,7 +50,7 @@ interface dut_if #(
     logic signed [BW_IN_B_1-1:0] b_1;
     logic sub;
 
-    // interface between DUT and downstream-side and DUT
+    // signals between DUT and downstream-side
     logic ready_from_ds;
     logic output_valid;
     logic signed [BW_OUT-1:0] c;
