@@ -110,7 +110,7 @@ always_comb begin: blk_phase_2
         g_ph_2_ohv[i] = r_phase_1.val[i] & ~r_phase_1.val[i+1];
     end
 
-    g_pre_orc_out_val.val = '0;
+    g_pre_orc_out_val.val = BW_OUT'(BW_IN);
     for (int unsigned i=0; i<BW_IN; ++i) begin
         if (g_ph_2_ohv[i]) begin
             g_pre_orc_out_val.val = BW_OUT'(BW_IN-1-i);

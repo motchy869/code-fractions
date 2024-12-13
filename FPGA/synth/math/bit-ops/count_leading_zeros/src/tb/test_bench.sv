@@ -146,7 +146,7 @@ task automatic feed_data(ref dut_vif_t vif);
         {BW_IN'(215), BW_OUT'(0)},
         {BW_IN'(42),  BW_OUT'(2)},
         {BW_IN'(127), BW_OUT'(1)},
-        {BW_IN'(122), BW_OUT'(1)}
+        {BW_IN'(0),   BW_OUT'(8)}
     };
 
     bit is_error = 1'b0;
