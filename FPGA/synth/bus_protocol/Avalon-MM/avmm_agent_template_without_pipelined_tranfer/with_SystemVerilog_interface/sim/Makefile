@@ -15,7 +15,7 @@
 #  1. make -f <path/to/this/Makefile> cmp // Repeat this until all compilation error is resolved.
 #  2. make -f <path/to/this/Makefile> sim // Run simulation and create vsim.wlf file which records all signals.
 #  3. To view the waveform,
-#    3.1. If the GUI is not opened, `make -f <path/to/this/Makefile> view &` to open it. Note that the controll immediately returns to the current shell.
+#    3.1. If the GUI is not opened, `make -f <path/to/this/Makefile> view &` to open it. Note that the control immediately returns to the current shell.
 #    3.2. If the GUI is already opened, run `dataset restart` in the transcript window to reload the waveform.
 #
 # Helpful web pages:
