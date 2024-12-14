@@ -7,7 +7,7 @@
 
 //! utility functions for cnt_leading_zeros_v0_1_0 module
 package cnt_leading_zeros_v0_1_0_pkg;
-    // Calculates the module's cycle latency according to the given parameters.
+    //! Calculates the module's cycle latency according to the given parameters.
     function automatic int unsigned cycle_latency(
         input int unsigned INPUT_REG_CHAIN_LEN, // shown in the module document
         input int unsigned OUTPUT_REG_CHAIN_LEN // shown in the module document
