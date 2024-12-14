@@ -55,8 +55,8 @@ typedef struct packed {
 } out_reg_chain_elem_t;
 
 wire in_reg_chain_elem_t w_post_irc_val; //! value from input register chain
-var in_reg_chain_elem_t r_phase_1; //! Phase 1 result. In this phase, upper portions (there are ```BW_IN``` patterns) are OR-ed to find the first non-zero bit (step-like shape will show up).
-var logic [BW_IN-1:0] g_ph_2_ohv; //! one-hot vector for phase 2
+var in_reg_chain_elem_t r_phase_1; //! phase 1 (described later) result
+var logic [BW_IN-1:0] g_ph_2_ohv; //! one-hot vector for phase 2 (described later)
 var out_reg_chain_elem_t g_pre_orc_out_val; //! value to output register chain
 // --------------------
 
@@ -90,6 +90,7 @@ reg_chain_v0_1_0 #(
 // --------------------
 
 // ---------- blocks ----------
+//! In phase 1, upper portions of the input (there are ```BW_IN``` patterns) are OR-ed to find the first non-zero bit (step-like shape will show up).
 always_ff @(posedge i_clk) begin: blk_phase_1
     if (i_sync_rst) begin
         r_phase_1 <= '{default: '0};
@@ -103,7 +104,7 @@ always_ff @(posedge i_clk) begin: blk_phase_1
     end
 end
 
-//! In phase 2, the number of the leading zeros are determined.
+//! In phase 2, the number of the leading zeros of the absolute value of the input are determined.
 always_comb begin: blk_phase_2
     g_ph_2_ohv[BW_IN-1] = r_phase_1.val[BW_IN-1];
     for (int unsigned i=0; i<BW_IN-1; ++i) begin
