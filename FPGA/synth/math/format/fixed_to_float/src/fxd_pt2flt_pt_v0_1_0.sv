@@ -2,7 +2,7 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`include "cnt_leading_zeros_v0_1_0_pkg.svh"
+`include "cnt_leading_zeros_v0_1_1_pkg.svh"
 
 `default_nettype none
 
@@ -35,10 +35,11 @@ typedef int unsigned uint_t;
 localparam logic [BW_OUT_EXP-1:0] EXP_OFFSET = {1'b0,{BW_OUT_EXP-1{1'b1}}}; //! exponent offset
 localparam logic [BW_OUT_EXP-1:0] EXP_MAX = {{BW_OUT_EXP-1{1'b1}},1'b0}; //! maximum exponent
 localparam uint_t BW_IN = BW_IN_INT + BW_IN_FRAC; //! bit width of input
+localparam uint_t BW_OUT = 1+BW_OUT_EXP+BW_OUT_FRAC; //! bit width of output
 localparam uint_t BW_N_LZ = $clog2(BW_IN+1); //! bit width of 'number of leading zeros'
 localparam uint_t BW_FRAC_BS_L_IDX = $clog2(BW_IN+BW_OUT_FRAC); //! bit width of bit slice lower index to create fractional part
 localparam uint_t CLZ_OP_OUT_REG_CHAIN_LEN = (BW_IN + 15)/16; //! count leading zeros (CLZ) operation output register chain length
-localparam uint_t CYC_LAT_CLZ_OP = cnt_leading_zeros_v0_1_0_pkg::cycle_latency(0, CLZ_OP_OUT_REG_CHAIN_LEN); //! cycle latency of CLZ operation
+localparam uint_t CYC_LAT_CLZ_OP = cnt_leading_zeros_v0_1_1_pkg::cycle_latency(0, CLZ_OP_OUT_REG_CHAIN_LEN); //! cycle latency of CLZ operation
 localparam uint_t CYC_LAT = 4 + CYC_LAT_CLZ_OP; //! cycle latency of this module
 // --------------------
 
@@ -90,7 +91,7 @@ var logic [BW_FRAC_BS_L_IDX-1:0] r_frac_bs_l_idx; // bit slice lower index to cr
 
 // ---------- instances ----------
 //! Counts the number of leading zeros of the absolute value of input.
-cnt_leading_zeros_v0_1_0 #(
+cnt_leading_zeros_v0_1_1 #(
     .BW_IN(BW_IN),
     .INPUT_REG_CHAIN_LEN(0),
     .OUTPUT_REG_CHAIN_LEN(CLZ_OP_OUT_REG_CHAIN_LEN)
@@ -118,7 +119,7 @@ always_ff @(posedge i_clk) begin: blk_update_valid_sig_delay_line
     if (i_sync_rst) begin
         r_vld_delay_line <= '0;
     end else if (!i_freeze) begin
-        r_vld_delay_line <= {r_vld_delay_line[$high(r_vld_delay_line):1],i_in_valid};
+        r_vld_delay_line <= {r_vld_delay_line[$high(r_vld_delay_line)-1:0],i_in_valid};
     end
 end
 
@@ -136,17 +137,17 @@ always_ff @(posedge i_clk) begin: blk_extract_sign
     if (i_sync_rst) begin
         r_sgn <= '0;
     end else if (!i_freeze) begin
-        r_sgn <= {r_sgn[$high(r_sgn):1],i_in_val[$high(i_in_val)]};
+        r_sgn <= {r_sgn[$high(r_sgn)-1:0],i_in_val[$high(i_in_val)]};
     end
 end
 
-//! Append zeros to the absolute value of input.
+//! Appends zeros to the absolute value of input.
 always_ff @(posedge i_clk) begin: blk_app_zeros_to_abs_val
     if (i_sync_rst) begin
         r_te_abs_val <= '0;
     end else if (!i_freeze) begin
         r_te_abs_val <= {
-            r_te_abs_val[$high(r_te_abs_val):1],
+            r_te_abs_val[$high(r_te_abs_val)-1:0],
             {r_abs_val,{BW_OUT_FRAC{1'b0}}}
         };
     end
@@ -167,7 +168,7 @@ always_ff @(posedge i_clk) begin: blk_cls_abs_val_size
         r_cls_abs_val_size <= '{default: ABS_VAL_ZERO};
     end else if (!i_freeze) begin
         r_cls_abs_val_size <= {
-            r_cls_abs_val_size[$high(r_cls_abs_val_size)],
+            r_cls_abs_val_size[0],
             (uint_t'(w_n_lz) < BW_IN) ? ABS_VAL_LESS_THAN_ONE : (uint_t'(w_n_lz) < BW_IN_INT) ? ABS_VAL_NO_LESS_THAN_ONE : ABS_VAL_ZERO
         };
     end

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="/mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/math/format/fixed_to_float/sim/sim_result/all.wdb" id="1">
+         <top_modules>
+            <top_module name="test_bench" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="11.019 ns"></ZoomStartTime>
+      <ZoomEndTime time="63.198 ns"></ZoomEndTime>
+      <Cursor1Time time="20.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="276"></NameColumnWidth>
+      <ValueColumnWidth column_width="112"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="2" />
+   <wvobject type="logic" fp_name="/test_bench/r_clk">
+      <obj_property name="ElementShortName">r_clk</obj_property>
+      <obj_property name="ObjectShortName">r_clk</obj_property>
+   </wvobject>
+   <wvobject type="group" fp_name="group13">
+      <obj_property name="label">dut_if_0</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="logic" fp_name="/test_bench/dut_if_0/sync_rst">
+         <obj_property name="ElementShortName">sync_rst</obj_property>
+         <obj_property name="ObjectShortName">sync_rst</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_if_0/freeze">
+         <obj_property name="ElementShortName">freeze</obj_property>
+         <obj_property name="ObjectShortName">freeze</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_if_0/in_valid">
+         <obj_property name="ElementShortName">in_valid</obj_property>
+         <obj_property name="ObjectShortName">in_valid</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_if_0/in_val">
+         <obj_property name="ElementShortName">in_val[15:0]</obj_property>
+         <obj_property name="ObjectShortName">in_val[15:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_if_0/pipeline_filled">
+         <obj_property name="ElementShortName">pipeline_filled</obj_property>
+         <obj_property name="ObjectShortName">pipeline_filled</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_if_0/out_val">
+         <obj_property name="ElementShortName">out_val[31:0]</obj_property>
+         <obj_property name="ObjectShortName">out_val[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="group" fp_name="group77">
+         <obj_property name="label">dut</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="logic" fp_name="/test_bench/dut/i_in_valid">
+            <obj_property name="ElementShortName">i_in_valid</obj_property>
+            <obj_property name="ObjectShortName">i_in_valid</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/i_in_val">
+            <obj_property name="ElementShortName">i_in_val[15:0]</obj_property>
+            <obj_property name="ObjectShortName">i_in_val[15:0]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/test_bench/dut/o_pipeline_filled">
+            <obj_property name="ElementShortName">o_pipeline_filled</obj_property>
+            <obj_property name="ObjectShortName">o_pipeline_filled</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/o_out_val">
+            <obj_property name="ElementShortName">o_out_val[31:0]</obj_property>
+            <obj_property name="ObjectShortName">o_out_val[31:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_vld_delay_line">
+            <obj_property name="ElementShortName">r_vld_delay_line[5:0]</obj_property>
+            <obj_property name="ObjectShortName">r_vld_delay_line[5:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_abs_val">
+            <obj_property name="ElementShortName">r_abs_val[15:0]</obj_property>
+            <obj_property name="ObjectShortName">r_abs_val[15:0]</obj_property>
+            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_sgn">
+            <obj_property name="ElementShortName">r_sgn[5:0]</obj_property>
+            <obj_property name="ObjectShortName">r_sgn[5:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_te_abs_val">
+            <obj_property name="ElementShortName">r_te_abs_val[3:0][38:0]</obj_property>
+            <obj_property name="ObjectShortName">r_te_abs_val[3:0][38:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/w_n_lz">
+            <obj_property name="ElementShortName">w_n_lz[4:0]</obj_property>
+            <obj_property name="ObjectShortName">w_n_lz[4:0]</obj_property>
+            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_n_lz">
+            <obj_property name="ElementShortName">r_n_lz[4:0]</obj_property>
+            <obj_property name="ObjectShortName">r_n_lz[4:0]</obj_property>
+            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_frac">
+            <obj_property name="ElementShortName">r_frac[22:0]</obj_property>
+            <obj_property name="ObjectShortName">r_frac[22:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_cls_abs_val_size">
+            <obj_property name="ElementShortName">r_cls_abs_val_size[1:0][1:0]</obj_property>
+            <obj_property name="ObjectShortName">r_cls_abs_val_size[1:0][1:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_ov_rng_chk_res">
+            <obj_property name="ElementShortName">r_ov_rng_chk_res[1:0][1:0]</obj_property>
+            <obj_property name="ObjectShortName">r_ov_rng_chk_res[1:0][1:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_exp">
+            <obj_property name="ElementShortName">r_exp[1:0][7:0]</obj_property>
+            <obj_property name="ObjectShortName">r_exp[1:0][7:0]</obj_property>
+            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_frac_bs_l_idx">
+            <obj_property name="ElementShortName">r_frac_bs_l_idx[5:0]</obj_property>
+            <obj_property name="ObjectShortName">r_frac_bs_l_idx[5:0]</obj_property>
+            <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject type="group" fp_name="group155">
+            <obj_property name="label">cnt_lz</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="isExpanded"></obj_property>
+            <wvobject type="logic" fp_name="/test_bench/dut/cnt_lz/i_in_valid">
+               <obj_property name="ElementShortName">i_in_valid</obj_property>
+               <obj_property name="ObjectShortName">i_in_valid</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/test_bench/dut/cnt_lz/i_in_val">
+               <obj_property name="ElementShortName">i_in_val[15:0]</obj_property>
+               <obj_property name="ObjectShortName">i_in_val[15:0]</obj_property>
+               <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/test_bench/dut/cnt_lz/o_pipeline_filled">
+               <obj_property name="ElementShortName">o_pipeline_filled</obj_property>
+               <obj_property name="ObjectShortName">o_pipeline_filled</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/test_bench/dut/cnt_lz/o_out_val">
+               <obj_property name="ElementShortName">o_out_val[4:0]</obj_property>
+               <obj_property name="ObjectShortName">o_out_val[4:0]</obj_property>
+               <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/test_bench/dut/cnt_lz/w_post_irc_val">
+               <obj_property name="ElementShortName">w_post_irc_val</obj_property>
+               <obj_property name="ObjectShortName">w_post_irc_val</obj_property>
+               <obj_property name="isExpanded"></obj_property>
+               <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+               <wvobject type="array" fp_name="/test_bench/dut/cnt_lz/w_post_irc_val.val">
+                  <obj_property name="ElementShortName">.val[15:0]</obj_property>
+                  <obj_property name="ObjectShortName">.val[15:0]</obj_property>
+                  <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+               </wvobject>
+               <wvobject type="logic" fp_name="/test_bench/dut/cnt_lz/w_post_irc_val.valid">
+                  <obj_property name="ElementShortName">.valid</obj_property>
+                  <obj_property name="ObjectShortName">.valid</obj_property>
+               </wvobject>
+               <wvobject type="array" fp_name="/test_bench/dut/cnt_lz/w_post_irc_val.val">
+                  <obj_property name="ElementShortName">.val[15:0]</obj_property>
+                  <obj_property name="ObjectShortName">.val[15:0]</obj_property>
+               </wvobject>
+               <wvobject type="logic" fp_name="/test_bench/dut/cnt_lz/w_post_irc_val.valid">
+                  <obj_property name="ElementShortName">.valid</obj_property>
+                  <obj_property name="ObjectShortName">.valid</obj_property>
+               </wvobject>
+            </wvobject>
+            <wvobject type="array" fp_name="/test_bench/dut/cnt_lz/r_phase_1">
+               <obj_property name="ElementShortName">r_phase_1</obj_property>
+               <obj_property name="ObjectShortName">r_phase_1</obj_property>
+               <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+               <obj_property name="isExpanded"></obj_property>
+               <wvobject type="array" fp_name="/test_bench/dut/cnt_lz/r_phase_1.val">
+                  <obj_property name="ElementShortName">.val[15:0]</obj_property>
+                  <obj_property name="ObjectShortName">.val[15:0]</obj_property>
+                  <obj_property name="Radix">BINARYRADIX</obj_property>
+               </wvobject>
+               <wvobject type="logic" fp_name="/test_bench/dut/cnt_lz/r_phase_1.valid">
+                  <obj_property name="ElementShortName">.valid</obj_property>
+                  <obj_property name="ObjectShortName">.valid</obj_property>
+               </wvobject>
+               <wvobject type="array" fp_name="/test_bench/dut/cnt_lz/r_phase_1.val">
+                  <obj_property name="ElementShortName">.val[15:0]</obj_property>
+                  <obj_property name="ObjectShortName">.val[15:0]</obj_property>
+               </wvobject>
+               <wvobject type="logic" fp_name="/test_bench/dut/cnt_lz/r_phase_1.valid">
+                  <obj_property name="ElementShortName">.valid</obj_property>
+                  <obj_property name="ObjectShortName">.valid</obj_property>
+               </wvobject>
+            </wvobject>
+            <wvobject type="array" fp_name="/test_bench/dut/cnt_lz/g_ph_2_ohv">
+               <obj_property name="ElementShortName">g_ph_2_ohv[15:0]</obj_property>
+               <obj_property name="ObjectShortName">g_ph_2_ohv[15:0]</obj_property>
+               <obj_property name="Radix">BINARYRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/test_bench/dut/cnt_lz/g_pre_orc_out_val">
+               <obj_property name="ElementShortName">g_pre_orc_out_val</obj_property>
+               <obj_property name="ObjectShortName">g_pre_orc_out_val</obj_property>
+               <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+               <obj_property name="isExpanded"></obj_property>
+               <wvobject type="array" fp_name="/test_bench/dut/cnt_lz/g_pre_orc_out_val.val">
+                  <obj_property name="ElementShortName">.val[4:0]</obj_property>
+                  <obj_property name="ObjectShortName">.val[4:0]</obj_property>
+                  <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+               </wvobject>
+               <wvobject type="logic" fp_name="/test_bench/dut/cnt_lz/g_pre_orc_out_val.valid">
+                  <obj_property name="ElementShortName">.valid</obj_property>
+                  <obj_property name="ObjectShortName">.valid</obj_property>
+               </wvobject>
+               <wvobject type="array" fp_name="/test_bench/dut/cnt_lz/g_pre_orc_out_val.val">
+                  <obj_property name="ElementShortName">.val[4:0]</obj_property>
+                  <obj_property name="ObjectShortName">.val[4:0]</obj_property>
+               </wvobject>
+               <wvobject type="logic" fp_name="/test_bench/dut/cnt_lz/g_pre_orc_out_val.valid">
+                  <obj_property name="ElementShortName">.valid</obj_property>
+                  <obj_property name="ObjectShortName">.valid</obj_property>
+               </wvobject>
+            </wvobject>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+</wave_config>
