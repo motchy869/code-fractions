@@ -1,0 +1,51 @@
+== params
+EXP_OFFSET: {BW_OUT_EXP-1{1'b1}}
+EXP_MAX: {{BW_OUT_EXP-1{1'b1}},1'b0}
+
+== flow
+--clk↑-- t=0-δ
+i_in_val: {s,int part,frac part}
+
+--clk↑-- t+=T_clk-δ
+take abs val -> r_abs_val <= {int part, frac part}
+extract sign -> r_sgn[0] <= {s}
+
+--clk↑-- t+=L_CLZ*T_clk-δ
+append zeros -> r_te_abs_val[L_CLZ-1] <= {r_abs_val, {BW_OUT_FRAC{1'b0}}}
+count leading zeros (using sub-module) -> w_n_lz = no. of leading zeros
+
+--clk↑-- t+=T_clk-δ
+delay for w_n_lz -> r_n_lz <= w_n_lz
+
+classify the abs value size -> r_cls_abs_val_size[0] <= {
+    LESS_THAN_ONE (BW_IN_INT <= w_n_lz < BW_IN)
+    NO_LESS_THAN_ONE (w_n_lz < BW_IN_INT)
+    ZERO (otherwise; w_n_lz == BW_IN)
+}
+
+check over-range -> r_ov_rng_chk_res[0] <= {
+    TOO_SMALL (EXP_OFFSET + w_n_lz < BW_IN_INT ⇔ EXP_OFFSET + w_n_lz - BW_IN_INT + 1 < 1)
+    TOO_LARGE (EXP_OFFSET + w_n_lz + 1 > EXP_MAX + BW_IN_INT ⇔ EXP_OFFSET + w_n_lz - BW_IN_INT + 1> EXP_MAX)
+    OK (otherwise)
+}
+
+--clk↑-- t+=T_clk-δ
+determine exponent -> r_exp[0] <= {
+    '0 (r_cls_abs_val_size[0] == ZERO || r_ov_rng_chk_res[0] == TOO_SMALL)
+    EXP_MAX (r_ov_rng_chk_res[0] == TOO_LARGE)
+    EXP_OFFSET + BW_IN_INT - r_n_lz - 1 (otherwise)
+}
+
+// bit-width of `r_frac_bs_l_idx` should be designed to avoid slice index over range (occurs when `r_cls_abs_val_size[0] == ZERO`)
+determine frac part bit slice index -> r_frac_bs_l_idx <= {
+    BW_IN - r_n_lz - 1 ⇔ (BW_IN+BW_OUT_FRAC) - (r_n_lz+1+BW_OUT_FRAC) (r_ov_rng_chk_res[0] == OK)
+    '0 (otherwise)
+}
+
+--clk↑-- t+=T_clk-δ
+determine frac part -> r_frac <= {
+    r_te_abs_val[L_CLZ+1][r_frac_bs_l_idx+:BW_OUT_FRAC] (r_ov_rng_chk_res[1] == OK)
+    '0 (otherwise)
+}
+
+result == {r_sgn[3+L_CLZ], r_exp[1], r_frac}

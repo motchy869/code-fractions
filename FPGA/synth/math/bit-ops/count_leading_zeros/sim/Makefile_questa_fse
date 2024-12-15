@@ -27,7 +27,7 @@ MAKEFILE_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 
 #-------------- Config ------------------------
 SHELL := /usr/bin/env bash
-QSIM_DIR := /tools/Siemens/intelFPGA/23.1std/questa_fse/bin
+QSIM_DIR := /tools/Siemens/intelFPGA_lite/23.1std/questa_fse/bin
 VLIB := $(QSIM_DIR)/vlib
 VMAP := $(QSIM_DIR)/vmap
 VLOG := $(QSIM_DIR)/vlog
