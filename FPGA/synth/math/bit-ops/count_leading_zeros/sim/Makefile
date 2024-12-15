@@ -40,7 +40,7 @@ INCLUDE_DIR :=
 
 SIM_CONSOLE_LOG_FILE_PATH := $(SIM_DIR)/sim_console.log
 #SV_SRC_FILES := $(shell find $(SRC_DIR) -type f -name "*.sv" | tr '\n' ' ')
-SV_SRC_FILES := $(SRC_DIR)/reg_chain_v0_1_0.sv $(SRC_DIR)/cnt_leading_zeros_v0_1_0.sv $(SRC_DIR)/tb/test_bench.sv
+SV_SRC_FILES := $(SRC_DIR)/reg_chain_v0_1_0.sv $(SRC_DIR)/cnt_leading_zeros_v0_1_1.sv $(SRC_DIR)/tb/test_bench.sv
 
 TB_TOP := test_bench
 

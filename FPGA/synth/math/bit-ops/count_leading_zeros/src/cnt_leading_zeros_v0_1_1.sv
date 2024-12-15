@@ -8,7 +8,12 @@
 //! NEITHER feed-stop nor back-pressure flow control are supported.
 //!
 //! cycle latency: ```INPUT_REG_CHAIN_LEN``` + 1 + ```OUTPUT_REG_CHAIN_LEN```
-module cnt_leading_zeros_v0_1_0 #(
+//! ## changelog
+//! ### [0.1.1] - 2024-12-15
+//! - fix: output register chain length is same as input's one.
+//! ### [0.1.0] - 2024-12-13
+//! - initial release
+module cnt_leading_zeros_v0_1_1 #(
     parameter int unsigned BW_IN = 8, //! bit width of input
     parameter int unsigned INPUT_REG_CHAIN_LEN = 1, //! Input register chain length. When this is set to 0, the input registers are not instantiated. Modern fitting tools will utilize these registers for register re-timing to achieve better timing closure.
     parameter int unsigned OUTPUT_REG_CHAIN_LEN = 1 //! Output register chain length. When this is set to 0, the output registers are not instantiated. Like the input register chain, these registers may also have positive effect for better timing closure.
@@ -73,7 +78,7 @@ reg_chain_v0_1_0 #(
 );
 
 reg_chain_v0_1_0 #(
-    .CHAIN_LEN(INPUT_REG_CHAIN_LEN),
+    .CHAIN_LEN(OUTPUT_REG_CHAIN_LEN),
     .T(out_reg_chain_elem_t)
 ) out_reg_chain (
     .i_clk(i_clk),

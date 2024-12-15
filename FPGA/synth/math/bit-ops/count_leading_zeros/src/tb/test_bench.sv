@@ -2,7 +2,7 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`include "../cnt_leading_zeros_v0_1_0_pkg.svh"
+`include "../cnt_leading_zeros_v0_1_1_pkg.svh"
 
 `default_nettype none
 
@@ -18,7 +18,7 @@ localparam int unsigned BW_IN = 8;
 localparam int unsigned INPUT_REG_CHAIN_LEN = 1;
 localparam int unsigned OUTPUT_REG_CHAIN_LEN = 1;
 localparam int unsigned BW_OUT = $clog2(BW_IN+1);
-localparam int unsigned DUT_CYCLE_LAT = cnt_leading_zeros_v0_1_0_pkg::cycle_latency(INPUT_REG_CHAIN_LEN, OUTPUT_REG_CHAIN_LEN);
+localparam int unsigned DUT_CYCLE_LAT = cnt_leading_zeros_v0_1_1_pkg::cycle_latency(INPUT_REG_CHAIN_LEN, OUTPUT_REG_CHAIN_LEN);
 // --------------------
 
 // ---------- parameter validation ----------
@@ -28,6 +28,8 @@ localparam int unsigned DUT_CYCLE_LAT = cnt_leading_zeros_v0_1_0_pkg::cycle_late
 // --------------------
 
 // ---------- signals and storage ----------
+var bit r_clk; //! clock signal
+
 interface dut_if #(
     parameter int unsigned BW_IN = 8,
     parameter int unsigned INPUT_REG_CHAIN_LEN = 1,
@@ -60,8 +62,6 @@ typedef virtual interface dut_if #(
     .OUTPUT_REG_CHAIN_LEN(OUTPUT_REG_CHAIN_LEN)
 ) dut_vif_t;
 
-var bit r_clk; //! clock signal
-
 dut_vif_t dut_vif; //! virtual interface to DUT
 // --------------------
 
@@ -74,7 +74,7 @@ dut_if #(
 ) dut_if_0 (.i_clk(r_clk));
 
 //! DUT instance
-cnt_leading_zeros_v0_1_0 #(
+cnt_leading_zeros_v0_1_1 #(
     .BW_IN(BW_IN),
     .INPUT_REG_CHAIN_LEN(INPUT_REG_CHAIN_LEN),
     .OUTPUT_REG_CHAIN_LEN(OUTPUT_REG_CHAIN_LEN)
