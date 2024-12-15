@@ -1,0 +1,29 @@
+== state
+- IDLE
+- WAITING_RESP
+    for manager-side frontend (MS-FE): waiting response from subordinate-side frontend
+    for subordinate-side frontend (SS-FE): waiting response from subordinate
+- RESPONDING
+    for MS-FE: sending response to manager
+=== state transition
+initial:
+- MS-FE: IDLE
+- SS-FE: IDLE
+↓ MS_FE receives request from manager
+Performing multi-bit CDC from MS-FE to SS=FE.
+- MS-FE: WAITING_RESP
+- SS-FE: IDLE
+↓ multi-bit CDC from MS-FE to SS=FE is done
+- MS-FE: WAITING_RESP
+- SS-FE: WAITING_RESP
+↓ SS_FE receives response from subordinate
+Performing multi-bit CDC from SS=FE to MS-FE.
+- MS-FE: WAITING_RESP
+- SS-FE: RESPONDING
+↓ multi-bit CDC from SS=FE to MS-FE is done
+- MS-FE: RESPONDING
+- SS-FE: IDLE
+  SS_FE goes to IDLE when it sends pulse to MS-FE
+↓ MS-FE receives RREADY from manager
+- MS-FE: IDLE
+- SS-FE: IDLE
