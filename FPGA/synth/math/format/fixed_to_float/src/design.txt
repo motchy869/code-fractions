@@ -36,6 +36,7 @@ determine exponent -> r_exp[0] <= {
     EXP_OFFSET + BW_IN_INT - r_n_lz - 1 (otherwise)
 }
 
+// bit-width of `r_frac_bs_l_idx` should be designed to avoid slice index over range (occurs when `r_cls_abs_val_size[0] == ZERO`)
 determine frac part bit slice index -> r_frac_bs_l_idx <= {
     BW_IN - r_n_lz - 1 ⇔ (BW_IN+BW_OUT_FRAC) - (r_n_lz+1+BW_OUT_FRAC) (r_ov_rng_chk_res[0] == OK)
     '0 (otherwise)
