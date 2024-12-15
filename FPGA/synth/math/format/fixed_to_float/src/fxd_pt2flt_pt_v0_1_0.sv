@@ -10,6 +10,9 @@
 //! NEITHER feed-stop nor back-pressure flow control are supported.
 //!
 //! cycle latency: 6
+//! ## changelog
+//! ### [0.1.0] - 2024-12-15
+//! - initial release
 module fxd_pt2flt_pt_v0_1_0 #(
     parameter int unsigned BW_IN_INT = 4, //! bit width of input integer part
     parameter int unsigned BW_IN_FRAC = 12, //! bit width of input fractional part
