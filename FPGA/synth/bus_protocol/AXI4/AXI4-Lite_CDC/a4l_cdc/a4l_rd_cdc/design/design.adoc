@@ -58,6 +58,9 @@ Only SS-FE has depth-1 states.
 
 == state transition
 
+.State Transition Diagram
+image::state_trans_diag.png[state transition diagram]
+
 == AXI4-Lite output signals
 
 .MS-FE AXI4-Lite output signals according to the the state
@@ -114,10 +117,4 @@ Only SS-FE has depth-1 states.
 |'0
 |1'b0
 |1'b1
-
-|RESPONDING
-|'0
-|'0
-|1'b0
-|1'b0
 |===

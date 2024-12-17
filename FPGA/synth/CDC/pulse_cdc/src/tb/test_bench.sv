@@ -108,7 +108,7 @@ task automatic drive_ds_rst(ref dut_vif_t vif);
     vif.ds_sync_rst <= 1'b0;
 endtask
 
-// Feeds pu;se to DUT.
+// Feeds pulse to DUT.
 task automatic feed_pulse(ref dut_vif_t vif);
     localparam uint_t INTER_PULSE_GAP_CYC = ((6+US_ADD_DELAY)*US_CLK_PERIOD_NS + (3+DS_ADD_DELAY)*DS_CLK_PERIOD_NS + (US_CLK_PERIOD_NS-1))/US_CLK_PERIOD_NS;
     // 1st pulse
