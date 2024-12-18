@@ -1,0 +1,1 @@
+This module is completely garbage because multi-bit CDC is not implemented correctly.
