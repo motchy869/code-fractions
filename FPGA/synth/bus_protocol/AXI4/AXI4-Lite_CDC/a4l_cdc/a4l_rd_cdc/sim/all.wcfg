@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="all.wdb" id="1">
+         <top_modules>
+            <top_module name="test_bench" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="442.001 ns"></ZoomEndTime>
+      <Cursor1Time time="22.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="276"></NameColumnWidth>
+      <ValueColumnWidth column_width="104"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="2" />
+   <wvobject type="group" fp_name="group14">
+      <obj_property name="label">dut_s_if_0</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject type="logic" fp_name="/test_bench/dut_s_if_0/s0_aclk">
+         <obj_property name="ElementShortName">s0_aclk</obj_property>
+         <obj_property name="ObjectShortName">s0_aclk</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_s_if_0/s0_sync_rst">
+         <obj_property name="ElementShortName">s0_sync_rst</obj_property>
+         <obj_property name="ObjectShortName">s0_sync_rst</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_s_if_0/s0_araddr">
+         <obj_property name="ElementShortName">s0_araddr[31:0]</obj_property>
+         <obj_property name="ObjectShortName">s0_araddr[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_s_if_0/s0_arprot">
+         <obj_property name="ElementShortName">s0_arprot[2:0]</obj_property>
+         <obj_property name="ObjectShortName">s0_arprot[2:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_s_if_0/s0_arvalid">
+         <obj_property name="ElementShortName">s0_arvalid</obj_property>
+         <obj_property name="ObjectShortName">s0_arvalid</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_s_if_0/s0_arready">
+         <obj_property name="ElementShortName">s0_arready</obj_property>
+         <obj_property name="ObjectShortName">s0_arready</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_s_if_0/s0_rdata">
+         <obj_property name="ElementShortName">s0_rdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">s0_rdata[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_s_if_0/s0_rresp">
+         <obj_property name="ElementShortName">s0_rresp[1:0]</obj_property>
+         <obj_property name="ObjectShortName">s0_rresp[1:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_s_if_0/s0_rvalid">
+         <obj_property name="ElementShortName">s0_rvalid</obj_property>
+         <obj_property name="ObjectShortName">s0_rvalid</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_s_if_0/s0_rready">
+         <obj_property name="ElementShortName">s0_rready</obj_property>
+         <obj_property name="ObjectShortName">s0_rready</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="group" fp_name="group51">
+      <obj_property name="label">dut_m_if_0</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="logic" fp_name="/test_bench/dut_m_if_0/m0_aclk">
+         <obj_property name="ElementShortName">m0_aclk</obj_property>
+         <obj_property name="ObjectShortName">m0_aclk</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_m_if_0/m0_sync_rst">
+         <obj_property name="ElementShortName">m0_sync_rst</obj_property>
+         <obj_property name="ObjectShortName">m0_sync_rst</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_m_if_0/m0_araddr">
+         <obj_property name="ElementShortName">m0_araddr[31:0]</obj_property>
+         <obj_property name="ObjectShortName">m0_araddr[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_m_if_0/m0_arprot">
+         <obj_property name="ElementShortName">m0_arprot[2:0]</obj_property>
+         <obj_property name="ObjectShortName">m0_arprot[2:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_m_if_0/m0_arvalid">
+         <obj_property name="ElementShortName">m0_arvalid</obj_property>
+         <obj_property name="ObjectShortName">m0_arvalid</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_m_if_0/m0_arready">
+         <obj_property name="ElementShortName">m0_arready</obj_property>
+         <obj_property name="ObjectShortName">m0_arready</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_m_if_0/m0_rdata">
+         <obj_property name="ElementShortName">m0_rdata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">m0_rdata[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_m_if_0/m0_rresp">
+         <obj_property name="ElementShortName">m0_rresp[1:0]</obj_property>
+         <obj_property name="ObjectShortName">m0_rresp[1:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_m_if_0/m0_rvalid">
+         <obj_property name="ElementShortName">m0_rvalid</obj_property>
+         <obj_property name="ObjectShortName">m0_rvalid</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_m_if_0/m0_rready">
+         <obj_property name="ElementShortName">m0_rready</obj_property>
+         <obj_property name="ObjectShortName">m0_rready</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>

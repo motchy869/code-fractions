@@ -14,10 +14,11 @@ localparam uint_t M_CLK_PERIOD_NS = 5; //! manager clock period in ns
 localparam uint_t S_CLK_PERIOD_NS = 8; //! subordinate clock period in ns
 localparam uint_t M_RST_DURATION_CYCLE = 1; //! manager reset duration in cycles
 localparam uint_t S_RST_DURATION_CYCLE = 1; //! subordinate reset duration in cycles
-localparam uint_t SIM_TIME_LIMIT_NS = 200; //! simulation time limit in ns
+localparam uint_t SIM_TIME_LIMIT_NS = 700; //! simulation time limit in ns
 
 localparam uint_t AXI4_LITE_ADDR_BIT_WIDTH = 32;
 localparam uint_t AXI4_LITE_DATA_BIT_WIDTH = 32;
+localparam uint_t NUM_TEST_ADDR = 8; //! number of test addresses
 // --------------------
 
 // ---------- parameter validation ----------
@@ -27,6 +28,13 @@ localparam uint_t AXI4_LITE_DATA_BIT_WIDTH = 32;
 // --------------------
 
 // ---------- signals and storage ----------
+typedef enum logic [1:0] {
+    AXI4_RESP_OKAY = 2'b00,
+    AXI4_RESP_EXOKAY = 2'b01,
+    AXI4_RESP_SLVERR = 2'b10,
+    AXI4_RESP_DECERR = 2'b11
+} axi4_resp_t;
+
 var bit r_m_clk; //! manager clock signal
 var bit r_s_clk; //! subordinate clock signal
 
@@ -167,14 +175,93 @@ task automatic drive_s_rst(ref dut_v_m_if_t v_m_if);
     v_m_if.m0_sync_rst <= 1'b0;
 endtask
 
-// Issues read requests to DUT.
-task automatic issue_rd_req(ref dut_v_s_if_t v_s_if);
-    // TODO: Implement this.
+// Mocks the manager.
+task automatic mock_manager(ref dut_v_s_if_t v_s_if);
+    typedef struct packed {
+        logic [AXI4_LITE_DATA_BIT_WIDTH-1:0] rdata;
+        logic [1:0] rresp;
+    } resp_t;
+    const logic [AXI4_LITE_ADDR_BIT_WIDTH-1:0] addr[NUM_TEST_ADDR] = {'h9EC58EAF, 'hD543A4FA, 'h81EF1E1F, 'h1CAA6E39, 'h37E0780D, 'hEB94D829, 'h6830C3D9, 'h22F4F123};
+    resp_t resp;
+    logic [AXI4_LITE_DATA_BIT_WIDTH-1:0] expected_rdata;
+    bit is_error = 1'b0;
+
+    for (uint_t i=0; i<NUM_TEST_ADDR; ++i) begin
+        // Shows address to the DUT.
+        @(posedge v_s_if.s0_aclk);
+        v_s_if.s0_araddr <= addr[i];
+        v_s_if.s0_arprot <= '0;
+        v_s_if.s0_arvalid <= 1'b1;
+
+        // Waits the DUT accepts the address.
+        while (1'b1) begin
+            @(posedge v_s_if.s0_aclk);
+            if (v_s_if.s0_arready) begin
+                v_s_if.s0_araddr <= '0;
+                v_s_if.s0_arvalid <= 1'b0;
+                v_s_if.s0_rready <= 1'b1;
+                break;
+            end
+        end
+
+        // Waits the DUT returns data.
+        while (1'b1) begin
+            @(posedge v_s_if.s0_aclk);
+            if (v_s_if.s0_rvalid) begin
+                resp.rdata = v_s_if.s0_rdata;
+                resp.rresp = v_s_if.s0_rresp;
+                v_s_if.s0_rready <= 1'b0;
+                break;
+            end
+        end
+
+        // Check the response. RDATA should be bit order reversed version of ARADDR, and RRESP should be OKAY.
+        expected_rdata = {<<1{addr[i]}};
+        if (resp.rdata != expected_rdata || resp.rresp != AXI4_RESP_OKAY) begin
+            is_error = 1'b1;
+            $fatal(2, $sformatf("Unexpected response: addr=%h, rdata=%h, rresp=%h", addr[i], resp.rdata, resp.rresp));
+        end
+    end
+
+    if (!is_error) begin
+        $display("All test cases passed.");
+    end
 endtask
 
-// Issues read responses to DUT.
-task automatic issue_rd_resp(ref dut_v_m_if_t v_m_if);
-    // TODO: Implement this.
+// Mocks the subordinate.
+task automatic mock_subordinate(ref dut_v_m_if_t v_m_if);
+    logic [AXI4_LITE_ADDR_BIT_WIDTH-1:0] received_addr;
+    logic [AXI4_LITE_DATA_BIT_WIDTH-1:0] response_data;
+
+    for (uint_t i=0; i<NUM_TEST_ADDR; ++i) begin
+        // Waits read request from the DUT.
+        @(posedge v_m_if.m0_aclk);
+        v_m_if.m0_arready <= 1'b1;
+        while (1'b1) begin
+            @(posedge v_m_if.m0_aclk);
+            if (v_m_if.m0_arvalid) begin
+                received_addr = v_m_if.m0_araddr;
+                v_m_if.m0_arready <= 1'b0;
+                break;
+            end
+        end
+
+        // Sends response to the DUT.
+        response_data = {<<1{received_addr}};
+        @(posedge v_m_if.m0_aclk);
+        v_m_if.m0_rdata <= response_data;
+        v_m_if.m0_rresp <= AXI4_RESP_OKAY;
+        v_m_if.m0_rvalid <= 1'b1;
+
+        // Waits the DUT accepts the response.
+        while (1'b1) begin
+            @(posedge v_m_if.m0_aclk);
+            if (v_m_if.m0_rready) begin
+                v_m_if.m0_rvalid <= 1'b0;
+                break;
+            end
+        end
+    end
 endtask
 
 task automatic scenario();
@@ -185,9 +272,10 @@ task automatic scenario();
     @(posedge r_m_clk);
     @(posedge r_s_clk);
     fork
-        issue_rd_req(dut_v_s_if);
-        issue_rd_resp(dut_v_m_if);
+        mock_manager(dut_v_s_if);
+        mock_subordinate(dut_v_m_if);
     join
+    $finish;
 endtask
 
 //! Launches scenario and manage time limit.
