@@ -1,0 +1,120 @@
+= Design of a4l_rd_cdc
+motchy <motchy869@gmail.com>
+:revdate: 2024-12-16
+:revnumber: 0.1.0
+:description: Design of a4l_rd_cdc
+:sectanchors:
+:sectnums:
+:xrefstyle: short
+:stem: latexmath
+:toc:
+
+== names
+
+- manager-side frontend (MS-FE): the circuit that interfaces with the manager
+- subordinate-side frontend (SS-FE): the circuit that interfaces with the subordinate
+
+== states
+
+.depth-0 states
+[%header%autowidth,cols="<1,<1,<1",stripes=even]
+|===
+^|state name
+2+^|description
+
+|
+^|@MS-FE
+^|@SS-FE
+
+|IDLE
+|waiting request from manager
+|waiting request from MS-FE
+
+|WAITING_RESP
+|waiting response from subordinate-side frontend
+|waiting response from subordinate
+
+|RESPONDING
+|sending response to manager
+|-
+|===
+
+Only SS-FE has depth-1 states.
+
+.depth-1 states
+[%header%autowidth,cols="<1,<1,<1",stripes=even]
+|===
+^|depth-0 state name
+^|depth-1 state name
+^|description
+
+.2+^.^|WAITING_RESP
+|SENDING_ARADDR
+|subordinate has not accepted ARADDR yet (ARVALID is high)
+
+|WAITING_RVALID
+|subordinate has accepted ARADDR (ARVALID is low), but has not sent RVALID yet
+|===
+
+== state transition
+
+.State Transition Diagram
+image::state_trans_diag.png[state transition diagram]
+
+== AXI4-Lite output signals
+
+.MS-FE AXI4-Lite output signals according to the the state
+[%header%autowidth,cols="<1,<1,<1,<1,<1",stripes=even]
+|===
+^|state
+^|ARREADY
+^|RDATA
+^|RRESP
+^|RVALID
+
+|IDLE
+|1'b1
+|'0
+|'0
+|1'b0
+
+|WAITING_RESP
+|1'b0
+|'0
+|'0
+|1'b0
+
+|RESPONDING
+|1'b0
+|data
+|response
+|1'b1
+|===
+
+.SS-FE AXI4-Lite output signals according to the the state
+[%header%autowidth,cols="<1,<1,<1,<1,<1",stripes=even]
+|===
+^|state
+^|ARADDR
+^|ARPROT
+^|ARVALID
+^|RREADY
+
+|IDLE
+|'0
+|'0
+|1'b0
+|1'b0
+
+|WAITING_RESP.SENDING_ARADDR
+|address
+|prot
+|1'b1
+|1'b1
+
+|WAITING_RESP.WAITING_RVALID
+|'0
+|'0
+|1'b0
+|1'b1
+|===

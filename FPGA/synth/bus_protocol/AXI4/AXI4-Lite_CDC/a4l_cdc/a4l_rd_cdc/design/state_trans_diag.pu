@@ -1,0 +1,32 @@
+@startuml state_transition_diagram
+legend
+<size:8> Rendered with Plantuml Version %version() </size>
+end legend
+
+[*] --> idle
+idle: MS-FE: IDLE
+idle: SS-FE: IDLE
+
+idle --> phase_0: MS_FE receives a request from the manager.\nTriggers multi-bit CDC from MS-FE to SS-FE.
+phase_0: MS-FE: WAITING_RESP
+phase_0: SS-FE: IDLE
+
+phase_0 --> phase_1_1: Multi-bit CDC from MS-FE to SS-FE is done.
+phase_1_1: MS-FE: WAITING_RESP
+phase_1_1: SS-FE: WAITING_RESP.SENDING_ARADDR
+
+phase_1_1 --> phase_1_2: SS-FE receives ARREADY from the subordinate,\nbut does not receive RVALID yet.
+phase_1_2: MS-FE: WAITING_RESP
+phase_1_2: SS-FE: WAITING_RESP.WAITING_RVALID
+
+phase_1_2 --> phase_2: SS-FE receives RVALID from the subordinate.\nTriggers multi-bit CDC from SS-FE to MS-FE.
+phase_1_1 --> phase_2: SS-FE receives both ARREADY and RVALID from the subordinate.\nTriggers multi-bit CDC from SS-FE to MS-FE.
+phase_2: MS-FE: WAITING_RESP
+phase_2: SS-FE: IDLE
+
+phase_2 --> phase_3: Multi-bit CDC from SS-FE to MS-FE is done.
+phase_3: MS-FE: RESPONDING
+phase_3: SS-FE: IDLE
+
+phase_3 --> idle: MS-FE receives RREADY from manager.
+@enduml
