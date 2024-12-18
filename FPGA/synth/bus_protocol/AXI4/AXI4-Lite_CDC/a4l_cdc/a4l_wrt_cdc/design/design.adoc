@@ -1,0 +1,21 @@
+= Design of a4l_wrt_cdc
+motchy <motchy869@gmail.com>
+:revdate: 2024-12-18
+:revnumber: 0.1.0
+:description: Design of a4l_wrt_cdc
+:sectanchors:
+:sectnums:
+:xrefstyle: short
+:stem: latexmath
+:toc:
+
+== names
+
+- manager-side frontend (MS-FE): the circuit that interfaces with the manager
+- subordinate-side frontend (SS-FE): the circuit that interfaces with the subordinate
+
+== states
+
+== state transition
+
+== AXI4-Lite output signals
