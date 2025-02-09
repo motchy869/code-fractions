@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="/mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/math/divider/div_msb1_den/v0_1_0/sim/sim_result/all.wdb" id="1">
+         <top_modules>
+            <top_module name="test_bench" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="7.906 ns"></ZoomStartTime>
+      <ZoomEndTime time="80.847 ns"></ZoomEndTime>
+      <Cursor1Time time="36.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="276"></NameColumnWidth>
+      <ValueColumnWidth column_width="92"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="4" />
+   <wvobject type="logic" fp_name="/test_bench/r_clk">
+      <obj_property name="ElementShortName">r_clk</obj_property>
+      <obj_property name="ObjectShortName">r_clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_bench/r_sync_rst">
+      <obj_property name="ElementShortName">r_sync_rst</obj_property>
+      <obj_property name="ObjectShortName">r_sync_rst</obj_property>
+   </wvobject>
+   <wvobject type="group" fp_name="group11">
+      <obj_property name="label">dut_if_0</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="logic" fp_name="/test_bench/dut_if_0/freeze">
+         <obj_property name="ElementShortName">freeze</obj_property>
+         <obj_property name="ObjectShortName">freeze</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_if_0/num">
+         <obj_property name="ElementShortName">num[7:0]</obj_property>
+         <obj_property name="ObjectShortName">num[7:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_if_0/den">
+         <obj_property name="ElementShortName">den[3:0]</obj_property>
+         <obj_property name="ObjectShortName">den[3:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_if_0/quo">
+         <obj_property name="ElementShortName">quo[4:0]</obj_property>
+         <obj_property name="ObjectShortName">quo[4:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_if_0/rem">
+         <obj_property name="ElementShortName">rem[3:0]</obj_property>
+         <obj_property name="ObjectShortName">rem[3:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="group" fp_name="group21">
+      <obj_property name="label">dut</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="array" fp_name="/test_bench/dut/r_den_buf">
+         <obj_property name="ElementShortName">r_den_buf[3:0][3:0]</obj_property>
+         <obj_property name="ObjectShortName">r_den_buf[3:0][3:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/test_bench/dut/r_den_buf[3]">
+            <obj_property name="ElementShortName">[3][3:0]</obj_property>
+            <obj_property name="ObjectShortName">[3][3:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_den_buf[2]">
+            <obj_property name="ElementShortName">[2][3:0]</obj_property>
+            <obj_property name="ObjectShortName">[2][3:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_den_buf[1]">
+            <obj_property name="ElementShortName">[1][3:0]</obj_property>
+            <obj_property name="ObjectShortName">[1][3:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_den_buf[0]">
+            <obj_property name="ElementShortName">[0][3:0]</obj_property>
+            <obj_property name="ObjectShortName">[0][3:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_den_buf[3]">
+            <obj_property name="ElementShortName">[3][3:0]</obj_property>
+            <obj_property name="ObjectShortName">[3][3:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_den_buf[2]">
+            <obj_property name="ElementShortName">[2][3:0]</obj_property>
+            <obj_property name="ObjectShortName">[2][3:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_den_buf[1]">
+            <obj_property name="ElementShortName">[1][3:0]</obj_property>
+            <obj_property name="ObjectShortName">[1][3:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_den_buf[0]">
+            <obj_property name="ElementShortName">[0][3:0]</obj_property>
+            <obj_property name="ObjectShortName">[0][3:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/r_num_buf">
+         <obj_property name="ElementShortName">r_num_buf[4:0][7:0]</obj_property>
+         <obj_property name="ObjectShortName">r_num_buf[4:0][7:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/test_bench/dut/r_num_buf[4]">
+            <obj_property name="ElementShortName">[4][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[4][7:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_num_buf[3]">
+            <obj_property name="ElementShortName">[3][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[3][7:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_num_buf[2]">
+            <obj_property name="ElementShortName">[2][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[2][7:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_num_buf[1]">
+            <obj_property name="ElementShortName">[1][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[1][7:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_num_buf[0]">
+            <obj_property name="ElementShortName">[0][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[0][7:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_num_buf[4]">
+            <obj_property name="ElementShortName">[4][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[4][7:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_num_buf[3]">
+            <obj_property name="ElementShortName">[3][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[3][7:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_num_buf[2]">
+            <obj_property name="ElementShortName">[2][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[2][7:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_num_buf[1]">
+            <obj_property name="ElementShortName">[1][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[1][7:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_num_buf[0]">
+            <obj_property name="ElementShortName">[0][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[0][7:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/g_quo_comb">
+         <obj_property name="ElementShortName">g_quo_comb[4:0]</obj_property>
+         <obj_property name="ObjectShortName">g_quo_comb[4:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/r_quo_buf">
+         <obj_property name="ElementShortName">r_quo_buf[4:0][4:0]</obj_property>
+         <obj_property name="ObjectShortName">r_quo_buf[4:0][4:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/test_bench/dut/r_quo_buf[4]">
+            <obj_property name="ElementShortName">[4][4:0]</obj_property>
+            <obj_property name="ObjectShortName">[4][4:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_quo_buf[3]">
+            <obj_property name="ElementShortName">[3][4:0]</obj_property>
+            <obj_property name="ObjectShortName">[3][4:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_quo_buf[2]">
+            <obj_property name="ElementShortName">[2][4:0]</obj_property>
+            <obj_property name="ObjectShortName">[2][4:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_quo_buf[1]">
+            <obj_property name="ElementShortName">[1][4:0]</obj_property>
+            <obj_property name="ObjectShortName">[1][4:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_quo_buf[0]">
+            <obj_property name="ElementShortName">[0][4:0]</obj_property>
+            <obj_property name="ObjectShortName">[0][4:0]</obj_property>
+            <obj_property name="Radix">BINARYRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_quo_buf[4]">
+            <obj_property name="ElementShortName">[4][4:0]</obj_property>
+            <obj_property name="ObjectShortName">[4][4:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_quo_buf[3]">
+            <obj_property name="ElementShortName">[3][4:0]</obj_property>
+            <obj_property name="ObjectShortName">[3][4:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_quo_buf[2]">
+            <obj_property name="ElementShortName">[2][4:0]</obj_property>
+            <obj_property name="ObjectShortName">[2][4:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_quo_buf[1]">
+            <obj_property name="ElementShortName">[1][4:0]</obj_property>
+            <obj_property name="ObjectShortName">[1][4:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut/r_quo_buf[0]">
+            <obj_property name="ElementShortName">[0][4:0]</obj_property>
+            <obj_property name="ObjectShortName">[0][4:0]</obj_property>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+</wave_config>
