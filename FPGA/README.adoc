@@ -1,0 +1,61 @@
+= README
+motchy <motchy869@gmail.com>
+:revdate: 2025-02-17
+:revnumber: 0.1.0
+:description: README
+:sectanchors:
+:sectnums:
+:xrefstyle: short
+:stem: latexmath
+:toc:
+
+[pass]
+++++
+<style type="text/css">
+.imageblock > .title {
+    text-align: inherit; /* to match the alignment of image captions with that of the images */
+    font-style: normal /* roman type */
+}
+table[class*="tableblock"] > .title {
+    text-align: center; /* no effect... */
+    font-style: normal /* roman type */
+}
+</style>
+++++
+
+== Directory Structure
+
+* doc: focused on documentation
+* sim: focused on simulation
+* synth: focused on synthesis
+
+== Compiler Maturity Level
+
+For the sake of `ifdef` compiler switch based on the SystemVerilog language support level, we define the following `Compiler Maturity Levels':
+
+[.center%header%autowidth,cols="<1,<1,<1,<1",stripes=even]
+|===
+^|Level
+^|Limitation
+^|macro definition
+^|Example IDE
+
+|0
+a|* `parameter type` can't be used in parameter declaration in module header
+* `import <package>` can't be used in module header
+* `wire <type name>` can't be used in port list in module header
+* `var automatic <data type> <variable name>` can't be used
+|`COMPILER_MATURITY_LEVEL_0`
+|Quartus Prime Lite 23.1std
+
+|1
+|no noticeable defects so far
+|`COMPILER_MATURITY_LEVEL_1`
+|Vivado 2024.2.1
+|===
+
+When different `COMPILER_MATURITY_LEVEL_XYZ` macros are defined at the same time, the **LOWEST** level one takes precedence.
+
+== Makefile
+
+Sor far, the Makefile for mimo_fifo_v0_1_0 is most sophisticated.
