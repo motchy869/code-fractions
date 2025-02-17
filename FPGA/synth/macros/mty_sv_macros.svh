@@ -15,7 +15,7 @@
 `define CLIP_WITHIN(val, min_val, max_val) ((val) < (min_val) ? (min_val) : ((val) > (max_val) ? (max_val) : (val)))
 
 // Quartus Prime Lite 23.1std.1 doesn't support default value of macro argument
-`ifdef QUARTUS_PRIME_LITE // This macro should be set MANUALLY in the project settings
+`ifdef COMPILER_MATURITY_LEVEL_0 // This macro should be set MANUALLY in the project settings if needed.
     `define ASST_VAL_IS_KNOWN(val, disable_check) assert(disable_check || !$isunknown(val)) else begin $display("file: %s, line: %d", `__FILE__, `__LINE__); $fatal(2, "unknown value"); end
     `define ASST_VAL_IN_RANGE(condition, disable_check) assert(disable_check || condition) else begin $display("file: %s, line: %d", `__FILE__, `__LINE__); $fatal(2, "value out of range"); end
     `define ASST_ALL_BITS_ARE_EQUAL(val, disable_check) assert(disable_check || val == '0 || val == '1) else begin $display("file: %s, line: %d", `__FILE__, `__LINE__); $fatal(2, "All bits must be equal."); end

@@ -49,7 +49,7 @@ var logic signed [BIT_WIDTH_OUT-1:0] r_sum; //! pipeline for sum
 
 // ---------- instances ----------
 skid_buf_v0_1_0 #(
-    .T(logic [BIT_WIDTH_OUT-1:0])
+    .T_E(logic [BIT_WIDTH_OUT-1:0])
 ) output_skid_buf (
     .i_clk(i_clk),
     .i_sync_rst(i_sync_rst),

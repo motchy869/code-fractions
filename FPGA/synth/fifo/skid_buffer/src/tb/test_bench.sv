@@ -2,11 +2,26 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`include "../skid_buf_v0_1_0.svh"
+`include "../skid_buf_v0_1_0.sv"
 
 `default_nettype none
 
 // timescale is defined in Makefile.
+
+//! interface to DUT
+interface skid_buf_if #(
+    parameter type T_E = logic //! element data type
+)(
+    input wire logic i_clk //! clock signal
+);
+    logic us_valid; //! valid signal from upstream
+    T_E us_data; //! data from upstream
+    logic us_ready; //! ready signal to upstream
+
+    logic ds_ready; //! ready signal from downstream
+    T_E ds_data; //! data to downstream
+    logic ds_valid; //! valid signal to downstream
+endinterface
 
 //! A test bench for skid_buf.
 module test_bench;
@@ -15,31 +30,17 @@ localparam int CLK_PERIOD_NS = 8; //! clock period in ns
 localparam int SIM_TIME_LIMIT_NS = 500; //! simulation time limit in ns
 localparam int RELEASE_RST_AFTER_CLK = 2; //! Reset signal deasserts right after this clock rising-edge.
 
-parameter int DATA_BIT_WIDTH = 8; //! data bit width
-parameter type T = logic [DATA_BIT_WIDTH-1:0]; //! data type
+parameter int BIT_WIDTH_ELEM = 8; //! element data bit width
+parameter type T_E = logic [BIT_WIDTH_ELEM-1:0]; //! element data type
 // --------------------
 
 // ---------- types ----------
 typedef virtual interface skid_buf_if#(
-    .T(T)
+    .T_E(T_E)
 ) dut_vif_t;
 // --------------------
 
 // ---------- signal and storage ----------
-interface skid_buf_if #(
-    parameter type T = logic //! data type
-)(
-    input wire logic i_clk //! clock signal
-);
-    logic us_valid; //! valid signal from upstream
-    T us_data; //! data from upstream
-    logic us_ready; //! ready signal to upstream
-
-    logic ds_ready; //! ready signal from downstream
-    T ds_data; //! data to downstream
-    logic ds_valid; //! valid signal to downstream
-endinterface
-
 var bit r_clk; //! clock signal
 var bit r_sync_rst; //! clock synchronous reset signal
 
@@ -50,12 +51,12 @@ dut_vif_t dut_vif;
 // ---------- instances ----------
 //! interface to the DUT
 skid_buf_if #(
-    .T(T)
+    .T_E(T_E)
 ) dut_if (.i_clk(r_clk));
 
 //! DUT instance
 skid_buf_v0_1_0 #(
-    .T(T)
+    .T_E(T_E)
 ) dut (
     .i_clk(r_clk),
     .i_sync_rst(r_sync_rst),
@@ -91,22 +92,22 @@ task automatic drive_rst();
 endtask
 
 task automatic feed_data(ref dut_vif_t vif);
-    localparam int NUM_DATA = 16;
+    localparam int NUM_TEST_ELEMS = 16;
 
-    T us_data[NUM_DATA] = {
+    T_E us_data[NUM_TEST_ELEMS] = {
         'h00, 'h01, 'h02, 'h03, 'h04, 'h05, 'h06, 'h07,
         'h08, 'h09, 'h0a, 'h0b, 'h0c, 'h0d, 'h0e, 'h0f
     };
     logic next_us_valid;
     logic next_ds_ready;
-    T ds_data[NUM_DATA] = '{default:'0};
+    T_E ds_data[NUM_TEST_ELEMS] = '{default:'0};
 
     @(posedge vif.i_clk);
     vif.us_valid <= 1'b0;
     vif.us_data <= us_data[0];
     vif.ds_ready <= 1'b0;
 
-    for (int push_cnt=0, pop_cnt=0; pop_cnt<NUM_DATA;) begin
+    for (int push_cnt=0, pop_cnt=0; pop_cnt<NUM_TEST_ELEMS;) begin
         @(posedge vif.i_clk);
         if (vif.us_valid && vif.us_ready) begin
             ++push_cnt;
@@ -117,13 +118,13 @@ task automatic feed_data(ref dut_vif_t vif);
             ++pop_cnt;
         end
 
-        vif.us_valid <= (push_cnt < NUM_DATA) ? $urandom_range(0, 99) / 50 : 1'b0;
-        vif.us_data <= (push_cnt < NUM_DATA) ? us_data[push_cnt] : '0;
-        vif.ds_ready <= (pop_cnt < NUM_DATA) ? $urandom_range(0, 99) / 50 : 1'b0;
+        vif.us_valid <= (push_cnt < NUM_TEST_ELEMS) ? $urandom_range(0, 99) / 50 : 1'b0;
+        vif.us_data <= (push_cnt < NUM_TEST_ELEMS) ? us_data[push_cnt] : '0;
+        vif.ds_ready <= (pop_cnt < NUM_TEST_ELEMS) ? $urandom_range(0, 99) / 50 : 1'b0;
     end
 
     // Validate the data.
-    for (int i=0; i<NUM_DATA; ++i) begin
+    for (int i=0; i<NUM_TEST_ELEMS; ++i) begin
         if (us_data[i] !== ds_data[i]) begin
             $fatal(2, $sformatf("Data mismatch at index %0d: expected 8'h%02h, got 8'h%02h", i, us_data[i], ds_data[i]));
         end

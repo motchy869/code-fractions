@@ -2,6 +2,9 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
+`ifndef SKID_BUF_V0_1_0_INCLUDED
+`define SKID_BUF_V0_1_0_INCLUDED
+
 `default_nettype none
 
 //! simple skid buffer which can be used to cut timing arc
@@ -9,11 +12,10 @@
 //! ### [0.1.0] - 2024-12-12
 //! - initial release
 module skid_buf_v0_1_0 #(
-    // Quartus Prime Lite 23.1std.1 doesn't support type parameter.
-    `ifdef QUARTUS_PRIME_LITE // This macro should be set MANUALLY in the project settings
-        parameter int unsigned BIT_WIDTH_DATA = 8 //! bit width of the data
+    `ifdef COMPILER_MATURITY_LEVEL_0 // This macro should be set MANUALLY in the project settings if needed.
+        parameter int unsigned BIT_WIDTH_ELEM = 8 //! bit width of the element
     `else
-        parameter type T = logic //! data type
+        parameter type T_E = logic [7:0] //! element data type
     `endif
 )(
     input wire logic i_clk, //! clock signal
@@ -22,10 +24,10 @@ module skid_buf_v0_1_0 #(
 
     //! @virtualbus us_side_if @dir in upstream side interface
     input wire logic i_us_valid, //! valid signal from upstream
-    `ifdef QUARTUS_PRIME_LITE
-        input wire logic [BIT_WIDTH_DATA-1:0] i_us_data, //! data from upstream
+    `ifdef COMPILER_MATURITY_LEVEL_0
+        input wire logic [BIT_WIDTH_ELEM-1:0] i_us_data, //! data from upstream
     `else
-        input wire T i_us_data, //! data from upstream
+        input wire T_E i_us_data, //! data from upstream
     `endif
     output wire logic o_us_ready, //! A ready signal to upstream. **masked by** `i_sync_rst` (to avoid losing data at transition to reset state).
     //! @end
@@ -33,10 +35,10 @@ module skid_buf_v0_1_0 #(
     //! @virtualbus ds_side_if @dir out downstream side interface
     //! ready signal from downstream
     input wire logic i_ds_ready,
-    `ifdef QUARTUS_PRIME_LITE
-        output wire logic [BIT_WIDTH_DATA-1:0] o_ds_data, //! data to downstream
+    `ifdef COMPILER_MATURITY_LEVEL_0
+        output wire logic [BIT_WIDTH_ELEM-1:0] o_ds_data, //! data to downstream
     `else
-        output wire T o_ds_data, //! data to downstream
+        output wire T_E o_ds_data, //! data to downstream
     `endif
     output wire logic o_ds_valid //! valid signal to downstream
     //! @end
@@ -48,8 +50,8 @@ module skid_buf_v0_1_0 #(
 // --------------------
 
 // ---------- internal signal and storage ----------
-`ifdef QUARTUS_PRIME_LITE
-    typedef logic [BIT_WIDTH_DATA-1:0] T;
+`ifdef COMPILER_MATURITY_LEVEL_0
+    typedef logic [BIT_WIDTH_ELEM-1:0] T_E;
 `endif
 
 // FIFO read and write pointer type
@@ -58,7 +60,7 @@ typedef struct packed {
     logic phase; //! The buffer phase. Begins at 0 and toggles between 0 and 1 every time the index wraps around. This is utilized for distinguishing between full and empty conditions.
 } buf_ptr_t;
 
-var T [1:0] r_fifo_buf; //! FIFO buffer
+var T_E [1:0] r_fifo_buf; //! FIFO buffer
 var buf_ptr_t r_rd_ptr; //! FIFO read pointer
 var buf_ptr_t r_wr_ptr; //! FIFO write pointer
 wire g_buf_full; //! buffer full signal
@@ -120,3 +122,4 @@ end
 endmodule
 
 `default_nettype wire
+`endif // SKID_BUF_V0_1_0_INCLUDED

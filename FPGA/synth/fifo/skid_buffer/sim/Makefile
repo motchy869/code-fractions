@@ -47,7 +47,7 @@ DEFAULT_TIME_SCALE := 1ns/1ps
 
 XVLOG_FLAGS := --incr --define ALLOW_NON_SYNTHESIZABLE
 XELAB_FLAGS := --incr
-XSIM_FLAGS := -stats
+XSIM_FLAGS := --stats --sv_seed 42
 
 # 0/1: not/use
 USE_UVM := 0
