@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="all.wdb" id="1">
+         <top_modules>
+            <top_module name="test_bench" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="239.913 ns"></ZoomEndTime>
+      <Cursor1Time time="196.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="276"></NameColumnWidth>
+      <ValueColumnWidth column_width="92"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="3" />
+   <wvobject type="logic" fp_name="/test_bench/r_clk">
+      <obj_property name="ElementShortName">r_clk</obj_property>
+      <obj_property name="ObjectShortName">r_clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_bench/r_sync_rst">
+      <obj_property name="ElementShortName">r_sync_rst</obj_property>
+      <obj_property name="ObjectShortName">r_sync_rst</obj_property>
+   </wvobject>
+   <wvobject type="group" fp_name="group13">
+      <obj_property name="label">dut_if_0</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="logic" fp_name="/test_bench/dut_if_0/freeze">
+         <obj_property name="ElementShortName">freeze</obj_property>
+         <obj_property name="ObjectShortName">freeze</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_if_0/full">
+         <obj_property name="ElementShortName">full</obj_property>
+         <obj_property name="ObjectShortName">full</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_if_0/n_i">
+         <obj_property name="ElementShortName">n_i[2:0]</obj_property>
+         <obj_property name="ObjectShortName">n_i[2:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_if_0/in_elems">
+         <obj_property name="ElementShortName">in_elems[6:0][7:0]</obj_property>
+         <obj_property name="ObjectShortName">in_elems[6:0][7:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_if_0/empty">
+         <obj_property name="ElementShortName">empty</obj_property>
+         <obj_property name="ObjectShortName">empty</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_if_0/n_o">
+         <obj_property name="ElementShortName">n_o[2:0]</obj_property>
+         <obj_property name="ObjectShortName">n_o[2:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_if_0/out_elems">
+         <obj_property name="ElementShortName">out_elems[4:0][7:0]</obj_property>
+         <obj_property name="ObjectShortName">out_elems[4:0][7:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>

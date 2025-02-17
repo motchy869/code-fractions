@@ -1,3 +1,0 @@
-- doc: focused on documentation
-- sim: focused on simulation
-- synth: focused on synthesis
