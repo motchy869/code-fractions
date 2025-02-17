@@ -35,7 +35,7 @@ module mimo_fifo_v0_1_0 #(
     //! @end
 );
 // ---------- parameters ----------
-parameter int unsigned N_SLTS = 2*((MAX_N_I > MAX_N_I) ? MAX_N_I : MAX_N_O); //! the number of element-slots
+localparam int unsigned N_SLTS = 2*((MAX_N_I > MAX_N_I) ? MAX_N_I : MAX_N_O); //! the number of element-slots
 // --------------------
 
 // ---------- parameter validation ----------
