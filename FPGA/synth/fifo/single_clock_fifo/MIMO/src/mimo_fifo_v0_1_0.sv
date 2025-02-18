@@ -111,13 +111,11 @@ always_ff @(posedge i_clk) begin: blk_update_elem_slts
         automatic logic range_ptn = wr_range_top_idx >= wr_range_btm_idx;
         for (int unsigned i=0; i<N_SLTS; ++i) begin
             // Note that when `N_SLTS` is power of 2, `$clog2(N_SLTS)'(N_SLTS) == 0`, and conditional branch will be optimized out.
-            `ifndef COMPILER_MATURITY_LEVEL_0
-                var automatic logic in_range = range_ptn ? (i >= wr_range_btm_idx && i <= wr_range_top_idx) : (i >= wr_range_btm_idx || i <= wr_range_top_idx);
-                var automatic logic [$clog2(MAX_N_I)-1:0] intra_input_idx = ($clog2(N_SLTS)'(i) >= wr_range_btm_idx) ? $clog2(MAX_N_I)'($clog2(N_SLTS)'(i) - $clog2(N_SLTS)'(wr_range_btm_idx)) : $clog2(MAX_N_I)'($clog2(N_SLTS)'(i) + $clog2(N_SLTS)'(N_SLTS) - $clog2(N_SLTS+1)'(wr_range_btm_idx));
-            `else
-                var logic in_range = range_ptn ? (i >= wr_range_btm_idx && i <= wr_range_top_idx) : (i >= wr_range_btm_idx || i <= wr_range_top_idx);
-                var logic [$clog2(MAX_N_I)-1:0] intra_input_idx = ($clog2(N_SLTS)'(i) >= wr_range_btm_idx) ? $clog2(MAX_N_I)'($clog2(N_SLTS)'(i) - $clog2(N_SLTS)'(wr_range_btm_idx)) : $clog2(MAX_N_I)'($clog2(N_SLTS)'(i) + $clog2(N_SLTS)'(N_SLTS) - $clog2(N_SLTS+1)'(wr_range_btm_idx));
-            `endif
+            automatic logic in_range = range_ptn ? (i >= wr_range_btm_idx && i <= wr_range_top_idx) : (i >= wr_range_btm_idx || i <= wr_range_top_idx);
+            // verilator lint_off STATICVAR
+            localparam int unsigned TEMP_BW = $clog2(N_SLTS) + 1; // +1 is for avoiding overflow warning by compiler, but this overflow is harmless.
+            // verilator lint_on STATICVAR
+            automatic logic [$clog2(MAX_N_I)-1:0] intra_input_idx = ($clog2(N_SLTS)'(i) >= wr_range_btm_idx) ? $clog2(MAX_N_I)'($clog2(N_SLTS)'(i) - $clog2(N_SLTS)'(wr_range_btm_idx)) : $clog2(MAX_N_I)'($clog2(N_SLTS+1)'(i) + $clog2(N_SLTS+1)'(N_SLTS) - $clog2(N_SLTS+1)'(wr_range_btm_idx));
             if (in_range) begin
                 r_elem_slts[i] <= i_elems[intra_input_idx];
             end
