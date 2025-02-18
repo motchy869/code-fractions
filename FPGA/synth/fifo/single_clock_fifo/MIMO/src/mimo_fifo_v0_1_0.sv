@@ -106,15 +106,9 @@ always_ff @(posedge i_clk) begin: blk_update_elem_slts
     if (i_sync_rst) begin
         r_elem_slts <= '{default:'0};
     end else if (~i_freeze && g_push_now) begin
-        `ifndef COMPILER_MATURITY_LEVEL_0
-            var automatic logic [$clog2(N_SLTS)-1:0] wr_range_btm_idx = r_wr_ptrs[0];
-            var automatic logic [$clog2(N_SLTS)-1:0] wr_range_top_idx = r_wr_ptrs[g_n_i_clp-1]; // Note that `g_n_i_clp > 0` here.
-            var automatic logic range_ptn = wr_range_top_idx >= wr_range_btm_idx;
-        `else
-            var logic [$clog2(N_SLTS)-1:0] wr_range_btm_idx = r_wr_ptrs[0];
-            var logic [$clog2(N_SLTS)-1:0] wr_range_top_idx = r_wr_ptrs[g_n_i_clp-1]; // Note that `g_n_i_clp > 0` here.
-            var logic range_ptn = wr_range_top_idx >= wr_range_btm_idx;
-        `endif
+        automatic logic [$clog2(N_SLTS)-1:0] wr_range_btm_idx = r_wr_ptrs[0];
+        automatic logic [$clog2(N_SLTS)-1:0] wr_range_top_idx = r_wr_ptrs[g_n_i_clp-1]; // Note that `g_n_i_clp > 0` here.
+        automatic logic range_ptn = wr_range_top_idx >= wr_range_btm_idx;
         for (int unsigned i=0; i<N_SLTS; ++i) begin
             // Note that when `N_SLTS` is power of 2, `$clog2(N_SLTS)'(N_SLTS) == 0`, and conditional branch will be optimized out.
             `ifndef COMPILER_MATURITY_LEVEL_0
@@ -136,13 +130,8 @@ always_ff @(posedge i_clk) begin: blk_update_elem_cnt
     if (i_sync_rst) begin
         r_elem_cnt <= '0;
     end else if (~i_freeze) begin
-        `ifndef COMPILER_MATURITY_LEVEL_0
-            var automatic logic [$clog2(N_SLTS+1)-1:0] inc = g_push_now ? $clog2(N_SLTS+1)'(g_n_i_clp) : '0;
-            var automatic logic [$clog2(N_SLTS+1)-1:0] dec = g_pop_now ? $clog2(N_SLTS+1)'(g_n_o_clp) : '0;
-        `else
-            var logic [$clog2(N_SLTS+1)-1:0] inc = g_push_now ? $clog2(N_SLTS+1)'(g_n_i_clp) : '0;
-            var logic [$clog2(N_SLTS+1)-1:0] dec = g_pop_now ? $clog2(N_SLTS+1)'(g_n_o_clp) : '0;
-        `endif
+        automatic logic [$clog2(N_SLTS+1)-1:0] inc = g_push_now ? $clog2(N_SLTS+1)'(g_n_i_clp) : '0;
+        automatic logic [$clog2(N_SLTS+1)-1:0] dec = g_pop_now ? $clog2(N_SLTS+1)'(g_n_o_clp) : '0;
         r_elem_cnt <= r_elem_cnt + inc - dec;
     end
 end
@@ -154,11 +143,7 @@ always_ff @(posedge i_clk) begin: blk_update_rd_ptr
             r_rd_ptrs[i] <= $clog2(N_SLTS)'(i);
         end else if (~i_freeze && g_pop_now) begin
             // Note that when `N_SLTS` is power of 2, `$clog2(N_SLTS)'(N_SLTS) == 0`, and conditional branch will be optimized out.
-            `ifndef COMPILER_MATURITY_LEVEL_0
-                var automatic logic ov_flw = (r_rd_ptrs[i] > $clog2(N_SLTS)'(N_SLTS-1) - $clog2(N_SLTS)'(g_n_o_clp));
-            `else
-                var logic ov_flw = (r_rd_ptrs[i] > $clog2(N_SLTS)'(N_SLTS-1) - $clog2(N_SLTS)'(g_n_o_clp));
-            `endif
+            automatic logic ov_flw = (r_rd_ptrs[i] > $clog2(N_SLTS)'(N_SLTS-1) - $clog2(N_SLTS)'(g_n_o_clp));
             r_rd_ptrs[i] <= ov_flw ? r_rd_ptrs[i] + $clog2(N_SLTS)'(g_n_o_clp) - $clog2(N_SLTS)'(N_SLTS) : r_rd_ptrs[i] + $clog2(N_SLTS)'(g_n_o_clp);
         end
     end
@@ -171,11 +156,7 @@ always_ff @(posedge i_clk) begin: blk_update_wr_ptr
             r_wr_ptrs[i] <= $clog2(N_SLTS)'(i);
         end else if (~i_freeze && g_push_now) begin
             // Note that when `N_SLTS` is power of 2, `$clog2(N_SLTS)'(N_SLTS) == 0`, and conditional branch will be optimized out.
-            `ifndef COMPILER_MATURITY_LEVEL_0
-                var automatic logic ov_flw = (r_wr_ptrs[i] > $clog2(N_SLTS)'(N_SLTS-1) - $clog2(N_SLTS)'(g_n_i_clp));
-            `else
-                var logic ov_flw = (r_wr_ptrs[i] > $clog2(N_SLTS)'(N_SLTS-1) - $clog2(N_SLTS)'(g_n_i_clp));
-            `endif
+            automatic logic ov_flw = (r_wr_ptrs[i] > $clog2(N_SLTS)'(N_SLTS-1) - $clog2(N_SLTS)'(g_n_i_clp));
             r_wr_ptrs[i] <= ov_flw ? r_wr_ptrs[i] + $clog2(N_SLTS)'(g_n_i_clp) - $clog2(N_SLTS)'(N_SLTS) : r_wr_ptrs[i] + $clog2(N_SLTS)'(g_n_i_clp);
         end
     end

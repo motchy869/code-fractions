@@ -44,7 +44,6 @@ For the sake of `ifdef` compiler switch based on the SystemVerilog language supp
 a|* `parameter type` can't be used in parameter declaration in module header
 * `import <package>` can't be used in module header
 * `wire <type name>` can't be used in port list in module header
-* `var automatic <data type> <variable name>` can't be used
 |`COMPILER_MATURITY_LEVEL_0`
 |Quartus Prime Lite 23.1std
 
