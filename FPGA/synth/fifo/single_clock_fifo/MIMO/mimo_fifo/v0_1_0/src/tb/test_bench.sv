@@ -161,7 +161,7 @@ task automatic feed_data(ref dut_vif_t vif);
             vif.in_elems <= '{default:'0};
         end
 
-        if (cnt_popped_elems < N_TEST_ELEMS - MAX_N_O) begin // Shows next pop request.
+        if (cnt_popped_elems < N_TEST_ELEMS) begin // Shows next pop request.
             // Determines the number of elements to pop.
             int num_popping_elems = $urandom_range(MAX_N_O, MIN_N_O);
             if (N_TEST_ELEMS - cnt_popped_elems < num_popping_elems) begin // last chunk
