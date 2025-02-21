@@ -2,8 +2,8 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`ifndef MIMO_FIFO_V0_1_0_SV_INCLUDED
-`define MIMO_FIFO_V0_1_0_SV_INCLUDED
+`ifndef MIMO_FIFO_V0_2_0_SV_INCLUDED
+`define MIMO_FIFO_V0_2_0_SV_INCLUDED
 
 `default_nettype none
 
@@ -180,4 +180,4 @@ end
 endmodule
 
 `default_nettype wire
-`endif // MIMO_FIFO_V0_1_0_SV_INCLUDED
+`endif // MIMO_FIFO_V0_2_0_SV_INCLUDED
