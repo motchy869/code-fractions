@@ -2,7 +2,7 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`include "../mimo_fifo_v0_1_0.sv"
+`include "../mimo_fifo_v0_2_0.sv"
 
 `default_nettype none
 
@@ -45,6 +45,7 @@ module test_bench;
 localparam int unsigned CLK_PERIOD_NS = 8; //! clock period in ns
 localparam int unsigned RST_DURATION_CYCLE = 1; //! reset duration in clock cycle
 
+localparam bit BE_UNSAFE = 1'b1; //! Enable unsafe configuration.
 localparam int unsigned MAX_N_I = 7; //! maximal instantaneous number of input elements
 localparam int unsigned MAX_N_O = 5; //! maximal instantaneous number of output elements
 localparam int unsigned MIN_N_I = 1; //! minimal instantaneous number of input elements
@@ -83,7 +84,8 @@ dut_if #(
     .T_E(T_E)
 ) dut_if_0 (.i_clk(r_clk));
 
-mimo_fifo_v0_1_0 #(
+mimo_fifo_v0_2_0 #(
+    .BE_UNSAFE(BE_UNSAFE),
     .MAX_N_I(MAX_N_I),
     .MAX_N_O(MAX_N_O),
     .T_E(T_E)
@@ -161,7 +163,7 @@ task automatic feed_data(ref dut_vif_t vif);
             vif.in_elems <= '{default:'0};
         end
 
-        if (cnt_popped_elems < N_TEST_ELEMS - MAX_N_O) begin // Shows next pop request.
+        if (cnt_popped_elems < N_TEST_ELEMS) begin // Shows next pop request.
             // Determines the number of elements to pop.
             int num_popping_elems = $urandom_range(MAX_N_O, MIN_N_O);
             if (N_TEST_ELEMS - cnt_popped_elems < num_popping_elems) begin // last chunk
