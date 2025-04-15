@@ -20,7 +20,7 @@ module mimo_dly_line_v0_1_1 #(
     `ifndef COMPILER_MATURITY_LEVEL_0 // This macro should be set MANUALLY in the project settings if needed.
         parameter type T_E = logic [7:0] //! element data type
     `else
-        parameter int unsigned BW_ELEM = 8 //! element data bit width
+        parameter int unsigned BW_ELEM = 8 //! element data bit width (>=1)
     `endif
 )(
     //! @virtualbus cont_if @dir in control interface
@@ -69,6 +69,11 @@ generate
     if (MAX_N_DC > L) begin: gen_MAX_N_DC_upper_bound_validation
         nonexistent_module_to_throw_a_custom_error_message_for too_large_MAX_N_DC();
     end
+    `ifdef COMPILER_MATURITY_LEVEL_0
+        if (BW_ELEM < 1) begin: gen_too_small_BW_ELEM
+            nonexistent_module_to_throw_a_custom_error_message_for too_small_BW_ELEM();
+        end
+    `endif
 endgenerate
 // --------------------
 
