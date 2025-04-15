@@ -2,7 +2,7 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`include "../mimo_dly_line_v0_1_0.sv"
+`include "../mimo_dly_line_v0_1_1.sv"
 
 `default_nettype none
 
@@ -99,7 +99,7 @@ dut_if #(
     .T_E(T_E)
 ) dut_if (.i_clk(r_clk));
 
-mimo_dly_line_v0_1_0 #(
+mimo_dly_line_v0_1_1 #(
     .BE_UNSAFE(BE_UNSAFE),
     .L(L),
     .MAX_N_C(MAX_N_C),

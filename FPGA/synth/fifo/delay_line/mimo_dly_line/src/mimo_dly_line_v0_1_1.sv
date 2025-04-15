@@ -2,8 +2,8 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`ifndef MIMO_DLY_LINE_V0_1_0_SV_INCLUDED
-`define MIMO_DLY_LINE_V0_1_0_SV_INCLUDED
+`ifndef MIMO_DLY_LINE_V0_1_1_SV_INCLUDED
+`define MIMO_DLY_LINE_V0_1_1_SV_INCLUDED
 
 `default_nettype none
 
@@ -12,7 +12,7 @@
 //!
 //! This module receives elements from the upstream side up to ```MAX_N_C``` elements at one clock cycle, and discharges up to ```MAX_N_DC``` elements at one clock cycle.
 //! There is no handshake feature, so a parent module must handle the flow control.
-module mimo_dly_line_v0_1_0 #(
+module mimo_dly_line_v0_1_1 #(
     parameter bit BE_UNSAFE = 1'b0, //! Enable unsafe configuration, which disables most of costly invalid-value sanitizing, improving place&route feasibility.
     parameter int unsigned L = 16, //! delay line length (>0)
     parameter int unsigned MAX_N_C = 4, //! maximal instantaneous number of charging elements, must be in range [1,```L```]
@@ -39,7 +39,7 @@ module mimo_dly_line_v0_1_0 #(
         input wire T_E [MAX_N_C-1:0] i_c_elems,
     `else
         //! Charging elements. First ```i_n_c``` elements are assumed to be valid.
-        input T_E [MAX_N_C-1:0] i_c_elems,
+        input wire logic [MAX_N_C-1:0][BW_ELEM-1:0] i_c_elems,
     `endif
     //! @end
     //! @virtualbus data_out_if @dir out data output interface
@@ -48,7 +48,7 @@ module mimo_dly_line_v0_1_0 #(
         output wire T_E [L-1:0] o_line
     `else
         //! Delay line. Only first ```o_cnt``` elements are valid.
-        output T_E [L-1:0] o_line
+        output wire logic [L-1:0][BW_ELEM-1:0] o_line
     `endif
     //! @end
 );
@@ -152,4 +152,4 @@ endmodule
 
 `default_nettype wire
 
-`endif // MIMO_DLY_LINE_V0_1_0_SV_INCLUDED
+`endif // MIMO_DLY_LINE_V0_1_1_SV_INCLUDED
