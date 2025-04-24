@@ -2,19 +2,19 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`ifndef BST_CHG_RING_BUF_V0_1_0_SV_INCLUDED
-`define BST_CHG_RING_BUF_V0_1_0_SV_INCLUDED
+`ifndef POW2_BST_CHG_RING_BUF_V0_1_0_SV_INCLUDED
+`define POW2_BST_CHG_RING_BUF_V0_1_0_SV_INCLUDED
 
 `default_nettype none
 
-//! A ring buffer with power-of-two capacity and fixed-size burst-charging.
+//! A ring buffer with power-of-two capacity and burst-charging.
 //!
-//! This module receives **exactly** ```CHG_BST_SIZE``` elements from the upstream side at one clock cycle, and discharges **up to** ```CHG_BST_SIZE``` elements at one clock cycle.
+//! This module receives **exactly** ```2**EXP_CHG``` elements from the upstream side at one clock cycle, and discharges **up to** ```2**EXP_CHG``` elements at one clock cycle.
 //! There is **no handshake** function, so a parent module must handle the flow control.
-module bst_chg_ring_buf_v0_1_0 #(
+module pow2_bst_chg_ring_buf_v0_1_1 #(
     parameter bit BE_UNSAFE = 1'b0, //! Enable unsafe configuration, which disables most of costly invalid-value sanitizing, improving place&route feasibility.
     parameter int unsigned EXP_BUF = 7, //! Buffer size exponent, must be in range [1,31]. The buffer size is ```2**EXP_BUF```.
-    parameter int unsigned CHG_BST_SIZE = 2**6, //! charging burst size, must be in range [1,```2**(EXP_BUF-1)```].
+    parameter int unsigned EXP_CHG = 6, //! Charging burst size exponent, must be in range [1,```EXP_BUF```). The charging burst size is ```2**EXP_CHG```.
     `ifndef COMPILER_MATURITY_LEVEL_0 // This macro should be set MANUALLY in the project settings if needed.
         parameter type T_ELEM = logic [7:0] //! element data type
     `else
@@ -31,12 +31,12 @@ module bst_chg_ring_buf_v0_1_0 #(
     //! @virtualbus us_side_if @dir in upstream-side interface
     //! number of free slots in the buffer
     output wire logic [EXP_BUF:0] o_cnt_free,
-    output wire logic o_c_ready, //! Ready signal indicating that the charging elements (described below) can be accepted. An equation ```o_c_ready = (o_cnt_free >= CHG_BST_SIZE)``` holds.
+    output wire logic o_c_ready, //! Ready signal indicating that the charging elements (described below) can be accepted. An equation ```o_c_ready = (o_cnt_free >= 2**EXP_CHG)``` holds.
     input wire logic i_c_valid, //! valid signal indicating that the charging elements (described below) are valid
     `ifndef COMPILER_MATURITY_LEVEL_0
-        input wire T_ELEM [CHG_BST_SIZE-1:0] i_c_elems, //! charging elements
+        input wire T_ELEM [2**EXP_CHG-1:0] i_c_elems, //! charging elements
     `else
-        input wire logic [CHG_BST_SIZE-1:0][BW_ELEM-1:0] i_c_elems, //! charging elements
+        input wire logic [2**EXP_CHG-1:0][BW_ELEM-1:0] i_c_elems, //! charging elements
     `endif
     //! @end
     //! @virtualbus ds_side_if @dir out downstream-side interface
@@ -47,7 +47,7 @@ module bst_chg_ring_buf_v0_1_0 #(
     `else
         output wire logic [2**EXP_BUF-1:0][BW_ELEM-1:0] o_mrr_buf, //! Mirrored internal buffer which is virtually rotated so that the head element comes to the index 0. Only first ```o_cnt``` elements are valid.
     `endif
-    input wire logic [$clog2(CHG_BST_SIZE+1)-1:0] i_n_dc //! Number of discharging elements. At the next clock rising-edge, ```i_n_dc``` elements are removed from the buffer. Under safe configuration, ```i_n_dc``` is **clipped** to the range [0,```o_cnt```]. Under unsafe configuration, this **MUST NOT** be greater than ```o_cnt```, otherwise **UNDEFINED** behavior will occur.
+    input wire logic [EXP_CHG:0] i_n_dc //! Number of discharging elements. At the next clock rising-edge, ```i_n_dc``` elements are removed from the buffer. Under safe configuration, ```i_n_dc``` is **clipped** to the range [0,```o_cnt```]. Under unsafe configuration, this **MUST NOT** be greater than ```o_cnt```, otherwise **UNDEFINED** behavior will occur.
     //! @end
 );
 // ---------- imports ----------
@@ -55,6 +55,7 @@ module bst_chg_ring_buf_v0_1_0 #(
 
 // ---------- parameters ----------
 localparam int unsigned BUF_CAPACITY = 2**EXP_BUF; //! buffer capacity
+localparam int unsigned CHG_BST_SIZE = 2**EXP_CHG; //! charging burst size
 localparam int unsigned BW_BUF_CNT = EXP_BUF+1; //! bit width of the buffer element count
 localparam int unsigned BW_BUF_IDX = EXP_BUF; //! bit width of the buffer index
 // --------------------
@@ -67,11 +68,11 @@ generate
     if (EXP_BUF > 31) begin: gen_too_large_EXP_BUF
         nonexistent_module_to_throw_a_custom_error_message_for too_large_EXP_BUF();
     end
-    if (CHG_BST_SIZE < 1) begin: gen_too_small_CHG_BST_SIZE
-        nonexistent_module_to_throw_a_custom_error_message_for too_small_CHG_BST_SIZE();
+    if (EXP_CHG < 1) begin: gen_too_small_EXP_CHG
+        nonexistent_module_to_throw_a_custom_error_message_for too_small_EXP_CHG();
     end
-    if (CHG_BST_SIZE > 2**(EXP_BUF-1)) begin: gen_too_large_CHG_BST_SIZE
-        nonexistent_module_to_throw_a_custom_error_message_for too_large_CHG_BST_SIZE();
+    if (EXP_CHG >= EXP_BUF) begin: gen_too_large_EXP_CHG
+        nonexistent_module_to_throw_a_custom_error_message_for too_large_EXP_CHG();
     end
     `ifdef COMPILER_MATURITY_LEVEL_0
         if (BW_ELEM < 1) begin: gen_too_small_BW_ELEM
@@ -104,7 +105,7 @@ wire [BW_BUF_CNT-1:0] w_snt_n_dc; //! Sanitized version of ```i_n_dc```. Under s
 
 generate
     if (BE_UNSAFE) begin: gen_unsafe
-        assign w_snt_n_dc = i_n_dc;
+        assign w_snt_n_dc = BW_BUF_CNT'(i_n_dc);
     end else begin: gen_safe
         assign w_snt_n_dc = (BW_BUF_CNT'(i_n_dc) > r_cnt) ? r_cnt : BW_BUF_CNT'(i_n_dc);
     end
@@ -123,7 +124,7 @@ assign o_cnt = r_cnt;
 genvar i_gen;
 generate
     for (i_gen=0; i_gen<BUF_CAPACITY; i_gen++) begin: gen_drv_o_mrr_buf
-        assign o_mrr_buf[i_gen] = r_buf[EXP_BUF'(i_gen + r_head_idx)];
+        assign o_mrr_buf[i_gen] = r_buf[BW_BUF_IDX'(i_gen + r_head_idx)];
     end
 endgenerate
 // --------------------
@@ -148,8 +149,8 @@ always_ff @(posedge i_clk) begin: blk_update_idx
         r_head_idx <= '0;
         r_tail_idx <= '0;
     end else if (!i_freeze) begin
-        r_head_idx <= r_head_idx + EXP_BUF'(w_snt_n_dc);
-        r_tail_idx <= r_tail_idx + (g_chg_en ? EXP_BUF'(CHG_BST_SIZE) : '0);
+        r_head_idx <= r_head_idx + BW_BUF_IDX'(w_snt_n_dc);
+        r_tail_idx <= r_tail_idx + (g_chg_en ? BW_BUF_IDX'(CHG_BST_SIZE) : '0);
     end
 end
 
@@ -158,17 +159,17 @@ always_ff @(posedge i_clk) begin: blk_update_buf
     if (i_sync_rst) begin
         r_buf <= '{default:'0};
     end else if (!i_freeze && g_chg_en) begin
-        automatic logic [BW_BUF_IDX-1:0] chg_end_idx = r_tail_idx + EXP_BUF'(CHG_BST_SIZE-1); // charged region end index
+        automatic logic [BW_BUF_IDX-1:0] chg_end_idx = r_tail_idx + BW_BUF_IDX'(CHG_BST_SIZE-1);
         for (int unsigned i=0; i<BUF_CAPACITY; ++i) begin
-            if (chg_end_idx >= r_tail_idx) begin // Charged region doesn't wrap around.
-                if (EXP_BUF'(i) >= r_tail_idx && EXP_BUF'(i) <= chg_end_idx) begin
-                    r_buf[i] <= i_c_elems[EXP_BUF'(i) - EXP_BUF'(r_tail_idx)];
+            if (chg_end_idx >= r_tail_idx) begin //! Charged region doesn't wrap around.
+                if (BW_BUF_IDX'(i) >= r_tail_idx && BW_BUF_IDX'(i) <= chg_end_idx) begin
+                    r_buf[i] <= i_c_elems[BW_BUF_IDX'(i) - BW_BUF_IDX'(r_tail_idx)];
                 end
-            end else begin // Charged region wraps around.
-                if (EXP_BUF'(i) >= r_tail_idx) begin
-                    r_buf[i] <= i_c_elems[EXP_BUF'(i) - EXP_BUF'(r_tail_idx)];
-                end else if (EXP_BUF'(i) <= chg_end_idx) begin
-                    r_buf[i] <= i_c_elems[EXP_BUF'(i) + EXP_BUF'(BW_BUF_CNT'(BUF_CAPACITY) - BW_BUF_CNT'(r_tail_idx))];
+            end else begin //! Charged region wraps around.
+                if (BW_BUF_IDX'(i) >= r_tail_idx) begin
+                    r_buf[i] <= i_c_elems[BW_BUF_IDX'(i) - BW_BUF_IDX'(r_tail_idx)];
+                end else if (BW_BUF_IDX'(i) <= chg_end_idx) begin
+                    r_buf[i] <= i_c_elems[BW_BUF_IDX'(i) + BW_BUF_IDX'(BW_BUF_CNT'(BUF_CAPACITY) - BW_BUF_CNT'(r_tail_idx))];
                 end
             end
         end
@@ -181,7 +182,7 @@ always_ff @(posedge i_clk) begin: blk_bug_det
         r_init_rst_done <= 1'b1;
     end
     if (!BE_UNSAFE && r_init_rst_done) begin
-        if (!(r_head_idx + EXP_BUF'(r_cnt) == r_tail_idx)) begin
+        if (!(r_head_idx + BW_BUF_IDX'(r_cnt) == r_tail_idx)) begin
             $error("BUG: head_idx + cnt != tail_idx");
         end
     end
@@ -191,4 +192,4 @@ endmodule
 
 `default_nettype wire
 
-`endif // BST_CHG_RING_BUF_V0_1_0_SV_INCLUDED
+`endif // POW2_BST_CHG_RING_BUF_V0_1_0_SV_INCLUDED
