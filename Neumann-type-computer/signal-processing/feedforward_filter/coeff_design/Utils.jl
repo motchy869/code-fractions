@@ -3,6 +3,31 @@ module Utils
     using Plots
 
     """
+    Estimates the number of required taps for HBF with given pass-band, gain errors.
+    The equation is cited from "電気・電子・情報工学系テキストシリーズ 17 ディジタル・フィルタ" eq. (6.36).
+    The estimated number of taps N_taps satisfies the following conditions.
+
+    1. N_taps is odd
+    2. (N_taps-1)/2 is also odd. This is required so that the left-most and right-most taps' coefficients are non-zero.
+
+    args:
+    - Ω_p: normalized angular frequency of pass-band right end, must be in (0, π/2)
+    - δ_p: maximal pass-band error, must be greater than 0
+    - δ_s: maximal stop-band error, must be greater than 0
+
+    returns:
+    - N_taps: estimated number of taps
+    """
+    function remezTapNumEst(Ω_p::Real, δ_p::Real, δ_s::Real)::Int
+        @assert Ω_p > 0 && Ω_p < π/2 "Ω_p must be in (0, π/2)"
+        @assert δ_p > 0 "δ_p must be greater than 0"
+        @assert δ_s > 0 "δ_s must be greater than 0"
+        Ω_s = pi-Ω_p; Δ = (Ω_s - Ω_p)/(2pi)
+        N1 = Int(ceil((-20log10(sqrt(δ_p*δ_s))-13)/(14.6Δ)))
+        L1 = N1÷2; L2 = L1÷2; N2 = 2*L2+1; 2*N2+1
+    end
+
+    """
     Calculates the coefficient of HBF using Remez algorithm.
 
     args:
