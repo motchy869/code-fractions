@@ -137,4 +137,4 @@ endmodule
 
 `default_nettype wire
 
-`endif // verilog_lint: waive-end line-length
+`endif // SFT_REG_SLC_V0_1_0_SV_INCLUDED
