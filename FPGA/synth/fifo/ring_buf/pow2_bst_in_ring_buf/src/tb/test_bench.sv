@@ -124,7 +124,7 @@ task automatic drive_rst(ref dut_vif_t vif);
     // verilator lint_off INITIALDLY
     @(posedge r_clk);
     r_sync_rst <= 1'b1;
-    vif.reset_bench_driven_sigs();
+    vif.reset_bench_driven_sigs('0);
     repeat (RST_DURATION_CYCLE) begin
         @(posedge r_clk);
     end
