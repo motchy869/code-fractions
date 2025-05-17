@@ -2,7 +2,7 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`include "../tree_adder_v0_1_0.sv"
+`include "../tree_adder_typ_a_v0_1_0.sv"
 
 `default_nettype none
 
@@ -81,7 +81,7 @@ dut_if #(
     .BW_IN_ELEM(BW_IN_ELEM)
 ) dut_if (.i_clk(r_clk));
 
-tree_adder_v0_1_0 #(
+tree_adder_typ_a_v0_1_0 #(
     .N_IN_ELEMS(N_IN_ELEMS),
     .BW_IN_ELEM(BW_IN_ELEM)
 ) dut (

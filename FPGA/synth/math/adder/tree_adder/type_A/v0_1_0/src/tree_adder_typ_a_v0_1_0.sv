@@ -2,8 +2,8 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`ifndef TREE_ADDER_V0_1_0_SV_INCLUDED
-`define TREE_ADDER_V0_1_0_SV_INCLUDED
+`ifndef TREE_ADDER_TYP_A_V0_1_0_SV_INCLUDED
+`define TREE_ADDER_TYP_A_V0_1_0_SV_INCLUDED
 
 `default_nettype none
 
@@ -14,7 +14,7 @@
 //! The output bit width is ```(BW_IN_ELEM-1) + $clog2(N_IN_ELEMS+1) + 1``` (because the possible minimum sum is ```-N_IN_ELEMS*(2**(BW_IN_ELEM-1))```).
 //!
 //! There is **no handshake** function, so a parent module must handle the flow control.
-module tree_adder_v0_1_0 #(
+module tree_adder_typ_a_v0_1_0 #(
     parameter int unsigned N_IN_ELEMS = 9, //! number of input elements, must be 2 or greater
     parameter int unsigned BW_IN_ELEM = 8 //! bit width of each input element
 )(
@@ -195,4 +195,4 @@ endmodule
 
 `default_nettype wire
 
-`endif // TREE_ADDER_V0_1_0_SV_INCLUDED
+`endif // TREE_ADDER_TYP_A_V0_1_0_SV_INCLUDED
