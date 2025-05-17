@@ -145,7 +145,7 @@ task automatic feed_data(ref dut_vif_t vif);
         if (cnt_pushed_vecs < N_TEST_VECS) begin
             vif.in_vct = test_vectors[cnt_pushed_vecs].in_vct;
             vif.slc_idx = test_vectors[cnt_pushed_vecs].slc_idx;
-            cnt_pushed_vecs++;
+            ++cnt_pushed_vecs;
         end else begin
             vif.in_vct = '{default:'0};
             vif.slc_idx = '0;
@@ -155,7 +155,7 @@ task automatic feed_data(ref dut_vif_t vif);
             if (cnt_popped_vecs < N_TEST_VECS) begin
                 if (dut_vif.out_vld) begin
                     test_vectors[cnt_popped_vecs].actual_out_vct = dut_vif.out_vct;
-                    cnt_popped_vecs++;
+                    ++cnt_popped_vecs;
                 end
             end else if (cnt_pushed_vecs == N_TEST_VECS) begin
                 break;
