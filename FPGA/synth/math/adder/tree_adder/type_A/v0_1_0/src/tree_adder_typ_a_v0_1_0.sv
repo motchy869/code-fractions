@@ -67,7 +67,7 @@ typedef struct packed {
     uint_t [TREE_HEIGHT-1:0][TREE_WIDTH-1:0] bw_mat; // bit width matrix
 } adder_plan_t;
 
-//! Calculates the number of leading ones in a given value.
+//! Counts the number of leading ones in a given value.
 function automatic int unsigned cntLdgOnes(input logic [BW_OUT-1:0] val);
     int unsigned cnt = 0;
     for (int i=BW_OUT-1; i>=0; --i) begin
