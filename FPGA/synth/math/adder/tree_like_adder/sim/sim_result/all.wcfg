@@ -3,7 +3,7 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="/mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/math/adder/tree_like_adder/sim/sim_result/all.wdb" id="1">
+      <db_ref path="/mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/math/adder/tree_adder/sim/sim_result/all.wdb" id="1">
          <top_modules>
             <top_module name="test_bench" />
          </top_modules>
