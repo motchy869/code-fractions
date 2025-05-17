@@ -130,6 +130,7 @@ task automatic feed_data(ref dut_vif_t vif);
 
     test_vector_t test_vectors[] = new[N_TEST_VECS];
 
+    // Generates test vectors.
     for (int i=0; i<N_TEST_VECS; ++i) begin
         logic [$clog2(N_SFT_REGS)-1:0] slc_idx = $clog2(N_SFT_REGS)'($urandom_range(W_I-W_O, 0));
         for (int j=0; j<W_I; ++j) begin
@@ -139,6 +140,7 @@ task automatic feed_data(ref dut_vif_t vif);
         test_vectors[i].exp_out_vct = test_vectors[i].in_vct[slc_idx+:W_O];
     end
 
+    // Drives the DUT.
     while (1'b1) begin
         #DELTA_T;
 
