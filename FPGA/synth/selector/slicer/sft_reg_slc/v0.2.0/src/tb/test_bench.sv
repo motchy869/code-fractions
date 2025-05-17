@@ -153,8 +153,8 @@ task automatic feed_data(ref dut_vif_t vif);
 
         @(posedge r_clk) begin
             if (cnt_popped_vecs < N_TEST_VECS) begin
-                if (dut_vif.out_vld) begin
-                    test_vectors[cnt_popped_vecs].actual_out_vct = dut_vif.out_vct;
+                if (vif.out_vld) begin
+                    test_vectors[cnt_popped_vecs].actual_out_vct = vif.out_vct;
                     ++cnt_popped_vecs;
                 end
             end else if (cnt_pushed_vecs == N_TEST_VECS) begin
