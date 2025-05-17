@@ -2,8 +2,8 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`ifndef POW2_BST_IN_RING_BUF_V0_1_0_SV_INCLUDED
-`define POW2_BST_IN_RING_BUF_V0_1_0_SV_INCLUDED
+`ifndef POW2_BST_IN_RING_BUF_V0_1_2_SV_INCLUDED
+`define POW2_BST_IN_RING_BUF_V0_1_2_SV_INCLUDED
 
 `default_nettype none
 
@@ -11,7 +11,7 @@
 //!
 //! This module receives **exactly** ```2**EXP_IN``` elements from the upstream side at one clock cycle, and outputs **up to** ```2**EXP_IN``` elements at one clock cycle.
 //! There is **no handshake** function, so a parent module must handle the flow control.
-module pow2_bst_in_ring_buf_v0_1_1 #(
+module pow2_bst_in_ring_buf_v0_1_2 #(
     parameter bit BE_UNSAFE = 1'b0, //! Enable unsafe configuration, which disables most of costly invalid-value sanitizing, improving place&route feasibility.
     parameter int unsigned EXP_BUF = 7, //! Buffer size exponent, must be in range [1,31]. The buffer size is ```2**EXP_BUF```.
     parameter int unsigned EXP_IN = 6, //! Input burst size exponent, must be in range [1,```EXP_BUF-1```]. The input burst size is ```2**EXP_IN```.
@@ -142,7 +142,7 @@ end
 always_ff @(posedge i_clk) begin: blk_update_idx
     if (i_sync_rst) begin
         r_head_idx <= '0;
-        r_tail_idx <= '0;
+        r_tail_idx <= BW_BUF_IDX'(i_n_init_zero_elems);
     end else if (!i_freeze) begin
         r_head_idx <= r_head_idx + BW_BUF_IDX'(w_snt_n_out);
         r_tail_idx <= r_tail_idx + (g_str_en ? BW_BUF_IDX'(IN_BST_SIZE) : '0);
@@ -187,4 +187,4 @@ endmodule
 
 `default_nettype wire
 
-`endif // POW2_BST_IN_RING_BUF_V0_1_0_SV_INCLUDED
+`endif // POW2_BST_IN_RING_BUF_V0_1_2_SV_INCLUDED

@@ -2,7 +2,7 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`include "../pow2_bst_in_ring_buf_v0_1_1.sv"
+`include "../pow2_bst_in_ring_buf_v0_1_2.sv"
 
 `default_nettype none
 
@@ -95,7 +95,7 @@ dut_if #(
     .T_ELEM(T_ELEM)
 ) dut_if (.i_clk(r_clk));
 
-pow2_bst_in_ring_buf_v0_1_1 #(
+pow2_bst_in_ring_buf_v0_1_2 #(
     .BE_UNSAFE(BE_UNSAFE),
     .EXP_BUF(EXP_BUF),
     .EXP_IN(EXP_IN),
