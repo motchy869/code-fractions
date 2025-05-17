@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="/mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/math/adder/tree_like_adder/sim/sim_result/all.wdb" id="1">
+         <top_modules>
+            <top_module name="test_bench" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="202.030 ns"></ZoomEndTime>
+      <Cursor1Time time="9.381 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="294"></NameColumnWidth>
+      <ValueColumnWidth column_width="66"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="4" />
+   <wvobject type="logic" fp_name="/test_bench/r_clk">
+      <obj_property name="ElementShortName">r_clk</obj_property>
+      <obj_property name="ObjectShortName">r_clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_bench/r_sync_rst">
+      <obj_property name="ElementShortName">r_sync_rst</obj_property>
+      <obj_property name="ObjectShortName">r_sync_rst</obj_property>
+   </wvobject>
+   <wvobject type="group" fp_name="group35">
+      <obj_property name="label">dut</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject type="logic" fp_name="/test_bench/dut/i_freeze">
+         <obj_property name="ElementShortName">i_freeze</obj_property>
+         <obj_property name="ObjectShortName">i_freeze</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/i_elems">
+         <obj_property name="ElementShortName">i_elems[8:0][7:0]</obj_property>
+         <obj_property name="ObjectShortName">i_elems[8:0][7:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut/o_out_vld">
+         <obj_property name="ElementShortName">o_out_vld</obj_property>
+         <obj_property name="ObjectShortName">o_out_vld</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/o_sum">
+         <obj_property name="ElementShortName">o_sum[11:0]</obj_property>
+         <obj_property name="ObjectShortName">o_sum[11:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/r_vld_dly_line">
+         <obj_property name="ElementShortName">r_vld_dly_line[3:0]</obj_property>
+         <obj_property name="ObjectShortName">r_vld_dly_line[3:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/\gen_elem_depth[0].gen_elem_horiz[0].r_elem ">
+         <obj_property name="ElementShortName">\gen_elem_depth[0].gen_elem_horiz[0].r_elem [8:0]</obj_property>
+         <obj_property name="ObjectShortName">\gen_elem_depth[0].gen_elem_horiz[0].r_elem [8:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/\gen_elem_depth[0].gen_elem_horiz[1].r_elem ">
+         <obj_property name="ElementShortName">\gen_elem_depth[0].gen_elem_horiz[1].r_elem [8:0]</obj_property>
+         <obj_property name="ObjectShortName">\gen_elem_depth[0].gen_elem_horiz[1].r_elem [8:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/\gen_elem_depth[0].gen_elem_horiz[2].r_elem ">
+         <obj_property name="ElementShortName">\gen_elem_depth[0].gen_elem_horiz[2].r_elem [8:0]</obj_property>
+         <obj_property name="ObjectShortName">\gen_elem_depth[0].gen_elem_horiz[2].r_elem [8:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/\gen_elem_depth[0].gen_elem_horiz[3].r_elem ">
+         <obj_property name="ElementShortName">\gen_elem_depth[0].gen_elem_horiz[3].r_elem [8:0]</obj_property>
+         <obj_property name="ObjectShortName">\gen_elem_depth[0].gen_elem_horiz[3].r_elem [8:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/\gen_elem_depth[0].gen_elem_horiz[4].r_elem ">
+         <obj_property name="ElementShortName">\gen_elem_depth[0].gen_elem_horiz[4].r_elem [7:0]</obj_property>
+         <obj_property name="ObjectShortName">\gen_elem_depth[0].gen_elem_horiz[4].r_elem [7:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/\gen_elem_depth[1].gen_elem_horiz[0].r_elem ">
+         <obj_property name="ElementShortName">\gen_elem_depth[1].gen_elem_horiz[0].r_elem [9:0]</obj_property>
+         <obj_property name="ObjectShortName">\gen_elem_depth[1].gen_elem_horiz[0].r_elem [9:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/\gen_elem_depth[1].gen_elem_horiz[1].r_elem ">
+         <obj_property name="ElementShortName">\gen_elem_depth[1].gen_elem_horiz[1].r_elem [9:0]</obj_property>
+         <obj_property name="ObjectShortName">\gen_elem_depth[1].gen_elem_horiz[1].r_elem [9:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/\gen_elem_depth[1].gen_elem_horiz[2].r_elem ">
+         <obj_property name="ElementShortName">\gen_elem_depth[1].gen_elem_horiz[2].r_elem [7:0]</obj_property>
+         <obj_property name="ObjectShortName">\gen_elem_depth[1].gen_elem_horiz[2].r_elem [7:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/\gen_elem_depth[2].gen_elem_horiz[0].r_elem ">
+         <obj_property name="ElementShortName">\gen_elem_depth[2].gen_elem_horiz[0].r_elem [10:0]</obj_property>
+         <obj_property name="ObjectShortName">\gen_elem_depth[2].gen_elem_horiz[0].r_elem [10:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/\gen_elem_depth[2].gen_elem_horiz[1].r_elem ">
+         <obj_property name="ElementShortName">\gen_elem_depth[2].gen_elem_horiz[1].r_elem [7:0]</obj_property>
+         <obj_property name="ObjectShortName">\gen_elem_depth[2].gen_elem_horiz[1].r_elem [7:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/\gen_elem_depth[3].gen_elem_horiz[0].r_elem ">
+         <obj_property name="ElementShortName">\gen_elem_depth[3].gen_elem_horiz[0].r_elem [11:0]</obj_property>
+         <obj_property name="ObjectShortName">\gen_elem_depth[3].gen_elem_horiz[0].r_elem [11:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut/adder_plan">
+         <obj_property name="ElementShortName">adder_plan</obj_property>
+         <obj_property name="ObjectShortName">adder_plan</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="group" fp_name="group264">
+      <obj_property name="label">dut_if</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="logic" fp_name="/test_bench/dut_if/freeze">
+         <obj_property name="ElementShortName">freeze</obj_property>
+         <obj_property name="ObjectShortName">freeze</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_if/elems">
+         <obj_property name="ElementShortName">elems[8:0][7:0]</obj_property>
+         <obj_property name="ObjectShortName">elems[8:0][7:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="array" fp_name="/test_bench/dut_if/elems[8]">
+            <obj_property name="ElementShortName">[8][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[8][7:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut_if/elems[7]">
+            <obj_property name="ElementShortName">[7][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[7][7:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut_if/elems[6]">
+            <obj_property name="ElementShortName">[6][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[6][7:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut_if/elems[5]">
+            <obj_property name="ElementShortName">[5][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[5][7:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut_if/elems[4]">
+            <obj_property name="ElementShortName">[4][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[4][7:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut_if/elems[3]">
+            <obj_property name="ElementShortName">[3][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[3][7:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut_if/elems[2]">
+            <obj_property name="ElementShortName">[2][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[2][7:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut_if/elems[1]">
+            <obj_property name="ElementShortName">[1][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[1][7:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut_if/elems[0]">
+            <obj_property name="ElementShortName">[0][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[0][7:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut_if/elems[8]">
+            <obj_property name="ElementShortName">[8][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[8][7:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut_if/elems[7]">
+            <obj_property name="ElementShortName">[7][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[7][7:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut_if/elems[6]">
+            <obj_property name="ElementShortName">[6][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[6][7:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut_if/elems[5]">
+            <obj_property name="ElementShortName">[5][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[5][7:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut_if/elems[4]">
+            <obj_property name="ElementShortName">[4][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[4][7:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut_if/elems[3]">
+            <obj_property name="ElementShortName">[3][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[3][7:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut_if/elems[2]">
+            <obj_property name="ElementShortName">[2][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[2][7:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut_if/elems[1]">
+            <obj_property name="ElementShortName">[1][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[1][7:0]</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/test_bench/dut_if/elems[0]">
+            <obj_property name="ElementShortName">[0][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[0][7:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_if/out_vld">
+         <obj_property name="ElementShortName">out_vld</obj_property>
+         <obj_property name="ObjectShortName">out_vld</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_if/sum">
+         <obj_property name="ElementShortName">sum[11:0]</obj_property>
+         <obj_property name="ObjectShortName">sum[11:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>
