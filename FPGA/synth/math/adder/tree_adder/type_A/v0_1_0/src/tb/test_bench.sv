@@ -81,6 +81,7 @@ dut_if #(
     .BW_IN_ELEM(BW_IN_ELEM)
 ) dut_if (.i_clk(r_clk));
 
+//! DUT instance
 tree_adder_typ_a_v0_1_0 #(
     .N_IN_ELEMS(N_IN_ELEMS),
     .BW_IN_ELEM(BW_IN_ELEM)
