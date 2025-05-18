@@ -28,17 +28,17 @@ localparam int BYTE_ADDR_BITS_PER_WORD = $clog2(BYTES_PER_WORD); //! byte addres
 generate
     if (if_csr_side.WORD_BIT_WIDTH != WORD_BIT_WIDTH) begin: gen_invalid_WORD_BIT_WIDTH
         $error("WORD_BIT_WIDTH must be equal to WORD_BIT_WIDTH of if_csr_side");
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_parameters();
+        nonexistent_module_to_throw_a_custom_error_message_for__invalid_WORD_BIT_WIDTH inst();
     end
 
     if (if_csr_side.BYTE_ADDR_BIT_WIDTH != BYTE_ADDR_BIT_WIDTH) begin: gen_invalid_BYTE_ADDR_BIT_WIDTH
         $error("BYTE_ADDR_BIT_WIDTH must be equal to BYTE_ADDR_BIT_WIDTH of if_csr_side");
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_parameters();
+        nonexistent_module_to_throw_a_custom_error_message_for__invalid_BYTE_ADDR_BIT_WIDTH inst();
     end
 
     if (if_ram_side.WORD_ADDR_BIT_WIDTH != WORD_ADDR_BIT_WIDTH) begin: gen_invalid_WORD_ADDR_BIT_WIDTH
         $error("WORD_ADDR_BIT_WIDTH must be equal to WORD_ADDR_BIT_WIDTH of if_ram_side");
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_parameters();
+        nonexistent_module_to_throw_a_custom_error_message_for__invalid_WORD_ADDR_BIT_WIDTH inst();
     end
 endgenerate
 // --------------------

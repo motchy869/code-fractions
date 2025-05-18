@@ -53,10 +53,10 @@ localparam int unsigned N_SLTS = 2*((MAX_N_I > MAX_N_I) ? MAX_N_I : MAX_N_O); //
 // ---------- parameter validation ----------
 generate
     if (MAX_N_I < 1) begin: gen_MAX_N_I_lower_bound_validation
-        nonexistent_module_to_throw_a_custom_error_message_for too_small_MAX_N_I();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_small_MAX_N_I inst();
     end
     if (MAX_N_O < 1) begin: gen_MAX_N_O_lower_bound_validation
-        nonexistent_module_to_throw_a_custom_error_message_for too_small_MAX_N_O();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_small_MAX_N_O inst();
     end
 endgenerate
 // --------------------

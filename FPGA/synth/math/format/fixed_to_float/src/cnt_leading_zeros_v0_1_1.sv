@@ -38,7 +38,7 @@ localparam int unsigned BW_OUT = $clog2(BW_IN+1); //! bit width of output
 // ---------- parameter validation ----------
 generate
     if (BW_IN == '0) begin: gen_validate_BW_IN
-        nonexistent_module_to_throw_a_custom_error_message_for too_small_BW_IN();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_small_BW_IN inst();
     end
 endgenerate
 // --------------------

@@ -55,10 +55,10 @@ localparam int unsigned N_SFT_REGS = MAX_SHIFT_TIMES + 1; //! number of shift re
 // ---------- parameter validation ----------
 generate
     if (W_O < 1) begin: gen_too_small_W_O
-        nonexistent_module_to_throw_a_custom_error_message_for too_small_W_O();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_small_W_O inst();
     end
     if (W_I <= W_O) begin: gen_too_large_W_O
-        nonexistent_module_to_throw_a_custom_error_message_for too_large_W_O();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_large_W_O inst();
     end
 endgenerate
 // --------------------

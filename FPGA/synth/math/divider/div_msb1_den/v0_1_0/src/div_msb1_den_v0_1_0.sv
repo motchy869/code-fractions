@@ -44,10 +44,10 @@ localparam int unsigned LAT_CYC = BW_QUO; //! latency in clock cycle
 // ---------- parameter validation ----------
 generate
     if (BW_DEN < 1) begin: gen_BW_DEN_lower_bound_validation
-        nonexistent_module_to_throw_a_custom_error_message_for too_small_BW_DEN();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_small_BW_DEN inst();
     end
     if (BW_NUM < BW_DEN) begin: gen_BW_NUM_lower_bound_validation
-        nonexistent_module_to_throw_a_custom_error_message_for too_small_BW_NUM();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_small_BW_NUM inst();
     end
 endgenerate
 // --------------------

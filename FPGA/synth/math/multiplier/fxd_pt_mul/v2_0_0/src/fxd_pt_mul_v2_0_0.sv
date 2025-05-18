@@ -55,19 +55,19 @@ localparam int unsigned BIT_WIDTH_INTERM_PROD = BIT_WIDTH_IN_A + BIT_WIDTH_IN_B;
 // ---------- parameter validation ----------
 generate
     if (BIT_SLICE_OFFSET_OUT + BIT_WIDTH_OUT - 1 > BIT_WIDTH_INTERM_PROD - 1) begin: gen_bit_slice_range_validation
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_bit_slice_range();
+        nonexistent_module_to_throw_a_custom_error_message_for_invalid_bit_slice_range inst();
     end
 
     if (MULT_INPUT_STG_PIPELINE_DEPTH < 1) begin: gen_mult_input_stg_pipeline_depth_validation
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_mult_input_stg_pipeline_depth();
+        nonexistent_module_to_throw_a_custom_error_message_for_invalid_mult_input_stg_pipeline_depth inst();
     end
 
     if (MULT_OUTPUT_STG_PIPELINE_DEPTH < 1) begin: gen_mult_output_stg_pipeline_depth_validation
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_mult_output_stg_pipeline_depth();
+        nonexistent_module_to_throw_a_custom_error_message_for_invalid_mult_output_stg_pipeline_depth inst();
     end
 
     if (ENABLE_ROUNDING_HALF_TO_EVEN && BIT_SLICE_OFFSET_OUT == 0) begin: gen_rounding_param_validation
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_rounding_params();
+        nonexistent_module_to_throw_a_custom_error_message_for_invalid_rounding_params inst();
     end
 endgenerate
 // --------------------

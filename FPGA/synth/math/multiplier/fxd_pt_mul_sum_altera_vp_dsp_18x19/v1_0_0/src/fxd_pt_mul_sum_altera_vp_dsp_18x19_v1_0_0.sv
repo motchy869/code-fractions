@@ -64,27 +64,27 @@ localparam int unsigned CYCLE_LAT = DSP_BLK_INPUT_STG_REG_CHAIN_LEN + DSP_BLK_OU
 // ---------- parameter validation ----------
 generate
     if (BW_IN_A_0 > BW_LHS_MULT) begin: gen_validate_bw_in_a_0
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_a_0_bit_width();
+        nonexistent_module_to_throw_a_custom_error_message_for_invalid_a_0_bit_width inst();
     end
 
     if (BW_IN_B_0 > BW_RHS_MULT) begin: gen_validate_bw_in_b_0
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_b_0_bit_width();
+        nonexistent_module_to_throw_a_custom_error_message_for_invalid_b_0_bit_width inst();
     end
 
     if (BW_IN_A_1 > BW_LHS_MULT) begin: gen_validate_bw_in_a_1
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_a_1_bit_width();
+        nonexistent_module_to_throw_a_custom_error_message_for_invalid_a_1_bit_width inst();
     end
 
     if (BW_IN_B_1 > BW_RHS_MULT) begin: gen_validate_bw_in_b_1
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_b_1_bit_width();
+        nonexistent_module_to_throw_a_custom_error_message_for_invalid_b_1_bit_width inst();
     end
 
     if (BIT_SLC_OFFSET_OUT + BW_OUT > BW_INTERM_SUM) begin: gen_validate_bit_slice_offset_and_output_bit_width
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_bit_slice_offset_and_output_bit_width();
+        nonexistent_module_to_throw_a_custom_error_message_for_invalid_bit_slice_offset_and_output_bit_width inst();
     end
 
     if (EN_RND_HF2EVN && BIT_SLC_OFFSET_OUT == 0) begin: gen_validate_rounding_option
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_rounding_option();
+        nonexistent_module_to_throw_a_custom_error_message_for_invalid_rounding_option inst();
     end
 endgenerate
 // --------------------

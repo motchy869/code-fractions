@@ -61,17 +61,17 @@ module mimo_dly_line_v0_1_1 #(
 // ---------- parameter validation ----------
 generate
     if (L < 1) begin: gen_L_lower_bound_validation
-        nonexistent_module_to_throw_a_custom_error_message_for too_small_L();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_small_L inst();
     end
     if (MAX_N_C > L) begin: gen_MAX_N_C_upper_bound_validation
-        nonexistent_module_to_throw_a_custom_error_message_for too_large_MAX_N_C();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_large_MAX_N_C inst();
     end
     if (MAX_N_DC > L) begin: gen_MAX_N_DC_upper_bound_validation
-        nonexistent_module_to_throw_a_custom_error_message_for too_large_MAX_N_DC();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_large_MAX_N_DC inst();
     end
     `ifdef COMPILER_MATURITY_LEVEL_0
         if (BW_ELEM < 1) begin: gen_too_small_BW_ELEM
-            nonexistent_module_to_throw_a_custom_error_message_for too_small_BW_ELEM();
+            nonexistent_module_to_throw_a_custom_error_message_for_too_small_BW_ELEM inst();
         end
     `endif
 endgenerate

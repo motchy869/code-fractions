@@ -49,15 +49,15 @@ localparam int unsigned BIT_WIDTH_INTERM_PROD = BIT_WIDTH_IN_A + BIT_WIDTH_IN_B;
 // ---------- parameter validation ----------
 generate
     if (BIT_SLICE_OFFSET_OUT + BIT_WIDTH_OUT - 1 > BIT_WIDTH_INTERM_PROD - 1) begin: gen_bit_slice_range_validation
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_parameters();
+        nonexistent_module_to_throw_a_custom_error_message_for_bit_slice_range_validation inst();
     end
 
     if (MULT_PIPELINE_DEPTH < 1) begin: gen_mult_pipeline_depth_validation
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_parameters();
+        nonexistent_module_to_throw_a_custom_error_message_for_mult_pipeline_depth_validation inst();
     end
 
     if (ENABLE_ROUNDING_HALF_TO_EVEN && BIT_SLICE_OFFSET_OUT == 0) begin: gen_rounding_param_validation
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_parameters();
+        nonexistent_module_to_throw_a_custom_error_message_for_rounding_param_validation inst();
     end
 endgenerate
 // --------------------

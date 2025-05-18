@@ -28,11 +28,11 @@ localparam int unsigned CYCLE_LAT = 1;
 // ---------- parameter validation ----------
 generate
     if ($bits(agt_pt_cplx_a.complex_t.re) != $bits(agt_pt_cplx_b.complex_t.re)) begin: gen_validate_real_part_bit_width
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_real_part_bit_width();
+        nonexistent_module_to_throw_a_custom_error_message_for_invalid_real_part_bit_width inst();
     end
 
     if ($bits(agt_pt_cplx_a.complex_t.im) != $bits(agt_pt_cplx_b.complex_t.im)) begin: gen_validate_imaginary_part_bit_width
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_imaginary_part_bit_width();
+        nonexistent_module_to_throw_a_custom_error_message_for_invalid_imaginary_part_bit_width inst();
     end
 endgenerate
 // --------------------

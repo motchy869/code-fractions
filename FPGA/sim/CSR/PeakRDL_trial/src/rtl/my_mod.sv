@@ -31,12 +31,12 @@ localparam int RAM_WORD_ADDR_BIT_WIDTH = RAM_BYTE_ADDR_BIT_WIDTH - BYTE_ADDR_BIT
 generate
     if (!$onehot(WORD_BIT_WIDTH)) begin: gen_invalid_WORD_bit_width
         $error("WORD_BIT_WIDTH must be power of 2");
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_parameters();
+        nonexistent_module_to_throw_a_custom_error_message_for_invalid_WORD_bit_width inst();
     end
 
     if (!$onehot(RAM_DEPTH)) begin: gen_invalid_addr_bit_width
         $error("RAM_DEPTH must be power of 2");
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_parameters();
+        nonexistent_module_to_throw_a_custom_error_message_for_invalid_addr_bit_width inst();
     end
 endgenerate
 // --------------------

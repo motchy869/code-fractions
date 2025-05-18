@@ -42,15 +42,15 @@ interface avmm_if_lv0_v0_1_0 #(
     // parameter validation
     generate
         if ((AVMM_DATA_BIT_WIDTH > 8) && !($bits(byteenable) inside {2, 4, 8, 16, 32, 64, 128})) begin: gen_byteenable_bit_width_validation
-            nonexistent_module_to_throw_a_custom_error_message_for invalid_byteenable_bit_width();
+            nonexistent_module_to_throw_a_custom_error_message_for_invalid_byteenable_bit_width inst();
         end
 
         if (!($bits(readdata) inside {8, 16, 32, 64, 128, 256, 512, 1024})) begin: gen_readdata_bit_width_validation
-            nonexistent_module_to_throw_a_custom_error_message_for invalid_readdata_bit_width();
+            nonexistent_module_to_throw_a_custom_error_message_for_invalid_readdata_bit_width inst();
         end
 
         if (!($bits(writedata) inside {8, 16, 32, 64, 128, 256, 512, 1024})) begin: gen_writedata_bit_width_validation
-            nonexistent_module_to_throw_a_custom_error_message_for invalid_writedata_bit_width();
+            nonexistent_module_to_throw_a_custom_error_message_for_invalid_writedata_bit_width inst();
         end
     endgenerate
 

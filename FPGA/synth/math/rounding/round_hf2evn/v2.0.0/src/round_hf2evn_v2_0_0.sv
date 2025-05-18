@@ -43,11 +43,11 @@ localparam bit [N_F-1:0] FRAC_PART_ZP5 = {1'b1, {(N_F-1){1'b0}}}; //! 0.5 in fra
 // ---------- parameter validation ----------
 generate
     if (N_F < 1) begin: gen_validate_n_f_lower_bound
-        nonexistent_module_to_throw_a_custom_error_message_for too_small_n_f();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_small_n_f inst();
     end
 
     if (N_F >= N) begin: gen_validate_n_f_upper_bound
-        nonexistent_module_to_throw_a_custom_error_message_for too_large_n_f();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_large_n_f inst();
     end
 endgenerate
 // --------------------

@@ -32,7 +32,7 @@ localparam int unsigned CYCLE_LATENCY = 1; //! cycle latency
 // ---------- parameter validation ----------
 generate
     if (BIT_WIDTH_IN == '0) begin: gen_input_bit_width_validation
-        nonexistent_module_to_throw_a_custom_error_message_for too_small_input_bit_width();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_small_input_bit_width inst();
     end
 endgenerate
 // --------------------

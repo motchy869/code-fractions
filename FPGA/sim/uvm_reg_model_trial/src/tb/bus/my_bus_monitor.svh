@@ -6,7 +6,7 @@
 
 `ifndef INCLUDED_FROM_MY_VERIF_PKG
     $fatal(2, "include \"my_verif_pkg.svh\" instead of including this file");
-    nonexistent_module_to_throw_a_custom_error_message_for invalid_inclusion();
+    nonexistent_module_to_throw_a_custom_error_message_for_invalid_inclusion inst();
 `endif
 
 class my_bus_monitor extends uvm_monitor;

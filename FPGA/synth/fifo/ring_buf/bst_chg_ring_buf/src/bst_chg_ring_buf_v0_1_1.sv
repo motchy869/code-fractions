@@ -62,20 +62,20 @@ localparam int unsigned BW_BUF_IDX = EXP_BUF; //! bit width of the buffer index
 // ---------- parameter validation ----------
 generate
     if (EXP_BUF < 1) begin: gen_too_small_EXP_BUF
-        nonexistent_module_to_throw_a_custom_error_message_for too_small_EXP_BUF();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_small_EXP_BUF inst();
     end
     if (EXP_BUF > 31) begin: gen_too_large_EXP_BUF
-        nonexistent_module_to_throw_a_custom_error_message_for too_large_EXP_BUF();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_large_EXP_BUF inst();
     end
     if (CHG_BST_SIZE < 1) begin: gen_too_small_CHG_BST_SIZE
-        nonexistent_module_to_throw_a_custom_error_message_for too_small_CHG_BST_SIZE();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_small_CHG_BST_SIZE inst();
     end
     if (CHG_BST_SIZE > 2**(EXP_BUF-1)) begin: gen_too_large_CHG_BST_SIZE
-        nonexistent_module_to_throw_a_custom_error_message_for too_large_CHG_BST_SIZE();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_large_CHG_BST_SIZE inst();
     end
     `ifdef COMPILER_MATURITY_LEVEL_0
         if (BW_ELEM < 1) begin: gen_too_small_BW_ELEM
-            nonexistent_module_to_throw_a_custom_error_message_for too_small_BW_ELEM();
+            nonexistent_module_to_throw_a_custom_error_message_for_too_small_BW_ELEM inst();
         end
     `endif
 endgenerate

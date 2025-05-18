@@ -65,19 +65,19 @@ localparam int unsigned BW_INTERM_SUM = BW_INTERM_PROD + 1; //! bit width of the
 // ---------- parameter validation ----------
 generate
     if (BW_IN_A > BW_LHS_MULT) begin: gen_validate_bw_in_a
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_a_bit_width();
+        nonexistent_module_to_throw_a_custom_error_message_for_invalid_a_bit_width inst();
     end
 
     if (BW_IN_B > BW_RHS_MULT) begin: gen_validate_bw_in_b
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_b_bit_width();
+        nonexistent_module_to_throw_a_custom_error_message_for_invalid_b_bit_width inst();
     end
 
     if (BIT_SLC_OFFSET_OUT + BW_OUT > BW_INTERM_SUM) begin: gen_validate_bit_slice_offset_and_output_bit_width
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_bit_slice_offset_and_output_bit_width();
+        nonexistent_module_to_throw_a_custom_error_message_for_invalid_bit_slice_offset_and_output_bit_width inst();
     end
 
     if (EN_RND_HF2EVN && BIT_SLC_OFFSET_OUT == 0) begin: gen_validate_rounding_option
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_rounding_option();
+        nonexistent_module_to_throw_a_custom_error_message_for_invalid_rounding_option inst();
     end
 endgenerate
 // --------------------

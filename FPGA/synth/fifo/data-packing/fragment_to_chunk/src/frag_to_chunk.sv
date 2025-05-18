@@ -43,12 +43,12 @@ module frag_to_chunk#(
 generate
     if (S_MAX_IN < 1) begin: gen_input_fragment_size_param_validation
         $error("S_MAX_IN must be greater than or equal to 1");
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_parameters();
+        nonexistent_module_to_throw_a_custom_error_message_for_input_fragment_size_param_validation inst();
     end
 
     if (S_OUT < 1) begin: gen_output_chunk_size_param_validation
         $error("S_OUT must be greater than or equal to 1");
-        nonexistent_module_to_throw_a_custom_error_message_for invalid_parameters();
+        nonexistent_module_to_throw_a_custom_error_message_for_output_chunk_size_param_validation inst();
     end
 endgenerate
 

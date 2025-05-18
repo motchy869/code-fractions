@@ -25,10 +25,10 @@ interface tree_adder_typ_b_if #(
     // ---------- parameter validation ----------
     generate
         if (N_IN_ELEMS < 2) begin: gen_too_small_N_IN_ELEMS
-            nonexistent_module_to_throw_a_custom_error_message_for too_small_N_IN_ELEMS();
+            nonexistent_module_to_throw_a_custom_error_message_for_too_small_N_IN_ELEMS inst();
         end
         if (BW_IN_ELEM < 1) begin: gen_too_small_BW_IN_ELEM
-            nonexistent_module_to_throw_a_custom_error_message_for too_small_BW_IN_ELEM();
+            nonexistent_module_to_throw_a_custom_error_message_for_too_small_BW_IN_ELEM inst();
         end
         for (genvar i=0; i<N_IN_ELEMS; ++i) begin
             if (signed'(MIN_VALS[i]) > signed'(MAX_VALS[i])) begin: gen_min_max_inversion

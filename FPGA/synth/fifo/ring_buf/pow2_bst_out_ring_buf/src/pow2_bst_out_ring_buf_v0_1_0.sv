@@ -61,16 +61,16 @@ localparam int unsigned BW_BUF_IDX = EXP_BUF; //! bit width of the buffer index
 // ---------- parameter validation ----------
 generate
     if (EXP_BUF < 1) begin: gen_too_small_EXP_BUF
-        nonexistent_module_to_throw_a_custom_error_message_for too_small_EXP_BUF();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_small_EXP_BUF inst();
     end
     if (EXP_BUF > 31) begin: gen_too_large_EXP_BUF
-        nonexistent_module_to_throw_a_custom_error_message_for too_large_EXP_BUF();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_large_EXP_BUF inst();
     end
     if (EXP_OUT < 1) begin: gen_too_small_EXP_OUT
-        nonexistent_module_to_throw_a_custom_error_message_for too_small_EXP_OUT();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_small_EXP_OUT inst();
     end
     if (EXP_OUT >= EXP_BUF) begin: gen_too_large_EXP_OUT
-        nonexistent_module_to_throw_a_custom_error_message_for too_large_EXP_OUT();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_large_EXP_OUT inst();
     end
 endgenerate
 // --------------------

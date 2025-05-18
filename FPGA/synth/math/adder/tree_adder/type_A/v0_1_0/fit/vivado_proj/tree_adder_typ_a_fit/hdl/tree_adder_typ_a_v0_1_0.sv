@@ -45,10 +45,10 @@ localparam int unsigned BW_OUT = (BW_IN_ELEM-1) + $clog2(N_IN_ELEMS+1) + 1; //! 
 // ---------- parameter validation ----------
 generate
     if (N_IN_ELEMS < 2) begin: gen_too_small_N_IN_ELEMS
-        nonexistent_module_to_throw_a_custom_error_message_for too_small_N_IN_ELEMS();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_small_N_IN_ELEMS inst();
     end
     if (BW_IN_ELEM < 1) begin: gen_too_small_BW_IN_ELEM
-        nonexistent_module_to_throw_a_custom_error_message_for too_small_BW_IN_ELEM();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_small_BW_IN_ELEM inst();
     end
 endgenerate
 // --------------------

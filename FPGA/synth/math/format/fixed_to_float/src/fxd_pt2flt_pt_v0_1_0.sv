@@ -49,13 +49,13 @@ localparam uint_t CYC_LAT = 4 + CYC_LAT_CLZ_OP; //! cycle latency of this module
 // ---------- parameter validation ----------
 generate
     if (BW_IN_INT == '0) begin: gen_validate_BW_IN_INT
-        nonexistent_module_to_throw_a_custom_error_message_for too_small_BW_IN_INT();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_small_BW_IN_INT inst();
     end
     if (BW_OUT_EXP == '0) begin: gen_validate_BW_OUT_EXP
-        nonexistent_module_to_throw_a_custom_error_message_for too_small_BW_OUT_EXP();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_small_BW_OUT_EXP inst();
     end
     if (BW_OUT_FRAC == '0) begin: gen_validate_BW_OUT_FRAC
-        nonexistent_module_to_throw_a_custom_error_message_for too_small_BW_OUT_FRAC();
+        nonexistent_module_to_throw_a_custom_error_message_for_too_small_BW_OUT_FRAC inst();
     end
 endgenerate
 // --------------------
