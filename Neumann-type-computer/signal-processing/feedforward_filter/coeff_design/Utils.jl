@@ -85,12 +85,12 @@ module Utils
         display(plot(plt_td, plt_fd, layout=(1,2), size=(1600,200)))
         plt_fd_pb = plot(Ω->20log10(abs(H(Ω))), xlims=(0, Ω_p), title="HBF pass-band gain characteristic", minorgrid=true, label=nothing, xlabel="normalized ang. freq. [rad]", ylabel="gain [dB]", size=(800,200), bottom_margin=8Plots.mm, left_margin=8Plots.mm) # frequency-domain, pass-band
         if δ_p >= 0
-            plot!(plt_fd_pb, Ω->20log10(1+δ_p), xlims=(0, Ω_p), label="expected maximal gain", linestyle=:dash)
-            plot!(plt_fd_pb, Ω->20log10(1-δ_p), xlims=(0, Ω_p), label="expected minimal gain", linestyle=:dash)
+            hline!([20log10(1+δ_p)], label="expected maximal gain", linestyle=:dash)
+            hline!([20log10(1-δ_p)], label="expected minimal gain", linestyle=:dash)
         end
         plt_fd_sb = plot(Ω->20log10(abs(H(Ω))), xlims=(Ω_s, pi), title="HBF stop-band gain characteristic", minorgrid=true, label=nothing, xlabel="normalized ang. freq. [rad]", ylabel="gain [dB]", size=(800,200), bottom_margin=8Plots.mm, left_margin=8Plots.mm) # frequency-domain, stop-band
         if δ_s >= 0
-            plot!(plt_fd_sb, Ω->20log10(δ_s), xlims=(Ω_s, pi), label="expected maximal error", linestyle=:dash)
+            hline!([20log10(δ_s)], label="expected maximal error", linestyle=:dash)
         end
         display(plot(plt_fd_pb, plt_fd_sb, layout=(1,2), size=(1600,200)))
     end
@@ -117,7 +117,7 @@ module Utils
         H_cmps(Ω) = H(Ω)*Hg_apt(Ω) # composite characteristic
         plt_cmps_fb = plot(Ω->20log10(abs(H_cmps(Ω))), xlims=(0, pi), title="Composite gain characteristic", minorgrid=true, label=nothing, xlabel="normalized ang. freq. [rad]", ylabel="gain [dB]", size=(800,200), bottom_margin=8Plots.mm, left_margin=8Plots.mm) # full-band
         plt_cmps_tb = plot(Ω->20log10(abs(H_cmps(Ω))), xlims=(0, Ω_c), title="Compensation error", minorgrid=true, label="composite gain", xlabel="normalized ang. freq. [rad]", ylabel="gain [dB]", size=(800,200), bottom_margin=8Plots.mm, left_margin=8Plots.mm) # target band
-        plot!(Ω->20log10(abs(H_cmps(0))), xlims=(0, Ω_c), label="ideal gain", linestyle=:dash)
+        hline!([20log10(abs(H_cmps(0)))], label="ideal gain", linestyle=:dash)
         display(plot(plt_cmps_fb, plt_cmps_tb, layout=(1,2), size=(1600,200)))
     end
 end
