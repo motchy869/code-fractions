@@ -3,15 +3,15 @@
 // verilog_lint: waive-start line-length
 
 
-`ifndef SGL_CLK_PIPE_FIFO_SV_INCLUDED
-`define SGL_CLK_PIPE_FIFO_SV_INCLUDED
+`ifndef SGL_CLK_PIPE_FIFO_V0_1_0_SV_INCLUDED
+`define SGL_CLK_PIPE_FIFO_V0_1_0_SV_INCLUDED
 
 `default_nettype none
 
 //! Single-clock symmetric FIFO.
 //! The internal storage uses a shift register.
 //! This can avoid large selector in the output circuit, different from ring-buffer-based FIFO.
-module sgl_clk_pipe_fifo #(
+module sgl_clk_pipe_fifo_v0_1_0 #(
     `ifndef COMPILER_MATURITY_LEVEL_0 // This macro should be set MANUALLY in the project settings if needed.
         parameter type T_ELEM = logic [7:0], //! element data type
     `else
@@ -120,7 +120,7 @@ always_ff @(posedge i_clk) begin: blk_update_shift_reg
             unique case ({g_push_en, g_pop_en})
                 2'b01: r_shift_reg[i] <= (i < DEPTH-1) ? r_shift_reg[i+1] : '0;
                 2'b10: if (BW_CNT'(i) == r_cnt) r_shift_reg[i] <= i_in_elem;
-                2'b11: r_shift_reg[i] <= (BW_CNT'(i) == r_cnt - BW_CNT'(1)) ? i_in_elem : r_shift_reg[i+1];
+                2'b11: r_shift_reg[i] <= (BW_CNT'(i) == r_cnt - BW_CNT'(1)) ? i_in_elem : (i < DEPTH-1) ? r_shift_reg[i+1] : '0;
                 default: /* no change */;
             endcase
         end
@@ -131,4 +131,4 @@ endmodule
 
 `default_nettype wire
 
-`endif // SGL_CLK_PIPE_FIFO_SV_INCLUDED
+`endif // SGL_CLK_PIPE_FIFO_V0_1_0_SV_INCLUDED

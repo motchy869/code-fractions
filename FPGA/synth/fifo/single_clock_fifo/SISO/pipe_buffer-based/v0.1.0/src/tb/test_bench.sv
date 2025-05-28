@@ -2,7 +2,7 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`include "../sgl_clk_pipe_fifo.sv"
+`include "../sgl_clk_pipe_fifo_v0_1_0.sv"
 
 `default_nettype none
 
@@ -12,8 +12,7 @@
 
 //! interface to DUT
 interface dut_if #(
-    parameter type T_ELEM = logic [7:0],
-    parameter int DEPTH = 16
+    parameter type T_ELEM = logic [7:0]
 )(
     input wire logic i_clk //! clock signal
 );
@@ -64,8 +63,7 @@ typedef logic [BW_ELEM-1:0] elem_t; //! element data type
 
 //! virtual interface to DUT
 typedef virtual interface dut_if #(
-    .T_ELEM(elem_t),
-    .DEPTH(FIFO_DEPTH)
+    .T_ELEM(elem_t)
 ) dut_vif_t;
 
 dut_vif_t dut_vif; //! virtual interface to DUT
@@ -74,12 +72,11 @@ dut_vif_t dut_vif; //! virtual interface to DUT
 // ---------- instances ----------
 //! interface to DUT
 dut_if #(
-    .T_ELEM(elem_t),
-    .DEPTH(FIFO_DEPTH)
+    .T_ELEM(elem_t)
 ) dut_if (.i_clk(r_clk));
 
 //! DUT instance
-sgl_clk_pipe_fifo #(
+sgl_clk_pipe_fifo_v0_1_0 #(
     .T_ELEM(elem_t),
     .DEPTH(FIFO_DEPTH)
 ) dut (
