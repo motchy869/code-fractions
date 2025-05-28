@@ -1,5 +1,5 @@
-`ifndef SGL_CLK_FIFO_SVH_INCLUDED
-`define SGL_CLK_FIFO_SVH_INCLUDED
+`ifndef SGL_CLK_RING_FIFO_SVH_INCLUDED
+`define SGL_CLK_RING_FIFO_SVH_INCLUDED
 
 // Verible directives
 // verilog_lint: waive-start parameter-name-style
@@ -10,7 +10,7 @@
 //! Single-clock symmetric FIFO.
 //! The output can be optionally registered.
 //! Some techniques used in this design are base on '[Simulation and Synthesis Techniques for Asynchronous FIFO Design](http://www.sunburst-design.com/papers/CummingsSNUG2002SJ_FIFO1.pdf)'
-extern module sgl_clk_fifo#(
+extern module sgl_clk_ring_fifo #(
     parameter int DATA_BIT_WIDTH = 8, //! data bit width
     parameter int DEPTH = 16, //! FIFO depth
     parameter bit EN_US_OUT_REG = 1'b0, //! enable output register on upstream side
@@ -35,4 +35,4 @@ extern module sgl_clk_fifo#(
 
 `default_nettype wire
 
-`endif // SGL_CLK_FIFO_SVH_INCLUDED
+`endif // SGL_CLK_RING_FIFO_SVH_INCLUDED

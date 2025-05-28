@@ -2,13 +2,13 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`include "../sgl_clk_fifo.svh"
+`include "../sgl_clk_ring_fifo.svh"
 
 `default_nettype none
 
 // timescale is defined in Makefile.
 
-//! A test bench for sgl_clk_fifo.
+//! A test bench for sgl_clk_ring_fifo.
 module test_bench;
 // ---------- parameters ----------
 localparam int CLK_PERIOD_NS = 8; //! clock period in ns
@@ -22,14 +22,14 @@ parameter bit EN_DS_OUT_REG = 1'b1; //! enable output register on downstream sid
 // --------------------
 
 // ---------- types ----------
-typedef virtual interface sgl_clk_fifo_if#(
+typedef virtual interface sgl_clk_ring_fifo_if#(
     .DATA_BIT_WIDTH(DATA_BIT_WIDTH),
     .DEPTH(DEPTH)
 ) dut_vif_t;
 // --------------------
 
 // ---------- internal signal and storage ----------
-interface sgl_clk_fifo_if#(
+interface sgl_clk_ring_fifo_if#(
     parameter int DATA_BIT_WIDTH = 8, //! data bit width
     parameter int DEPTH = 16 //! FIFO depth
 )(
@@ -52,13 +52,13 @@ dut_vif_t dut_vif;
 
 // ---------- instances ----------
 //! interface to the DUT
-sgl_clk_fifo_if#(
+sgl_clk_ring_fifo_if#(
     .DATA_BIT_WIDTH(DATA_BIT_WIDTH),
     .DEPTH(DEPTH)
 ) dut_if (.i_clk(r_clk));
 
 //! DUT instance
-sgl_clk_fifo#(
+sgl_clk_ring_fifo#(
     .DATA_BIT_WIDTH(DATA_BIT_WIDTH),
     .DEPTH(DEPTH),
     .EN_US_OUT_REG(EN_US_OUT_REG),

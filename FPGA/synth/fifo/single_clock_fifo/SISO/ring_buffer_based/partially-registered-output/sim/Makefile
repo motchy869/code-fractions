@@ -27,7 +27,7 @@ MAKEFILE_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 
 #-------------- Config ------------------------
 SHELL := /usr/bin/env bash
-VIVADO_DIR := /tools/Xilinx/Vivado/2024.1
+VIVADO_DIR := /tools/AMD/Vivado/2024.2
 XVLOG := $(VIVADO_DIR)/bin/xvlog
 XELAB := $(VIVADO_DIR)/bin/xelab
 XSIM := $(VIVADO_DIR)/bin/xsim

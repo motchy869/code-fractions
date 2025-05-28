@@ -6,7 +6,7 @@
 
 //! Single-clock symmetric FIFO.
 //! Some techniques used in this design are base on '[Simulation and Synthesis Techniques for Asynchronous FIFO Design](http://www.sunburst-design.com/papers/CummingsSNUG2002SJ_FIFO1.pdf)'
-module sgl_clk_fifo#(
+module sgl_clk_ring_fifo #(
     parameter int DATA_BIT_WIDTH = 8, //! data bit width
     parameter int DEPTH = 16 //! FIFO depth
 )(
