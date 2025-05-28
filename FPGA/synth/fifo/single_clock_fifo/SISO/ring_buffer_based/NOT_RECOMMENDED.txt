@@ -1,0 +1,1 @@
+Ring buffer inherently has has large selector in output logic.
