@@ -3,8 +3,8 @@
 // verilog_lint: waive-start line-length
 
 `default_nettype none
-//! test bench for round_hf2evn_v2_1_0
-module test_bench_for_v2_1_0();
+//! test bench for round_hf2evn_v2_1_1
+module test_bench_for_v2_1_1();
 // ---------- parameters ----------
 localparam int CLK_PERIOD_NS = 8; //! clock period in ns
 localparam int SIM_TIME_LIMIT_NS = 300; //! simulation time limit in ns
@@ -63,7 +63,7 @@ dut_if #(
 );
 
 //! DUT instance
-round_hf2evn_v2_1_0 #(
+round_hf2evn_v2_1_1 #(
     .N(N),
     .N_F(N_F),
     .EN_OUT_REG(EN_OUT_REG)
