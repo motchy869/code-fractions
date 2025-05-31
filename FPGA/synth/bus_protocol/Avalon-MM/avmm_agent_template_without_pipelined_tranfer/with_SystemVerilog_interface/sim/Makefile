@@ -25,7 +25,7 @@
 
 MAKEFILE_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 
-#-------------- Config ------------------------
+# ---------- config ----------
 SHELL := /usr/bin/env bash
 QSIM_DIR := /tools/Siemens/intelFPGA/23.1std/questa_fse/bin
 VLIB := $(QSIM_DIR)/vlib
@@ -50,17 +50,17 @@ PRE_DEF_MACROS := ALLOW_NON_SYNTHESIZABLE
 # -mfcu is for macro-based include guard.
 VLOG_FLAGS := -mfcu -lint=full -incr
 VSIM_FLAGS := -c -voptargs="+acc" -do "add wave * -recursive; run -all; quit;"
-#---------------------------------------------
+# --------------------
 
-#-------------- Auto-generated configs ------------------------
+# ---------- auto-generated configs ----------
 INCLUDE_DIRS_DIRECTIVE := $(foreach dir,$(INCLUDE_DIRS),+incdir+$(dir))
 MACROS_DIRECTIVE := $(foreach macro,$(PRE_DEF_MACROS),+define+$(macro))
 
 VLOG_FLAGS += -l $(COMPILE_LOG_FILE_PATH) $(INCLUDE_DIRS_DIRECTIVE) $(MACROS_DIRECTIVE)
 VSIM_FLAGS += -l $(SIM_LOG_FILE_PATH)
-#---------------------------------------------
+# --------------------
 
-#------------ Commands -----------------------
+# ---------- commands ----------
 # Run compilation.
 cmp: $(SIM_DIR)/work/_info
 
@@ -77,9 +77,9 @@ view: $(SIM_DIR)/vsim.wlf
 
 clean:
 	rm -rf $(SIM_DIR)
-#---------------------------------------------
+# --------------------
 
-#------------ Files --------------------------
+# ---------- files ----------
 $(SIM_DIR):
 	mkdir -p $@
 
@@ -96,4 +96,4 @@ $(SIM_DIR)/work/_info: $(SIM_DIR)/work $(SV_SRC_FILES) $(SV_HEADER_FILES)
 $(SIM_DIR)/vsim.wlf: $(SIM_DIR)/work/_info
 	cd $(SIM_DIR) && \
 	$(VSIM) -L work $(VSIM_FLAGS) $(TB_TOP)
-#---------------------------------------------
+# --------------------

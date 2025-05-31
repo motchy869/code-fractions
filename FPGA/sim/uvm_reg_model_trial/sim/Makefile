@@ -25,7 +25,7 @@
 
 MAKEFILE_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 
-#-------------- Config ------------------------
+# ---------- config ----------
 SHELL := /usr/bin/env bash
 VIVADO_DIR := /tools/Xilinx/Vivado/2023.2
 XVLOG := $(VIVADO_DIR)/bin/xvlog
@@ -63,17 +63,17 @@ endif
 # Code coverage options
 # s: statement, b: branch, c: condition, t: toggle
 CODE_COV_TYPE := sbct
-#---------------------------------------------
+# --------------------
 
-#-------------- Auto-generated configs ------------------------
+# ---------- auto-generated configs ----------
 INCLUDE_DIR_DIRECTIVE = $(shell [ ! -z "$(INCLUDE_DIR)" ] && echo "--include $(INCLUDE_DIR)")
 CODE_COV_TYPE_DIRECTIVE = $(shell [ ! -z "$(CODE_COV_TYPE)" ] && echo "--cc_type $(CODE_COV_TYPE)")
 
 XVLOG_FLAGS += $(INCLUDE_DIR_DIRECTIVE)
 XELAB_FLAGS += $(CODE_COV_TYPE_DIRECTIVE)
-#---------------------------------------------
+# --------------------
 
-#------------ Commands -----------------------
+# ---------- commands ----------
 run: alone
 
 # Run parsing and elaboration.
@@ -113,9 +113,9 @@ clean:
 
 help: $(SIM_DIR)/help.txt
 	cat $<
-#---------------------------------------------
+# --------------------
 
-#------------ Files --------------------------
+# ---------- files ----------
 $(SIM_DIR):
 	mkdir -p $@
 
@@ -147,4 +147,4 @@ $(SIM_DIR)/help.txt:
 	$(XELAB) -help >> $@
 	$(XSIM) -help >> $@
 	$(XCRG) -help >> $@
-#---------------------------------------------
+# --------------------
