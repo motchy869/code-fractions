@@ -1,6 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use std.env.finish;
 
 entity test_bench is
 end entity;
@@ -40,15 +41,15 @@ architecture behavioral of test_bench is
     signal w_sync_rst: std_logic := '1'; --! synchronous reset signal
 
     --! interface to DUT
-    signal dut_if_0: dut_if_t; --:= (
-    --     ready_to_us => '0',
-    --     input_valid => '0',
-    --     in_val => (others => '0'),
+    signal dut_if_0: dut_if_t := (
+        ready_to_us => '0',
+        input_valid => '0',
+        in_val => (others => '0'),
 
-    --     ready_from_ds => '0',
-    --     output_valid => '0',
-    --     out_val => (others => '0')
-    -- );
+        ready_from_ds => '0',
+        output_valid => '0',
+        out_val => (others => '0')
+    );
     --------------------
 
 begin
@@ -84,23 +85,23 @@ begin
     --! simulation main part
     prc_main: process is
         --! Resets bench-driven signals.
-        procedure rst_bench_drv_sig(
-            signal dut_if: out dut_if_t
-        ) is begin
-            dut_if.input_valid <= '0';
-            dut_if.in_val <= (others => '0');
-            dut_if.ready_from_ds <= '0';
+        procedure rst_bench_drv_sig/*(
+            signal dut_if: out dut_if_t -- This leads to multiple driver, and DUT-driven signals become 'U'.
+        )*/ is begin
+            dut_if_0.input_valid <= '0';
+            dut_if_0.in_val <= (others => '0');
+            dut_if_0.ready_from_ds <= '0';
         end procedure;
 
         --! Drives the reset signal.
         procedure drv_rst(
             signal clk: in std_logic;
-            signal sync_rst: out std_logic;
-            signal dut_if: inout dut_if_t
+            signal sync_rst: out std_logic/*;
+            signal dut_if: inout dut_if_t*/ -- This leads to multiple driver, and DUT-driven signals become 'U'.
         ) is begin
             wait until rising_edge(clk);
             sync_rst <= '1';
-            rst_bench_drv_sig(dut_if);
+            rst_bench_drv_sig/*(dut_if)*/;
             for i in 0 to RST_DURATION_CYCLE-1 loop
                 wait until rising_edge(clk);
             end loop;
@@ -109,9 +110,8 @@ begin
 
         --! Runs test cases.
         procedure run_test_cases(
-            signal clk: in std_logic;
-            signal sync_rst: out std_logic;
-            signal dut_if: inout dut_if_t
+            signal clk: in std_logic/*;
+            signal dut_if: inout dut_if_t*/ -- This leads to multiple driver, and DUT-driven signals become 'U'.
         ) is
             constant NUM_TEST_CASES: positive := 21; -- number of values to test
             type test_case_t is record
@@ -148,37 +148,37 @@ begin
         begin
             while (cnt_output < NUM_TEST_CASES) loop
                 wait until rising_edge(clk);
-                if (dut_if.output_valid = '1') then
-                    if (dut_if.out_val /= test_cases(cnt_output).expected_out_val) then
+                if (dut_if_0.output_valid = '1') then
+                    if (dut_if_0.out_val /= test_cases(cnt_output).expected_out_val) then
                         is_error := true;
                         report "Test case " & integer'image(cnt_output) & " failed. Expected: " & to_hstring(test_cases(cnt_output).expected_out_val) severity error;
                     end if;
                     cnt_output := cnt_output + 1;
                 end if;
                 if (cnt_input < NUM_TEST_CASES) then
-                    dut_if.input_valid <= '1';
-                    dut_if.in_val <= test_cases(cnt_input).in_val;
+                    dut_if_0.input_valid <= '1';
+                    dut_if_0.in_val <= test_cases(cnt_input).in_val;
                     cnt_input := cnt_input + 1;
                 else
-                    dut_if.input_valid <= '0';
-                    dut_if.in_val <= (others => '0');
+                    dut_if_0.input_valid <= '0';
+                    dut_if_0.in_val <= (others => '0');
                 end if;
-                dut_if.ready_from_ds <= '1';
+                dut_if_0.ready_from_ds <= '1';
             end loop;
 
             wait until rising_edge(clk);
-            dut_if.ready_from_ds <= '0';
+            dut_if_0.ready_from_ds <= '0';
 
             if (not is_error) then
                 report "All test cases passed." severity note;
             end if;
-            wait;
+            finish;
         end procedure;
     begin
-        report "Performing initial reset." severity note;
-        drv_rst(w_clk, w_sync_rst, dut_if_0);
-        report "Starting test case." severity note;
-        run_test_cases(w_clk, w_sync_rst, dut_if_0);
+        -- report "Performing initial reset." severity note;
+        drv_rst(w_clk, w_sync_rst/*, dut_if_0*/);
+        -- report "Starting test case." severity note;
+        run_test_cases(w_clk/*, dut_if_0*/);
         wait;
     end process;
     --------------------
