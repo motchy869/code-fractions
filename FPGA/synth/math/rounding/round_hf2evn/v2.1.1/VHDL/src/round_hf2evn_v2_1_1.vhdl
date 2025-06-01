@@ -42,15 +42,24 @@ architecture rtl of round_hf2evn_v2_1_1 is
     --------------------
 
     ---------- signals and variables ----------
-    signal w_int_part: signed(N_I-1 downto 0) := i_val(N-1 downto N_F); --! integer part of input value
-    signal w_frac_part: unsigned(N_F-1 downto 0) := unsigned(i_val(N_F-1 downto 0)); --! fractional part of input value
-    signal g_int_part_is_max: std_logic := w_int_part ?= INT_PART_MAX; --! flag indicating that the integer part is max value
-    signal g_frac_part_is_0: std_logic := w_frac_part ?= (others => '0'); --! flag indicating that the fractional part is zero
-    signal g_frac_part_is_0p5: std_logic := w_frac_part ?= FRAC_PART_ZP5; --! flag indicating that the fractional part is 0.5
+    signal w_int_part: signed(N_I-1 downto 0); --! integer part of input value
+    signal w_frac_part: unsigned(N_F-1 downto 0); --! fractional part of input value
+    signal g_int_part_is_max: std_logic; --! flag indicating that the integer part is max value
+    signal g_frac_part_is_0: std_logic; --! flag indicating that the fractional part is zero
+    signal g_frac_part_is_0p5: std_logic; --! flag indicating that the fractional part is 0.5
     signal g_post_round_val: signed(N_I-1 downto 0); --! post-rounding value
     --------------------
 begin
     ---------- processes ----------
+    --! Assigns values to signals.
+    prc_asgn: process(all) is begin
+        w_int_part <= i_val(N-1 downto N_F);
+        w_frac_part <= unsigned(i_val(N_F-1 downto 0));
+        g_int_part_is_max <= w_int_part ?= INT_PART_MAX;
+        g_frac_part_is_0 <= w_frac_part ?= (N_F-1 downto 0 => '0');
+        g_frac_part_is_0p5 <= w_frac_part ?= FRAC_PART_ZP5;
+    end process;
+
     --! Calculates post-rounding value.
     prc_calc_post_round_val: process(all) is begin
         if g_frac_part_is_0 then
