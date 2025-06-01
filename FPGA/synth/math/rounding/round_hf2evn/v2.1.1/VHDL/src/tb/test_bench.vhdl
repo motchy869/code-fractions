@@ -72,9 +72,7 @@ begin
 
     ---------- processes ----------
     --! Drives clock signal.
-    prc_drv_clk: process is begin
-        w_clk <= not w_clk; wait for CLK_PERIOD_NS / 2;
-    end process;
+    w_clk <= not w_clk after CLK_PERIOD_NS / 2;
 
     --! Manages simulation time limit.
     prc_tim_lim: process is begin
