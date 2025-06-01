@@ -3,7 +3,7 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="all.wdb" id="1">
+      <db_ref path="/mnt/c/Users/motchy/Documents/GitHub/code-fractions/FPGA/synth/math/rounding/round_hf2evn/v2.1.1/VHDL/sim/sim_result/all.wdb" id="1">
          <top_modules>
             <top_module name="numeric_std" />
             <top_module name="standard" />
@@ -15,48 +15,94 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="354.080 ns"></ZoomEndTime>
+      <ZoomEndTime time="417.324 ns"></ZoomEndTime>
       <Cursor1Time time="300.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="290"></NameColumnWidth>
+      <NameColumnWidth column_width="270"></NameColumnWidth>
       <ValueColumnWidth column_width="66"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="9" />
-   <wvobject type="logic" fp_name="/test_bench/r_clk">
-      <obj_property name="ElementShortName">r_clk</obj_property>
-      <obj_property name="ObjectShortName">r_clk</obj_property>
+   <WVObjectSize size="4" />
+   <wvobject type="logic" fp_name="/test_bench/w_clk">
+      <obj_property name="ElementShortName">w_clk</obj_property>
+      <obj_property name="ObjectShortName">w_clk</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/test_bench/r_sync_rst">
-      <obj_property name="ElementShortName">r_sync_rst</obj_property>
-      <obj_property name="ObjectShortName">r_sync_rst</obj_property>
+   <wvobject type="logic" fp_name="/test_bench/w_sync_rst">
+      <obj_property name="ElementShortName">w_sync_rst</obj_property>
+      <obj_property name="ObjectShortName">w_sync_rst</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/test_bench/dut_if_0">
       <obj_property name="ElementShortName">dut_if_0</obj_property>
       <obj_property name="ObjectShortName">dut_if_0</obj_property>
+      <obj_property name="isExpanded"></obj_property>
    </wvobject>
-   <wvobject type="other" fp_name="/test_bench/CLK_PERIOD_NS">
-      <obj_property name="ElementShortName">CLK_PERIOD_NS</obj_property>
-      <obj_property name="ObjectShortName">CLK_PERIOD_NS</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/test_bench/SIM_TIME_LIMIT_NS">
-      <obj_property name="ElementShortName">SIM_TIME_LIMIT_NS</obj_property>
-      <obj_property name="ObjectShortName">SIM_TIME_LIMIT_NS</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/test_bench/RST_DURATION_CYCLE">
-      <obj_property name="ElementShortName">RST_DURATION_CYCLE</obj_property>
-      <obj_property name="ObjectShortName">RST_DURATION_CYCLE</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/test_bench/N">
-      <obj_property name="ElementShortName">N</obj_property>
-      <obj_property name="ObjectShortName">N</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/test_bench/N_F">
-      <obj_property name="ElementShortName">N_F</obj_property>
-      <obj_property name="ObjectShortName">N_F</obj_property>
-   </wvobject>
-   <wvobject type="other" fp_name="/test_bench/EN_OUT_REG">
-      <obj_property name="ElementShortName">EN_OUT_REG</obj_property>
-      <obj_property name="ObjectShortName">EN_OUT_REG</obj_property>
+   <wvobject type="group" fp_name="group25">
+      <obj_property name="label">dut_0</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="logic" fp_name="/test_bench/dut_0/o_ready">
+         <obj_property name="ElementShortName">o_ready</obj_property>
+         <obj_property name="ObjectShortName">o_ready</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_0/i_input_valid">
+         <obj_property name="ElementShortName">i_input_valid</obj_property>
+         <obj_property name="ObjectShortName">i_input_valid</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_0/i_val">
+         <obj_property name="ElementShortName">i_val[7:0]</obj_property>
+         <obj_property name="ObjectShortName">i_val[7:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_0/i_ds_ready">
+         <obj_property name="ElementShortName">i_ds_ready</obj_property>
+         <obj_property name="ObjectShortName">i_ds_ready</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_0/o_output_valid">
+         <obj_property name="ElementShortName">o_output_valid</obj_property>
+         <obj_property name="ObjectShortName">o_output_valid</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_0/o_val">
+         <obj_property name="ElementShortName">o_val[5:0]</obj_property>
+         <obj_property name="ObjectShortName">o_val[5:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_0/w_int_part">
+         <obj_property name="ElementShortName">w_int_part[5:0]</obj_property>
+         <obj_property name="ObjectShortName">w_int_part[5:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_0/w_frac_part">
+         <obj_property name="ElementShortName">w_frac_part[1:0]</obj_property>
+         <obj_property name="ObjectShortName">w_frac_part[1:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_0/g_int_part_is_max">
+         <obj_property name="ElementShortName">g_int_part_is_max</obj_property>
+         <obj_property name="ObjectShortName">g_int_part_is_max</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_0/g_frac_part_is_0">
+         <obj_property name="ElementShortName">g_frac_part_is_0</obj_property>
+         <obj_property name="ObjectShortName">g_frac_part_is_0</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_0/g_frac_part_is_0p5">
+         <obj_property name="ElementShortName">g_frac_part_is_0p5</obj_property>
+         <obj_property name="ObjectShortName">g_frac_part_is_0p5</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_0/g_post_round_val">
+         <obj_property name="ElementShortName">g_post_round_val[5:0]</obj_property>
+         <obj_property name="ObjectShortName">g_post_round_val[5:0]</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_0/gen_out_reg/blk_out_reg/r_vld_dly_line">
+         <obj_property name="ElementShortName">r_vld_dly_line</obj_property>
+         <obj_property name="ObjectShortName">r_vld_dly_line</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_0/gen_out_reg/blk_out_reg/g_can_adv_pip_ln">
+         <obj_property name="ElementShortName">g_can_adv_pip_ln</obj_property>
+         <obj_property name="ObjectShortName">g_can_adv_pip_ln</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/test_bench/dut_0/gen_out_reg/blk_out_reg/g_adv_pip_ln">
+         <obj_property name="ElementShortName">g_adv_pip_ln</obj_property>
+         <obj_property name="ObjectShortName">g_adv_pip_ln</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/test_bench/dut_0/gen_out_reg/blk_out_reg/r_post_round_val">
+         <obj_property name="ElementShortName">r_post_round_val[5:0]</obj_property>
+         <obj_property name="ObjectShortName">r_post_round_val[5:0]</obj_property>
+      </wvobject>
    </wvobject>
 </wave_config>

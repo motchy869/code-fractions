@@ -77,11 +77,17 @@ begin
 
     gen_out_reg: if EN_OUT_REG generate
         blk_out_reg: block
-            signal r_vld_dly_line: std_logic; --! delay line for the output valid signal
-            signal g_can_adv_pip_ln: std_logic := (not r_vld_dly_line) and i_ds_ready; --! signal indicating that the pipeline can advance
-            signal g_adv_pip_ln: std_logic := i_input_valid and g_can_adv_pip_ln; --! signal indicating that the pipeline should advance
-            signal r_post_round_val: signed(N_I-1 downto 0); --! register for post-rounding value
+            signal r_vld_dly_line: std_logic := '0'; --! delay line for the output valid signal
+            signal g_can_adv_pip_ln: std_logic;-- := (not r_vld_dly_line) and i_ds_ready; --! signal indicating that the pipeline can advance
+            signal g_adv_pip_ln: std_logic;-- := i_input_valid and g_can_adv_pip_ln; --! signal indicating that the pipeline should advance
+            signal r_post_round_val: signed(N_I-1 downto 0) := (others => '0'); --! register for post-rounding value
         begin
+            --! Assigns values to signals.
+            prc_asgn: process(all) is begin
+                g_can_adv_pip_ln <= (not r_vld_dly_line) or i_ds_ready;
+                g_adv_pip_ln <= i_input_valid and g_can_adv_pip_ln;
+            end process;
+
             --! Updates valid delay line.
             prc_update_vld_dly_line: process(i_clk) is begin
                 if rising_edge(i_clk) then
@@ -104,14 +110,22 @@ begin
                 end if;
             end process;
 
-            o_ready <= g_can_adv_pip_ln;
-            o_output_valid <= r_vld_dly_line;
-            o_val <= r_post_round_val;
+            --! Assigns output values.
+            prc_asgn_output: process(all) is begin
+                o_ready <= g_can_adv_pip_ln;
+                o_output_valid <= r_vld_dly_line;
+                o_val <= r_post_round_val;
+                -- report "Updates output values. o_output_valid = " & to_string(o_output_valid) severity note;
+            end process;
         end block;
     else generate
-        o_ready <= '1';
-        o_output_valid <= '1';
-        o_val <= g_post_round_val;
+        --! Assigns output values.
+        prc_asgn_output: process(all) is begin
+            -- report "Updates output values." severity note;
+            o_ready <= '1';
+            o_output_valid <= '1';
+            o_val <= g_post_round_val;
+        end process;
     end generate;
     --------------------
 end architecture;
