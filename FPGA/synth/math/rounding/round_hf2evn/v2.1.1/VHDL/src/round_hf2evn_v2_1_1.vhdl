@@ -10,19 +10,19 @@ entity round_hf2evn_v2_1_1 is
         EN_OUT_REG: boolean := false --! Enables output register.
     );
     port (
-        i_clk: in std_logic; --! input clock, used only when ```EN_OUT_REG``` is ```true```.
-        i_sync_rst: in std_logic; --! input reset signal synchronous to the input clock, used only when ```EN_OUT_REG``` is ```true```.
+        i_clk: in std_ulogic; --! input clock, used only when ```EN_OUT_REG``` is ```true```.
+        i_sync_rst: in std_ulogic; --! input reset signal synchronous to the input clock, used only when ```EN_OUT_REG``` is ```true```.
 
         --! @virtualbus us_side_if @dir in upstream side interface
-        o_ready: out std_logic; --! Ready signal to upstream side which indicates that the upstream side is allowed to update input data (to this module) right AFTER the next rising edge of the clock. When ```EN_OUT_REG``` is ```false```, this is set to constant 1.
-        i_input_valid: in std_logic; --! valid signal from upstream side, used only when ```EN_OUT_REG``` is ```true```.
+        o_ready: out std_ulogic; --! Ready signal to upstream side which indicates that the upstream side is allowed to update input data (to this module) right AFTER the next rising edge of the clock. When ```EN_OUT_REG``` is ```false```, this is set to constant 1.
+        i_input_valid: in std_ulogic; --! valid signal from upstream side, used only when ```EN_OUT_REG``` is ```true```.
         i_val: in signed(N-1 downto 0); --! input value
         --! @end
 
         --! @virtualbus ds_side_if @dir out downstream side interface
         --! Ready signal from downstream side which indicates that this module is allowed to update output data (to downstream side) right AFTER the next rising edge of the clock. This is used only when ```EN_OUT_REG``` is ```true```.
-        i_ds_ready: in std_logic;
-        o_output_valid: out std_logic; --! Output valid signal. When ```EN_OUT_REG``` is ```false```, this is set to constant 1.
+        i_ds_ready: in std_ulogic;
+        o_output_valid: out std_ulogic; --! Output valid signal. When ```EN_OUT_REG``` is ```false```, this is set to constant 1.
         o_val: out signed(N-N_F-1 downto 0) --! output value (integer part only)
         --! @end
     );
@@ -44,9 +44,9 @@ architecture rtl of round_hf2evn_v2_1_1 is
     ---------- signals and variables ----------
     signal w_int_part: signed(N_I-1 downto 0); --! integer part of input value
     signal w_frac_part: unsigned(N_F-1 downto 0); --! fractional part of input value
-    signal g_int_part_is_max: std_logic; --! flag indicating that the integer part is max value
-    signal g_frac_part_is_0: std_logic; --! flag indicating that the fractional part is zero
-    signal g_frac_part_is_0p5: std_logic; --! flag indicating that the fractional part is 0.5
+    signal g_int_part_is_max: std_ulogic; --! flag indicating that the integer part is max value
+    signal g_frac_part_is_0: std_ulogic; --! flag indicating that the fractional part is zero
+    signal g_frac_part_is_0p5: std_ulogic; --! flag indicating that the fractional part is 0.5
     signal g_post_round_val: signed(N_I-1 downto 0); --! post-rounding value
     --------------------
 begin
@@ -77,9 +77,9 @@ begin
 
     gen_out_reg: if EN_OUT_REG generate
         blk_out_reg: block
-            signal r_vld_dly_line: std_logic := '0'; --! delay line for the output valid signal
-            signal g_can_adv_pip_ln: std_logic;-- := (not r_vld_dly_line) and i_ds_ready; --! signal indicating that the pipeline can advance
-            signal g_adv_pip_ln: std_logic;-- := i_input_valid and g_can_adv_pip_ln; --! signal indicating that the pipeline should advance
+            signal r_vld_dly_line: std_ulogic := '0'; --! delay line for the output valid signal
+            signal g_can_adv_pip_ln: std_ulogic;-- := (not r_vld_dly_line) and i_ds_ready; --! signal indicating that the pipeline can advance
+            signal g_adv_pip_ln: std_ulogic;-- := i_input_valid and g_can_adv_pip_ln; --! signal indicating that the pipeline should advance
             signal r_post_round_val: signed(N_I-1 downto 0) := (others => '0'); --! register for post-rounding value
         begin
             --! Assigns values to signals.

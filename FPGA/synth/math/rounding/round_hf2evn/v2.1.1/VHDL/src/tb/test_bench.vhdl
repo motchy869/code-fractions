@@ -20,12 +20,12 @@ architecture behavioral of test_bench is
     ---------- types ----------
     --! interface to DUT
     type dut_if_t is record
-        ready_to_us: std_logic; --! ready signal to upstream side
-        input_valid: std_logic; --! valid signal from upstream side
+        ready_to_us: std_ulogic; --! ready signal to upstream side
+        input_valid: std_ulogic; --! valid signal from upstream side
         in_val: signed(N-1 downto 0); --! input value to DUT
 
-        ready_from_ds: std_logic; --! ready signal from downstream side
-        output_valid: std_logic; --! output valid signal to downstream side
+        ready_from_ds: std_ulogic; --! ready signal from downstream side
+        output_valid: std_ulogic; --! output valid signal to downstream side
         out_val: signed(N-N_F-1 downto 0); --! output value from DUT
     end record;
     --------------------
@@ -37,8 +37,8 @@ architecture behavioral of test_bench is
     --------------------
 
     ---------- signals and variables ----------
-    signal w_clk: std_logic := '0'; --! clock signal
-    signal w_sync_rst: std_logic := '1'; --! synchronous reset signal
+    signal w_clk: std_ulogic := '0'; --! clock signal
+    signal w_sync_rst: std_ulogic := '1'; --! synchronous reset signal
 
     --! interface to DUT
     signal dut_if_0: dut_if_t := (
@@ -93,8 +93,8 @@ begin
 
         --! Drives the reset signal.
         procedure drv_rst(
-            signal clk: in std_logic;
-            signal sync_rst: out std_logic/*;
+            signal clk: in std_ulogic;
+            signal sync_rst: out std_ulogic/*;
             signal dut_if: inout dut_if_t*/ -- This leads to multiple driver, and DUT-driven signals become 'U'.
         ) is begin
             wait until rising_edge(clk);
@@ -108,7 +108,7 @@ begin
 
         --! Runs test cases.
         procedure run_test_cases(
-            signal clk: in std_logic/*;
+            signal clk: in std_ulogic/*;
             signal dut_if: inout dut_if_t*/ -- This leads to multiple driver, and DUT-driven signals become 'U'.
         ) is
             constant NUM_TEST_CASES: positive := 21; -- number of values to test
