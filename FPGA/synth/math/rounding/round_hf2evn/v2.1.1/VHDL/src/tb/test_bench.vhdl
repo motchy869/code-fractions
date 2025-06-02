@@ -22,11 +22,11 @@ architecture behavioral of test_bench is
     type dut_if_t is record
         ready_to_us: std_ulogic; --! ready signal to upstream side
         input_valid: std_ulogic; --! valid signal from upstream side
-        in_val: signed(N-1 downto 0); --! input value to DUT
+        in_val: unresolved_signed(N-1 downto 0); --! input value to DUT
 
         ready_from_ds: std_ulogic; --! ready signal from downstream side
         output_valid: std_ulogic; --! output valid signal to downstream side
-        out_val: signed(N-N_F-1 downto 0); --! output value from DUT
+        out_val: unresolved_signed(N-N_F-1 downto 0); --! output value from DUT
     end record;
     --------------------
 
@@ -113,8 +113,8 @@ begin
         ) is
             constant NUM_TEST_CASES: positive := 21; -- number of values to test
             type test_case_t is record
-                in_val: signed(N-1 downto 0); -- input value
-                expected_out_val: signed(N-N_F-1 downto 0); -- expected output value
+                in_val: unresolved_signed(N-1 downto 0); -- input value
+                expected_out_val: unresolved_signed(N-N_F-1 downto 0); -- expected output value
             end record;
             type test_cases_t is array(0 to NUM_TEST_CASES-1) of test_case_t;
             constant test_cases: test_cases_t := (
