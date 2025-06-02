@@ -16,14 +16,14 @@ entity round_hf2evn_v2_1_1 is
         --! @virtualbus us_side_if @dir in upstream side interface
         o_ready: out std_ulogic; --! Ready signal to upstream side which indicates that the upstream side is allowed to update input data (to this module) right AFTER the next rising edge of the clock. When ```EN_OUT_REG``` is ```false```, this is set to constant 1.
         i_input_valid: in std_ulogic; --! valid signal from upstream side, used only when ```EN_OUT_REG``` is ```true```.
-        i_val: in signed(N-1 downto 0); --! input value
+        i_val: in unresolved_signed(N-1 downto 0); --! input value
         --! @end
 
         --! @virtualbus ds_side_if @dir out downstream side interface
         --! Ready signal from downstream side which indicates that this module is allowed to update output data (to downstream side) right AFTER the next rising edge of the clock. This is used only when ```EN_OUT_REG``` is ```true```.
         i_ds_ready: in std_ulogic;
         o_output_valid: out std_ulogic; --! Output valid signal. When ```EN_OUT_REG``` is ```false```, this is set to constant 1.
-        o_val: out signed(N-N_F-1 downto 0) --! output value (integer part only)
+        o_val: out unresolved_signed(N-N_F-1 downto 0) --! output value (integer part only)
         --! @end
     );
 end entity;
@@ -31,8 +31,8 @@ end entity;
 architecture rtl of round_hf2evn_v2_1_1 is
     ---------- constants ----------
     constant N_I: positive := N-N_F; --! bit width of integer part
-    constant FRAC_PART_ZP5: unsigned(N_F-1 downto 0) := (N_F-1 => '1', others => '0'); --! 0.5 in fractional part
-    constant INT_PART_MAX: signed(N_I-1 downto 0) := '0' & (N_I-2 downto 0 => '1'); --! max value of integer part
+    constant FRAC_PART_ZP5: unresolved_unsigned(N_F-1 downto 0) := (N_F-1 => '1', others => '0'); --! 0.5 in fractional part
+    constant INT_PART_MAX: unresolved_signed(N_I-1 downto 0) := '0' & (N_I-2 downto 0 => '1'); --! max value of integer part
     --------------------
 
     ---------- constants validation ----------
