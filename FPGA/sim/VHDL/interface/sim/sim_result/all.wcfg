@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="all.wdb" id="1">
+         <top_modules>
+            <top_module name="env" />
+            <top_module name="numeric_std" />
+            <top_module name="standard" />
+            <top_module name="std_logic_1164" />
+            <top_module name="test_bench" />
+            <top_module name="textio" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="117.626 ns"></ZoomEndTime>
+      <Cursor1Time time="100.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="266"></NameColumnWidth>
+      <ValueColumnWidth column_width="66"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="8" />
+   <wvobject type="logic" fp_name="/test_bench/w_clk">
+      <obj_property name="ElementShortName">w_clk</obj_property>
+      <obj_property name="ObjectShortName">w_clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/test_bench/w_sync_rst">
+      <obj_property name="ElementShortName">w_sync_rst</obj_property>
+      <obj_property name="ObjectShortName">w_sync_rst</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/test_bench/dut_if_0">
+      <obj_property name="ElementShortName">dut_if_0</obj_property>
+      <obj_property name="ObjectShortName">dut_if_0</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/test_bench/CLK_PERIOD_NS">
+      <obj_property name="ElementShortName">CLK_PERIOD_NS</obj_property>
+      <obj_property name="ObjectShortName">CLK_PERIOD_NS</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/test_bench/SIM_TIME_LIMIT_NS">
+      <obj_property name="ElementShortName">SIM_TIME_LIMIT_NS</obj_property>
+      <obj_property name="ObjectShortName">SIM_TIME_LIMIT_NS</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/test_bench/RST_DURATION_CYCLE">
+      <obj_property name="ElementShortName">RST_DURATION_CYCLE</obj_property>
+      <obj_property name="ObjectShortName">RST_DURATION_CYCLE</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/test_bench/BW_IN">
+      <obj_property name="ElementShortName">BW_IN</obj_property>
+      <obj_property name="ObjectShortName">BW_IN</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/test_bench/BW_OUT">
+      <obj_property name="ElementShortName">BW_OUT</obj_property>
+      <obj_property name="ObjectShortName">BW_OUT</obj_property>
+   </wvobject>
+</wave_config>
