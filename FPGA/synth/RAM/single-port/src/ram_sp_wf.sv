@@ -12,7 +12,7 @@
 //! - 1 cycle if `USE_OUTPUT_REG` is 0
 //! - 2 cycles if `USE_OUTPUT_REG` is 1
 //!
-//! **NOTE**: 'read latency is n' means that if address input is changed right after the k-th clock rising edge, the corresponding data is shown right after the (k+n)-th clock rising edge.
+//! **NOTE**: 'read latency is n' means that if address input is changed right after the n-th clock rising edge, the corresponding data is shown right after the (k+n)-th clock rising edge.
 //!
 //! example timing diagram
 //! ![example](Waveme/timing_diagram_example_@read_latency=2.png)
