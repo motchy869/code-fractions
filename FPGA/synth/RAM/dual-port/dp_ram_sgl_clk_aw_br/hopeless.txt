@@ -1,0 +1,1 @@
+On Agilex 5, RAM was not inferred. Just a large crowd of FFs and selectors are created.
