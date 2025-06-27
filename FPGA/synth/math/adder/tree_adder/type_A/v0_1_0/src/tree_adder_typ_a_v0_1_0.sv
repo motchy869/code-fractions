@@ -12,6 +12,7 @@
 //!
 //! The number of adder is ```N_IN_ELEMS-1``` and the cycle latency is ```$clog2(N_IN_ELEMS)``` where ```N_IN_ELEMS``` is the number of input elements.
 //! The output bit width is ```(BW_IN_ELEM-1) + $clog2(N_IN_ELEMS+1) + 1``` (because the possible minimum sum is ```-N_IN_ELEMS*(2**(BW_IN_ELEM-1))```).
+//! The latency, or tree height, is ```$clog2(N_IN_ELEMS)```.
 //!
 //! There is **no handshake** function, so a parent module must handle the flow control.
 module tree_adder_typ_a_v0_1_0 #(
