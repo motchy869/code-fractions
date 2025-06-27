@@ -2,8 +2,8 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`ifndef TREE_ADDER_TYP_A_V0_1_0_SV_INCLUDED
-`define TREE_ADDER_TYP_A_V0_1_0_SV_INCLUDED
+`ifndef TREE_ADDER_TYP_A_V0_1_0_SV_DEFINED
+`define TREE_ADDER_TYP_A_V0_1_0_SV_DEFINED
 
 `default_nettype none
 
@@ -195,4 +195,4 @@ endmodule
 
 `default_nettype wire
 
-`endif // TREE_ADDER_TYP_A_V0_1_0_SV_INCLUDED
+`endif // TREE_ADDER_TYP_A_V0_1_0_SV_DEFINED
