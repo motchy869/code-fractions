@@ -21,7 +21,7 @@ interface dut_if #(
     logic clk_en;
 
     // signals between bench and DUT's upstream-side interface
-    logic [N_IN_ELEMS-1:0][BW_IN_ELEM-1:0] elems;
+    logic signed [BW_IN_ELEM-1:0] elems [N_IN_ELEMS];
 
     // signals between bench and DUT's downstream-side interface
     logic out_vld;
@@ -141,7 +141,9 @@ task automatic feed_data(ref dut_vif_t vif);
         // vif.clk_en = 1'b1; // Clock-enable is not used in current configuration.
 
         if (cnt_pushed_vecs < N_TEST_VECS) begin
-            vif.elems = test_vectors[cnt_pushed_vecs].elems;
+            for (int unsigned j=0; j<N_IN_ELEMS; ++j) begin
+                vif.elems[j] = test_vectors[cnt_pushed_vecs].elems[j];
+            end
             ++cnt_pushed_vecs;
         end else begin
             vif.elems = '{default: '0};

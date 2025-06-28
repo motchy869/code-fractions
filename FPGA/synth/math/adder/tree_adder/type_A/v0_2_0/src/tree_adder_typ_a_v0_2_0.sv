@@ -32,7 +32,7 @@ module tree_adder_typ_a_v0_2_0 #(
     input wire logic i_clk_en, //! clock-enable signal
     //! @end
     //! @virtualbus us_side_if @dir in upstream side interface
-    input wire logic [N_IN_ELEMS-1:0][BW_IN_ELEM-1:0] i_elems, //! input elements, treated as **SIGNED** internally
+    input wire logic signed [BW_IN_ELEM-1:0] i_elems [N_IN_ELEMS], //! input elements, treated as **SIGNED** internally
     //! @end
     //! @virtualbus ds_side_if @dir out downstream side interface
     //! Signal indicating that the output vector is valid. This is **ONLY** for initial garbage data skipping, **NOT** for flow control.
@@ -169,9 +169,9 @@ generate
                 localparam int unsigned BW = adder_plan.bw_mat[0][i];
                 localparam logic elem_type = adder_plan.type_mat[0][i];
                 if (elem_type) begin
-                    gen_elem_depth[0].gen_elem_horiz[i].r_elem <= BW'(signed'(i_elems[2*i])) + BW'(signed'(i_elems[2*i+uint_t'(elem_type)]));
+                    gen_elem_depth[0].gen_elem_horiz[i].r_elem <= BW'(i_elems[2*i]) + BW'(i_elems[2*i+uint_t'(elem_type)]);
                 end else begin
-                    gen_elem_depth[0].gen_elem_horiz[i].r_elem <= BW'(signed'(i_elems[2*i]));
+                    gen_elem_depth[0].gen_elem_horiz[i].r_elem <= BW'(i_elems[2*i]);
                 end
             end
         end
