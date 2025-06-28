@@ -2,17 +2,21 @@
 // verilog_lint: waive-start parameter-name-style
 // verilog_lint: waive-start line-length
 
-`ifndef TREE_ADDER_TYP_A_V0_2_0_SV_DEFINED
-`define TREE_ADDER_TYP_A_V0_2_0_SV_DEFINED
+`ifndef TREE_ADDER_TYP_A_V0_2_0_DEFINED
+`define TREE_ADDER_TYP_A_V0_2_0_DEFINED
+
+`include "tree_adder_typ_a_v0_2_0_pkg.sv"
 
 `default_nettype none
 
 //! An integer tree-like adder.
 //! This module calculates the sum of a given set of input elements using tree-like adder structure.
 //!
-//! The number of adder is ```N_IN_ELEMS-1``` and the cycle latency is ```$clog2(N_IN_ELEMS)``` where ```N_IN_ELEMS``` is the number of input elements.
-//! The output bit width is ```(BW_IN_ELEM-1) + $clog2(N_IN_ELEMS+1) + 1``` (because the possible minimum sum is ```-N_IN_ELEMS*(2**(BW_IN_ELEM-1))```).
-//! The latency, or tree height, is ```$clog2(N_IN_ELEMS)```.
+//! - The number of adder is ```N_IN_ELEMS-1``` and the cycle latency is ```$clog2(N_IN_ELEMS)``` where ```N_IN_ELEMS``` is the number of input elements.
+//! - The output bit width is ```(BW_IN_ELEM-1) + $clog2(N_IN_ELEMS+1) + 1``` (because the possible minimum sum is ```-N_IN_ELEMS*(2**(BW_IN_ELEM-1))```).
+//! - The latency, or tree height, is ```$clog2(N_IN_ELEMS)```.
+//!
+//! Some of these derived parameters can be obtained using functions in ```tree_adder_typ_a_v0_2_0_pkg```.
 //!
 //! There is **no handshake** function, so a parent module must handle the flow control.
 module tree_adder_typ_a_v0_2_0 #(
@@ -40,9 +44,9 @@ module tree_adder_typ_a_v0_2_0 #(
 // --------------------
 
 // ---------- parameters ----------
-localparam int unsigned TREE_HEIGHT = $clog2(N_IN_ELEMS); //! tree height
+localparam int unsigned TREE_HEIGHT = tree_adder_typ_a_v0_2_0_pkg::calc_tree_height(N_IN_ELEMS); //! tree height
 localparam int unsigned TREE_WIDTH = N_IN_ELEMS/2 + (N_IN_ELEMS%2); //! tree width
-localparam int unsigned BW_OUT = (BW_IN_ELEM-1) + $clog2(N_IN_ELEMS+1) + 1; //! output bit width
+localparam int unsigned BW_OUT = tree_adder_typ_a_v0_2_0_pkg::calc_out_bit_width(BW_IN_ELEM, N_IN_ELEMS); //! output bit width
 // --------------------
 
 // ---------- parameter validation ----------
@@ -202,4 +206,4 @@ endmodule
 
 `default_nettype wire
 
-`endif // TREE_ADDER_TYP_A_V0_2_0_SV_DEFINED
+`endif // TREE_ADDER_TYP_A_V0_2_0_DEFINED
